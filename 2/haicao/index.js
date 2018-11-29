@@ -82,7 +82,7 @@ async function work() {
         i++;
     }
 
-    while (i < 14) {
+    while (i < 17) {
         if (!controller.canRun) {
             hasStop = true;
             return;

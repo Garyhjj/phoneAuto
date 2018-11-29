@@ -82,7 +82,7 @@ async function work() {
         i++;
     }
 
-    while (i < 14) {
+    while (i < 17) {
         if (!controller.canRun) {
             hasStop = true;
             return;
@@ -141,7 +141,10 @@ controller.addSchedule(async () => {
     await wait(10000);
     await controller.backToMainPage();
     await wait(2000);
-    return getHourCoin();
+    await getHourCoin();
+    await wait(1000);
+    await controller.back();
+    await wait(1000);
 }, '32 * * * *');
 
 module.exports = {

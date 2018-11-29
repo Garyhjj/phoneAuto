@@ -31,8 +31,8 @@ const BEFORE_CLOSE = 'BEFORE_CLOSE',
     SCHEDULE = 'SCHEDULE';
 
 
-const systemConfirm = 'com.miui.securitycenter/com.miui.wakepath.ui.ConfirmStartActivity',
-    sysPackageInstaller = 'com.miui.packageinstaller/com.android.packageinstaller.PackageInstallerActivity',
+const systemConfirm = 'com.miui.wakepath.ui.ConfirmStartActivity',
+    sysPackageInstaller = 'com.android.packageinstaller.PackageInstallerActivity',
     phoneHomePage = 'com.miui.home/com.miui.home.launcher.Launcher';
 
 let phoneList = [];
@@ -52,7 +52,7 @@ function updateNowApp(phone) {
         const fn = async () => {
             const res = await execPromise(`adb ${phone.target} shell dumpsys window windows | findstr "Current"`);
             const before = nowApp[name];
-            log(Date.now() + ' check');
+            // log(Date.now() + ' check');
             if (before !== res) {
                 nowApp[name] = res;
                 await Promise.all(cls.map((c) => c.screenChange(res)));
@@ -278,7 +278,17 @@ class PhoneController {
 }
 
 
-function doAllSchedule(appList, schedueList) {
+async function doAllSchedule(appList, schedueList) {
+    const deviceList = await execPromise(`adb devices`);
+    appList = appList || [];
+    schedueList = schedueList || [];
+    const one = appList.concat(schedueList)[0];
+    if (!one) {
+        return;
+    }
+    if (deviceList.indexOf(one.app.controller.name) < 0) {
+        return;
+    }
     let target;
     let timeID;
     appList.forEach(l => {
@@ -342,6 +352,9 @@ function doAllSchedule(appList, schedueList) {
             await wait(5000)
         }
         target = appList.shift();
+        if (!target) {
+            return;
+        }
         let hasSameTar;
         hasSameTar = !!appList.find((l) => l.app.controller.app === target.app.controller.app && l.hasInited);
         appList.push(target);

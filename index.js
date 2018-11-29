@@ -1,4 +1,5 @@
 const mi5 = require('./5');
+const mi2 = require('./2');
 
-
-mi5();
+mi2();
+// mi5();

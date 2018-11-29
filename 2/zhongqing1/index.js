@@ -3,10 +3,10 @@ const {
     PhoneController,
 } = require('../../util'),
     maxRead = 20,
-    app = "com.martian.hbnews",
+    app = "cn.youth.news",
     activity = {
-        enter: 'com.martian.hbnews.activity.MartianAppStart',
-        main: 'com.martian.hbnews.activity.MainActivity'
+        enter: 'com.weishang.wxrd.activity.SplashActivity',
+        main: 'com.weishang.wxrd.activity.MainActivity'
     };
 const name = require('../share').name;
 let read = 0;
@@ -15,41 +15,23 @@ const controller = new PhoneController({
     name,
     activity
 });
-const taskPage = 'com.martian.hbnews.libnews.activity.MartianNewsWebViewActivity';
 
-async function isTaskPage() {
-    const res = await controller.getNowApp();
-    if (res.indexOf(taskPage) > -1) {
-        return true;
-    } else {
-        return false;
-    }
-}
 function nextTitle() {
-    return controller.swipe(900, 500, 200, 520, 200);
+    return controller.swipe(600, 500, 200, 520, 200);
 }
 
 function nextPaper() {
-    return controller.swipe(500, 400, 520, 70, 500);
+    return controller.swipe(400, 350, 400, 900, 800);
 }
-
 async function enterPaper() {
-    await controller.click(400, 430);
+    await controller.click(400, 350);
     await wait(2000);
     const isMain = await controller.isMainPage();
     if (isMain) {
         await nextPaper();
         return await enterPaper();
     } else {
-        const isTaskP = await isTaskPage();
-        if (isTaskP) {
-            return true;
-        } else {
-            await controller.back();
-            await wait(2000);
-            await nextPaper();
-            return await enterPaper();
-        }
+        return true;
     }
 }
 
@@ -89,7 +71,25 @@ async function work() {
         await wait(2000);
         await controller.swipe(400, 500, 400, 350, 200);
         i++;
-        if (i < 13) {
+        if (i < 60) {
+            aa1()
+        } else {
+            await wait(1000);
+            await controller.click(50, 70);
+            await wait(1000);
+            read++;
+            work();
+        }
+    }
+    async function aa1() {
+        if (!controller.canRun) {
+            hasStop = true;
+            return;
+        };
+        await wait(2000);
+        await controller.swipe(400, 350, 400, 500, 200);
+        i++;
+        if (i < 60) {
             aa()
         } else {
             await wait(1000);
@@ -106,17 +106,21 @@ async function openApp() {
     await controller.adbShell(`keyevent 3`);
     await controller.adbShell(`keyevent 3`);
     let i = 1;
-    while (i < 5) {
+    while (i < 4) {
         await wait(500);
         await nextTitle();
         i++;
     }
-    await controller.click(400, 500);
+    await controller.click(150, 530);
+    controller.setOpen();
+    controller.setOnTask();
 }
+controller.openApp = openApp;
 async function begin() {
     await controller.openApp();
-    await wait(15000);
-    await nextTitle();
+    await wait(8000);
+    await controller.back();
+    await wait(5000);
     controller.startIntervalCheckExit();
     controller.miOnAppGoFront(async () => {
         if (hasStop) {
@@ -129,8 +133,10 @@ async function begin() {
 // controller.click(400, 500);
 // begin();
 
+
 module.exports = {
     begin,
     close: controller.closeApp.bind(controller),
     controller,
+    work
 }

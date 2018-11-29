@@ -1,4 +1,5 @@
 const zhongqing = require('./zhongqing'),
+zhongqing1 = require('./zhongqing1'),
     tou = require('./tou'),
     tou2 = require('./tou2'),
     haicao = require('./haicao'),
@@ -8,15 +9,9 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 const list = [{
-    app: tou2,
-    last: 1000 * 60 * 20
-}, {
-    app: tou,
-    last: 1000 * 60 * 20
-}, {
-    app: zhongqing,
-    last: 1000 * 60 * 30
+    app: zhongqing1,
+    last: 1000 * 60 * 5
 }];
-schedueList = [book.controller, haicao.controller];
+// schedueList = [book.controller, haicao.controller];
 
 module.exports = () => doAllSchedule(list, schedueList);

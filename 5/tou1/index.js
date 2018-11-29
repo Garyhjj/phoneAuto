@@ -25,6 +25,7 @@ async function isTaskPage() {
         return false;
     }
 }
+
 function nextTitle() {
     return controller.swipe(900, 500, 200, 520, 200);
 }
@@ -111,8 +112,9 @@ async function openApp() {
         await nextTitle();
         i++;
     }
-    await controller.click(400, 500);
+    await controller.click(700, 800);
 }
+controller.openApp = openApp;
 async function begin() {
     await controller.openApp();
     await wait(15000);

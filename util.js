@@ -172,6 +172,10 @@ class PhoneController {
         return this.adbShell(`tap ${x} ${y}`);
     }
 
+    press(x, y, d) {
+        return this.adbShell(`press ${x} ${y} ${d}`);
+    }
+
     getNowApp() {
         return execPromise(`adb ${this.target} shell dumpsys window windows | findstr "Current"`);
     }

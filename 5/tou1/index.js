@@ -113,6 +113,8 @@ async function openApp() {
         i++;
     }
     await controller.click(700, 800);
+    controller.setOpen();
+    controller.setOnTask();
 }
 controller.openApp = openApp;
 async function begin() {

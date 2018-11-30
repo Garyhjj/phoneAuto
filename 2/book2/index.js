@@ -2,35 +2,41 @@ const {
     wait,
     PhoneController,
 } = require('../../util'),
-    app = "com.martian.ttbook/com.martian.mibook.activity.EnterActivity";
+    app = "com.martian.ttbook",
+    activity = {
+        enter: 'com.martian.mibook.activity.EnterActivity',
+        main: 'com.martian.mibook.activity.Homepage'
+    };
 const name = require('../share').name;
+let read = 0;
 const controller = new PhoneController({
     app,
-    name
+    name,
+    activity
 });
 
 const during = 1000 * 25,
     lines = [
-        [800, 1770],
-        [10, 1770]
+        [600, 10],
+        [10, 80]
     ],
     count = 50;
 let n = lines[0],
     i = 0,
     lastGetJiang;
-async function getJiang(name) {
-    await controller.click(920, 120);
+
+function nextTitle() {
+    return controller.swipe(700, 500, 200, 520, 200);
+}
+async function getJiang() {
+    await controller.click(660, 100);
     await wait(1000);
     await controller.back();
     await wait(1000);
 }
 
 function enterNote() {
-    return controller.click(500, 800);
-}
-
-function nextTitle() {
-    return controller.swipe(900, 500, 200, 520, 200);
+    return controller.click(310, 460);
 }
 let hasStop;
 async function work(isNotFirst) {
@@ -66,12 +72,12 @@ async function openApp() {
     await controller.adbShell(`keyevent 3`);
     await controller.adbShell(`keyevent 3`);
     let i = 1;
-    while (i < 5) {
+    while (i < 3) {
         await wait(500);
         await nextTitle();
         i++;
     }
-    await controller.click(550, 300);
+    await controller.click(300, 500);
     controller.setOpen();
     controller.setOnTask();
 }
@@ -98,9 +104,10 @@ controller.addSchedule(async () => {
     await wait(2000);
     await controller.backToMainPage();
     return getJiang();
-}, '10 * * * *');
+}, '26 * * * *');
 module.exports = {
     begin,
     close: controller.closeApp.bind(controller),
     controller,
+    work
 }

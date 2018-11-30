@@ -9,12 +9,15 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 const list = [{
+    app: haicao,
+    last: 1000 * 60 * 80
+}, {
     app: zhongqing,
     last: 1000 * 60 * 80
-},{
+}, {
     app: tou,
     last: 1000 * 60 * 80
-},];
+}, ];
 
 schedueList = [];
 

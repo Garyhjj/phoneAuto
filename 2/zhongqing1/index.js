@@ -15,6 +15,16 @@ const controller = new PhoneController({
     name,
     activity
 });
+const taskPage = 'cn.youth.news/com.weishang.wxrd.activity.WebViewActivity';
+
+async function isTaskPage() {
+    const res = await controller.getNowApp();
+    if (res.indexOf(taskPage) > -1) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 function nextTitle() {
     return controller.swipe(600, 500, 200, 520, 200);
@@ -31,7 +41,14 @@ async function enterPaper() {
         await nextPaper();
         return await enterPaper();
     } else {
-        return true;
+        let isTaskP = await isTaskPage();
+        if (isTaskP) {
+            return true;
+        } else {
+            await controller.backToMainPage();
+            await nextPaper();
+            return await enterPaper();
+        }
     }
 }
 
@@ -118,7 +135,7 @@ async function openApp() {
 controller.openApp = openApp;
 async function begin() {
     await controller.openApp();
-    await wait(8000);
+    await wait(10000);
     await controller.back();
     await wait(5000);
     controller.startIntervalCheckExit();

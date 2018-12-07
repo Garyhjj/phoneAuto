@@ -12,10 +12,10 @@ const zhongqing = require('./zhongqing'),
 
 const list = [{
     app: zhongqing,
-    last: 1000 * 60 * 30
+    last: 1000 * 60 * 200
 }, {
-    app: book2,
-    last: 1000 * 60 * 50
+    app: tou,
+    last: 1000 * 60 * 40
 }];
 schedueList = [];
 

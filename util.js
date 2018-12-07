@@ -125,11 +125,14 @@ class PhoneController {
 
     async isMainPage() {
         const res = await this.getNowApp();
-        if (res.indexOf(this.joinActivity(this.activity.main)) > -1) {
-            return true;
-        } else {
-            return false;
-        }
+        const mains = this.activity.main.split(',');
+        let is = false;
+        mains.forEach((m) => {
+            if (res.indexOf(this.joinActivity(m)) > -1) {
+                is = true;
+            }
+        })
+        return is;
     }
 
     async openApp() {
@@ -231,7 +234,7 @@ class PhoneController {
             return true;
         } else {
             await this.back();
-            await wait(800);
+            await wait(2000);
             if (this.isOpen) {
                 return this.backToMainPage();
             } else {
@@ -351,23 +354,29 @@ async function doAllSchedule(appList, schedueList) {
         })
     })
     async function start() {
-        if (target) {
-            await target.app.close();
-            await wait(5000)
+        let same;
+        if (target === appList[0]) {
+            same = true;
         }
-        target = appList.shift();
-        if (!target) {
-            return;
-        }
-        let hasSameTar;
-        hasSameTar = !!appList.find((l) => l.app.controller.app === target.app.controller.app && l.hasInited);
-        appList.push(target);
-        const app = target.app;
-        if (target.hasInited || hasSameTar) {
-            await app.controller.openApp();
-        } else {
-            await app.begin();
-            target.hasInited = true;
+        if (!same) {
+            if (target) {
+                await target.app.close();
+                await wait(5000)
+            }
+            target = appList.shift();
+            if (!target) {
+                return;
+            }
+            let hasSameTar;
+            hasSameTar = !!appList.find((l) => l.app.controller.app === target.app.controller.app && l.hasInited);
+            appList.push(target);
+            const app = target.app;
+            if (target.hasInited || hasSameTar) {
+                await app.controller.openApp();
+            } else {
+                await app.begin();
+                target.hasInited = true;
+            }
         }
         setTimeout(() => start(), target.last);
     }

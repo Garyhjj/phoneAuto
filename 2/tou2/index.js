@@ -6,7 +6,7 @@ const {
     app = "com.martian.hbnews",
     activity = {
         enter: 'com.martian.hbnews.activity.MartianAppStart',
-        main: 'com.martian.hbnews.activity.MainActivity',
+        main: 'com.martian.hbnews.activity.MainActivity,com.martian.hbnews.libnews.activity.MartianNewsPushListActivity',
     };
 const name = require('../share').name;
 let read = 0;
@@ -15,11 +15,12 @@ const controller = new PhoneController({
     name,
     activity
 });
-const taskPage = 'com.martian.hbnews.libnews.activity.MartianNewsWebViewActivity';
+const taskPage = 'com.martian.hbnews.libnews.activity.MartianNewsWebViewActivity',
+    taskPage1 = 'com.martian.hbnews.libnews.activity.MartianNewsPushListActivity';
 
 async function isTaskPage() {
     const res = await controller.getNowApp();
-    if (res.indexOf(taskPage) > -1) {
+    if (res.indexOf(taskPage) > -1 || res.indexOf(taskPage1) > -1) {
         return true;
     } else {
         return false;
@@ -41,12 +42,11 @@ async function enterPaper() {
         await nextPaper();
         return await enterPaper();
     } else {
-        const isTaskP = await isTaskPage();
+        let isTaskP = await isTaskPage();
         if (isTaskP) {
             return true;
         } else {
-            await controller.back();
-            await wait(2000);
+            await controller.backToMainPage();
             await nextPaper();
             return await enterPaper();
         }
@@ -111,7 +111,7 @@ async function openApp() {
         await nextTitle();
         i++;
     }
-    await controller.click(300, 300);
+    await controller.click(420, 300);
     controller.setOpen();
     controller.setOnTask();
 }

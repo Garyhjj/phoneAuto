@@ -6,7 +6,7 @@ const {
     app = "com.martian.hbnews",
     activity = {
         enter: 'com.martian.hbnews.activity.MartianAppStart',
-        main: 'com.martian.hbnews.activity.MainActivity',
+        main: 'com.martian.hbnews.activity.MainActivity,com.martian.hbnews.libnews.activity.MartianNewsPushListActivity',
     };
 const name = require('../share').name;
 let read = 0;
@@ -15,7 +15,17 @@ const controller = new PhoneController({
     name,
     activity
 });
-const taskPage = 'com.martian.hbnews.libnews.activity.MartianNewsWebViewActivity';
+const taskPage = 'com.martian.hbnews.libnews.activity.MartianNewsWebViewActivity',
+    taskPage1 = 'com.martian.hbnews.libnews.activity.MartianNewsPushListActivity';
+
+async function isTaskPage() {
+    const res = await controller.getNowApp();
+    if (res.indexOf(taskPage) > -1 || res.indexOf(taskPage1) > -1) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 async function isTaskPage() {
     const res = await controller.getNowApp();

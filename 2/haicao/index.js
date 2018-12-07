@@ -15,6 +15,16 @@ const controller = new PhoneController({
     name,
     activity
 });
+const taskPage = 'com.billionstech.grassbook/com.billionstech.grassbook.business.main.find.findDetail.FindDetailActivity';
+
+async function isTaskPage() {
+    const res = await controller.getNowApp();
+    if (res.indexOf(taskPage) > -1) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 function getHourCoin() {
     return controller.click(660, 100);
@@ -36,7 +46,14 @@ async function enterPaper() {
         await nextPaper();
         return await enterPaper();
     } else {
-        return true;
+        let isTaskP = await isTaskPage();
+        if (isTaskP) {
+            return true;
+        } else {
+            await controller.backToMainPage();
+            await nextPaper();
+            return await enterPaper();
+        }
     }
 }
 

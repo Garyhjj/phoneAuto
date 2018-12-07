@@ -9,16 +9,10 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 const list = [{
-    app: haicao,
-    last: 1000 * 60 * 80
-}, {
     app: zhongqing,
-    last: 1000 * 60 * 80
-}, {
-    app: tou,
-    last: 1000 * 60 * 80
-}, ];
+    last: 1000 * 60 * 180
+}];
 
 schedueList = [];
-
+doAllSchedule(list, schedueList);
 module.exports = () => doAllSchedule(list, schedueList);

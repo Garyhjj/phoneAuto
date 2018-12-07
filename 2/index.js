@@ -11,8 +11,8 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 const list = [{
-    app: zhongqing,
-    last: 1000 * 60 * 200
+    app: tou2,
+    last: 1000 * 60 * 40
 }, {
     app: tou,
     last: 1000 * 60 * 40

@@ -41,7 +41,8 @@ function nextTitle() {
 }
 
 function nextPaper() {
-    return controller.swipe(500, 400, 520, 70, 500);
+    // return controller.swipe(500, 400, 520, 70, 500);
+    return controller.swipe(400, 350, 400, 900, 800);
 }
 async function enterPaper() {
     await controller.click(400, 350);

@@ -11,9 +11,14 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 const list = [{
-    app: zhongqing1,
-    last: 1000 * 60 * 300
-}];
+        app: tou2,
+        last: 1000 * 60 * 30
+    },
+    {
+        app: tou,
+        last: 1000 * 60 * 30
+    }
+];
 schedueList = [];
 
 module.exports = () => doAllSchedule(list, schedueList);

@@ -62,6 +62,45 @@ function updateNowApp(phone) {
         fn();
     }
 }
+
+
+function promiseFlow(fn) {
+    if (typeof fn === 'function') {
+        return new Promise((resolve, reject) => {
+            promiseFlow.list.push({
+                resolve,
+                reject,
+                fn
+            });
+        })
+    } else {
+        return Promise.reject('no fn');
+    }
+}
+promiseFlow.list = [];
+promiseFlow.startFlow = async function () {
+    const list = this.list;
+    if (list.length > 0) {
+        const first = list.shift();
+        const res = await first.fn()
+        await first.resolve(res);
+        await wait(800);
+        promiseFlow.startFlow();
+    }
+}
+const push = Array.prototype.push;
+promiseFlow.list.push = function (n) {
+    const lg = this.length;
+    if (lg === 0) {
+        setTimeout(() => {
+            promiseFlow.startFlow()
+        }, 200);
+    }
+    return push.call(this, n);
+}
+
+
+
 class PhoneController {
     constructor(options) {
         this.options = {};
@@ -116,7 +155,7 @@ class PhoneController {
 
 
     adbShell(order) {
-        return execPromise(`adb ${this.target} shell input ${order}`);
+        return promiseFlow(() => execPromise(`adb ${this.target} shell input ${order}`));
     }
 
     joinActivity(activity) {
@@ -136,10 +175,10 @@ class PhoneController {
     }
 
     async openApp() {
-        await execPromise(`adb ${this.target} shell am start -n ${this.joinActivity(this.activity.enter)}`);
+        await promiseFlow(() => execPromise(`adb ${this.target} shell am start -n ${this.joinActivity(this.activity.enter)}`));
         this.setOpen();
         this.setOnTask();
-        await wait(2000);
+        await this.wait(2000);
         return;
     }
 
@@ -164,7 +203,7 @@ class PhoneController {
     async closeApp() {
         await this._runCb(BEFORE_CLOSE);
         this._isOpen = false;
-        return execPromise(`adb ${this.target} shell am force-stop ${this.app}`)
+        return promiseFlow(() => execPromise(`adb ${this.target} shell am force-stop ${this.app}`));
     }
 
     swipe(x, y, x1, y1, d) {
@@ -195,7 +234,7 @@ class PhoneController {
         }
         if (res.indexOf(systemConfirm) > -1 || res.indexOf(sysPackageInstaller) > -1) {
             await this.back();
-            await wait(3000);
+            await this.wait(3000);
             return;
         }
         if (res.indexOf(this.app) > -1) {
@@ -234,7 +273,7 @@ class PhoneController {
             return true;
         } else {
             await this.back();
-            await wait(2000);
+            await this.wait(2000);
             if (this.isOpen) {
                 return this.backToMainPage();
             } else {
@@ -252,6 +291,10 @@ class PhoneController {
                 cron
             });
         }
+    }
+
+    wait(n) {
+        return promiseFlow(() => wait(n));
     }
 
     miScheduleJob(beforeDo, afterDo) {
@@ -319,16 +362,16 @@ async function doAllSchedule(appList, schedueList) {
             if ((target && target.app.controller === c)) {
                 const tarCtr = target.app.controller;
                 await tarCtr.stopTask();
-                await wait(2000);
+                await c.wait(2000);
                 await c.backToMainPage();
             } else {
                 if (target) {
                     const tarCtr = target.app.controller;
                 }
                 await c.backToPhoneHomePage();
-                await wait(3000);
+                await c.wait(3000);
                 await c.openApp();
-                await wait(8000);
+                await c.wait(8000);
             }
 
 
@@ -336,7 +379,7 @@ async function doAllSchedule(appList, schedueList) {
             if ((target && target.app.controller === c)) {
                 const tarCtr = target.app.controller;
                 await tarCtr.setOnTask();
-                await wait(2000);
+                await c.wait(2000);
                 await c.backToMainPage();
                 tarCtr.backToFront();
             } else {
@@ -344,9 +387,9 @@ async function doAllSchedule(appList, schedueList) {
                     await c.closeApp();
                     const tarCtr = target.app.controller;
                     tarCtr.setOnTask();
-                    await wait(2000);
+                    await c.wait(2000);
                     await tarCtr.openApp();
-                    await wait(5000);
+                    await c.wait(5000);
                     await c.backToMainPage();
                     tarCtr.backToFront();
                 }
@@ -361,7 +404,7 @@ async function doAllSchedule(appList, schedueList) {
         if (!same) {
             if (target) {
                 await target.app.close();
-                await wait(5000)
+                await c.wait(5000)
             }
             target = appList.shift();
             if (!target) {

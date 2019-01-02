@@ -137,7 +137,9 @@ async function begin() {
     await controller.openApp();
     await wait(10000);
     await controller.back();
-    await wait(5000);
+    await wait(3000);
+    await nextTitle();
+    await wait(2000);
     controller.startIntervalCheckExit();
     controller.miOnAppGoFront(async () => {
         if (hasStop) {

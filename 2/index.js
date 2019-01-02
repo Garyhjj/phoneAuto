@@ -13,6 +13,9 @@ const zhongqing = require('./zhongqing'),
 const list = [{
     app: zhongqing1,
     last: 1000 * 60 * 400
+}, {
+    app: zhongqing,
+    last: 1000 * 60 * 200
 }];
 schedueList = [];
 

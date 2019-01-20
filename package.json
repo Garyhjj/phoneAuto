@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "windowsDebug": "@powershell -Command $env:DEBUG='*';nodemon",
-    "windowsDebug1": "@powershell -Command $env:DEBUG='*';node"
+    "windowsDebug1": "@powershell -Command $env:DEBUG='*';node",
+    "proxy": "anyproxy   --rule rule.js"
   },
   "repository": {
     "type": "git",

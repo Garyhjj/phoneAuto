@@ -1,11 +1,31 @@
 const controller = require('./5/tou').controller;
 
+
+let hasGotVideo;
+
+const taskPage = 'com.martian.hbnews.libnews.activity.MartianVideoWebViewActivity';
+
+async function isTaskPage() {
+    const res = await controller.getNowApp();
+    if (res.indexOf(taskPage) > -1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 async function nextTitle() {
     await controller.swipe(500, 700, 520, 70, 500);
     return await controller.wait(500);
 }
 async function enterPaper() {
     await controller.click(400, 430);
+    const isTask = await isTaskPage();
+    while (!taskPage) {
+        await back();
+        await nextTitle();
+        await enterPaper();
+    }
 }
 
 const back = async () => {
@@ -17,6 +37,11 @@ async function afterRead() {
     await back();
     await nextTitle();
     await enterPaper();
+    setTimeout(() => {
+        if (!hasGotVideo) {
+            afterRead();
+        }
+    }, 20 * 1000)
 }
 
 enterPaper();
@@ -38,7 +63,7 @@ module.exports = {
             } else {
                 setTimeout(() => {
                     afterRead();
-                }, (duration + 8) * 1000)
+                }, (duration + 5 + (duration / 7)) * 1000);
             }
         }
     },

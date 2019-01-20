@@ -132,10 +132,15 @@ async function openApp() {
     await controller.click(400, 700);
 }
 async function begin() {
-    await controller.openApp();
-    await wait(8000);
-    await controller.back();
-    await wait(5000);
+    const isMain = await controller.isMainPage();
+    if (!isMain) {
+        await controller.openApp();
+        await wait(8000);
+        await controller.back();
+        await wait(5000);
+    } else {
+        controller.setOnTask();
+    }
     controller.startIntervalCheckExit();
     controller.miOnAppGoFront(async () => {
         if (hasStop) {

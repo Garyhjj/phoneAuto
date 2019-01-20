@@ -11,11 +11,11 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 const list = [{
-    app: zhongqing1,
-    last: 1000 * 60 * 400
-}, {
     app: zhongqing,
-    last: 1000 * 60 * 200
+    last: 1000 * 60 * 300
+}, {
+    app: zhongqing1,
+    last: 1000 * 60 * 50
 }];
 schedueList = [];
 

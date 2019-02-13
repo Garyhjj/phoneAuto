@@ -404,7 +404,7 @@ async function doAllSchedule(appList, schedueList) {
         if (!same) {
             if (target) {
                 await target.app.close();
-                await c.wait(5000)
+                await wait(5000)
             }
             target = appList.shift();
             if (!target) {

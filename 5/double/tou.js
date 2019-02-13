@@ -31,7 +31,7 @@ const toutiaoTop = {
             await ctr.wait(300);
             await that.readOne();
             i++;
-            if (i < 7) {
+            if (i < 16) {
                 aa()
             } else {
                 await ctr.wait(800);
@@ -95,4 +95,4 @@ const zhongqingLow = {
 // ctr.click(50, 1100);
 
 toutiaoTop.work();
-zhongqingLow.work();
+// zhongqingLow.work();

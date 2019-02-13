@@ -10,13 +10,23 @@ const zhongqing = require('./zhongqing'),
         doAllSchedule
     } = require('../util');
 
-const list = [{
-    app: zhongqing,
-    last: 1000 * 60 * 300
-}, {
-    app: zhongqing1,
-    last: 1000 * 60 * 50
-}];
+// const list = [{
+//     app: tou2,
+//     last: 1000 * 60 * 300
+// }];
+
 schedueList = [];
+const list = []
+
+async function aa(i) {
+    if (i < 20) {
+        await zhongqing.controller.click(500, 570);
+        await zhongqing.controller.wait(63000);
+        await zhongqing.controller.back();
+        await zhongqing.controller.wait(1000);
+        aa(i + 1);
+    }
+}
+aa(0)
 
 module.exports = () => doAllSchedule(list, schedueList);

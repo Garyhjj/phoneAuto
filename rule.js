@@ -51,7 +51,6 @@ module.exports = {
     summary: 'my customized rule for AnyProxy',
     // 发送请求前拦截处理
     * beforeSendRequest(requestDetail) {
-        console.log(requestDetail.url);
         const url = requestDetail.url;
         if (url.indexOf('http://rpnews.itaoxiaoshuo.com//auth/start_video_playing.do') > -1) {
             const pas = url.slice(url.indexOf('?') + 1);

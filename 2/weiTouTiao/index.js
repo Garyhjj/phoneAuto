@@ -32,10 +32,10 @@ function nextTitle() {
 }
 
 function nextPaper() {
-    return controller.swipe(400, 350, 400, 900, 800);
+    return controller.swipe(400, 950, 400, 100, 800);
 }
 async function enterPaper(is = true) {
-    await controller.click(400, 350);
+    await controller.click(400, 540);
     await wait(2000);
     if (!is) {
         return;
@@ -80,7 +80,7 @@ async function work(is = true) {
         await wait(2000);
         read = 0;
     }
-    await controller.swipe(400, 350, 400, 900, 800);
+    await nextPaper();
     await wait(2000);
     await enterPaper(is);
     await wait(1000);
@@ -92,14 +92,14 @@ async function work(is = true) {
             hasStop = true;
             return;
         };
-        await wait(2000);
+        await wait(3000);
         await controller.swipe(400, 500, 400, 350, 200);
         i++;
-        if (i < 60) {
+        if (i < 80) {
             aa1()
         } else {
             await wait(1000);
-            await controller.click(50, 70);
+            await leavePaper(is);
             await wait(1000);
             read++;
             work(is);
@@ -113,7 +113,7 @@ async function work(is = true) {
         await wait(2000);
         await controller.swipe(400, 350, 400, 500, 200);
         i++;
-        if (i < 60) {
+        if (i < 80) {
             aa()
         } else {
             await wait(1000);
@@ -138,24 +138,24 @@ async function openApp() {
     await controller.click(400, 700);
 }
 async function begin() {
-    const isMain = await controller.isMainPage();
-    if (!isMain) {
-        await controller.openApp();
-        await wait(8000);
-        await controller.back();
-        await wait(5000);
-    } else {
-        controller.setOnTask();
-    }
-    controller.startIntervalCheckExit();
-    controller.miOnAppGoFront(async () => {
-        if (hasStop) {
-            await wait(3000);
-            work();
-        }
-    });
-    work();
-    // work(false)
+    // const isMain = await controller.isMainPage();
+    // if (!isMain) {
+    //     await controller.openApp();
+    //     await wait(8000);
+    //     await controller.back();
+    //     await wait(5000);
+    // } else {
+    //     controller.setOnTask();
+    // }
+    // controller.startIntervalCheckExit();
+    // controller.miOnAppGoFront(async () => {
+    //     if (hasStop) {
+    //         await wait(3000);
+    //         work();
+    //     }
+    // });
+    // work();
+    work(false)
 }
 // controller.click(400, 500);
 // begin();

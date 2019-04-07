@@ -12,8 +12,8 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 let list = [{
-    app:  tou2,
-    last: 1000 * 60 * 300
+    app:  tou,
+    last: 1000 * 60 * 90
 }];
 
 schedueList = [];
@@ -21,12 +21,15 @@ schedueList = [];
 
 
 
-async function aa(i) {
+async function aa(i, isSub) {
     
     if(i > 18) {
         return
     }
-    await zhongqing.controller.click(100, 570);
+    await  zhongqing.controller.wait(2000);
+    await zhongqing.controller.click(700, isSub?760:360);
+    await  zhongqing.controller.wait(3000);
+    await zhongqing.controller.click(500, isSub?970:570);
     await  zhongqing.controller.wait(3000);
     const upDown = async (j) => {
         await zhongqing.controller.swipe(350, 770,350, 270,600);
@@ -45,13 +48,13 @@ async function aa(i) {
     await zhongqing.controller.click(700, 230);
     await zhongqing.controller.wait(800);
     await zhongqing.controller.click(700, 330);
-    await  zhongqing.controller.wait(1500);
+    await zhongqing.controller.wait(1500);
     await upDown(1);
 
     await zhongqing.controller.back();
     await zhongqing.controller.wait(800);
     await zhongqing.controller.click(130, 50);
-    await zhongqing.controller.wait(1500);;
+    await zhongqing.controller.wait(1500);
     return aa(i+1)
     
     // if (i < 40) {
@@ -116,23 +119,50 @@ async function aa1(i, site) {
     //     aa(i + 1);
     // }
 }
-const ls = [[100, 170],[500, 170],[100, 240],[500, 240],[100, 360],[500, 360],[100, 490],[500, 490], [100, 630], [500, 630],[100, 780],[500, 780], [100, 930], [500, 930]
+const ls = [[100, 170],[500, 170],[100, 240],[500, 240],[100, 360],
+[500, 360],[100, 510],[500, 510], [100, 630], [500, 630],[100, 780],
+[500, 780], [100, 930], [500, 930]
 ,[100, 1080], [500, 1080],[100, 1160], [500, 1160]];
 
 
-
-const beginReading = async () => {
-    let lg = ls.length -6;
+const backToMain =async () => {
+    const ctr = zhongqing.controller;
+    let i = 3;
+    while(i --) {
+        await ctr.back();
+        await ctr.wait(2000)
+    }
+    await ctr.click(150, 50);
+    await ctr.wait(2000);
+    await ctr.click(100, 1240);
+    await ctr.wait(1000);
+    await doAllSchedule([{
+        app:  zhongqing,
+        last: 1000 * 60 * 130
+    }], schedueList);
+}
+const beginReading = async (last) => {
+    let lg = ls.length;
     while(lg --) {
         await aa1(0,ls[lg]);
         await zhongqing.controller.wait(3000);
     }
+    if(last) {
+        return;
+    }
+    backToMain();
+    // await zhongqing.controller.swipe(350, 1160,350, 170,900);
+    // await zhongqing.controller.wait(3000);
+    // await beginReading(true)
 }
 
-list = []
-beginReading();
+ 
 
-// aa(0)
+// list = []
+// backToMain();
+// beginReading();
+
+// aa(0,true)
 
 
 module.exports = () => doAllSchedule(list, schedueList);

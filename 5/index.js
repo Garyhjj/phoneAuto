@@ -141,13 +141,13 @@ const ls = [
 
 
 const beginReading = async () => {
-  let lg = ls.length-1;
+  let lg = ls.length;
   while (lg--) {
     await aa1(0, ls[lg]);
     await zhongqing.controller.wait(1000);
   }
 }
-// beginReading();
+beginReading();
 
-aa(0)
+// aa(0)
 module.exports = () => doAllSchedule(list, schedueList);

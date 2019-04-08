@@ -12,8 +12,8 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 let list = [{
-    app:  tou2,
-    last: 1000 * 60 * 300
+    app:  zhongqing,
+    last: 1000 * 60 * 135
 }];
 
 schedueList = [];
@@ -122,15 +122,15 @@ const ls = [[100, 170],[500, 170],[100, 240],[500, 240],[100, 360],[500, 360],[1
 
 
 const beginReading = async () => {
-    let lg = ls.length -6;
+    let lg = ls.length -10;
     while(lg --) {
         await aa1(0,ls[lg]);
         await zhongqing.controller.wait(3000);
     }
 }
 
-list = []
-beginReading();
+// list = []
+// beginReading();
 
 // aa(0)
 

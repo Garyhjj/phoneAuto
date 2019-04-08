@@ -64,7 +64,10 @@ function updateNowApp(phone) {
 }
 
 
-function promiseFlow(fn) {
+function promiseFlow(fn, isWait) {
+    if(typeof promiseFlow.before === 'function') {
+        promiseFlow.before(isWait);
+    }
     if (typeof fn === 'function') {
         return new Promise((resolve, reject) => {
             promiseFlow.list.push({
@@ -294,7 +297,20 @@ class PhoneController {
     }
 
     wait(n) {
-        return promiseFlow(() => wait(n));
+        promiseFlow.before = promiseFlow.before || ((isWait) => {
+            if(!isWait) {
+                promiseFlow.lastWaitN = 0;
+            }
+        })
+        const last = promiseFlow.lastWaitN;
+        if(last) {
+            n = n - last;
+        }
+        if(n <=0) {
+            return Promise.resolve('');
+        }
+        promiseFlow.lastWaitN = n;
+        return promiseFlow(() => wait(n),true);
     }
 
     miScheduleJob(beforeDo, afterDo) {

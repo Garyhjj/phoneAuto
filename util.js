@@ -341,22 +341,22 @@ async function doAllSchedule(appList, schedueList) {
     }
     let target;
     let timeID;
-    appList.forEach(l => {
-        const app = l.app,
-            controller = app.controller;
-        controller.miBeforeClose(() => {
-            controller.log(' closed');
-        });
-        controller.miOnAppGoBackground(() => {
-            clearTimeout(timeID);
-            controller.log(' go back')
-            timeID = setTimeout(() => app.begin(), 1000 * 60 * 10);
-        });
-        controller.miOnAppGoFront(() => {
-            clearTimeout(timeID);
-            controller.log(' go front')
-        });
-    })
+    // appList.forEach(l => {
+    //     const app = l.app,
+    //         controller = app.controller;
+    //     controller.miBeforeClose(() => {
+    //         controller.log(' closed');
+    //     });
+    //     controller.miOnAppGoBackground(() => {
+    //         clearTimeout(timeID);
+    //         controller.log(' go back')
+    //         timeID = setTimeout(() => app.begin(), 1000 * 60 * 10);
+    //     });
+    //     controller.miOnAppGoFront(() => {
+    //         clearTimeout(timeID);
+    //         controller.log(' go front')
+    //     });
+    // })
     schedueList.forEach((c) => {
         c.miScheduleJob(async () => {
             if ((target && target.app.controller === c)) {

@@ -186,7 +186,7 @@ function lauchDuoFu() {
   sleep(10000);
 }
 
-function duofuReading() {
+function duofuReading(rt) {
   var read = (i) => {
     i = i || 1;
     oneUpDown(3000);

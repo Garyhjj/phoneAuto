@@ -14,9 +14,13 @@ var swipe1 = (x1, y1, x2, y2) => {
 }
 
 const oneUpDown = (sl) => {
-  ra.swipe(350, 770, 350, 270, 600);
+  ra.swipe(350, 770, 350, 270, 600, 2);
+  sleep(600);
+  click1(350, 120);
   sleep(sl || 400);
-  ra.swipe(350, 270, 350, 770, 600);
+  ra.swipe(350, 270, 350, 770, 600, 2);
+  sleep(600);
+  click1(350, 120);
 }
 
 const oneHour = 1000 * 60 * 60;
@@ -24,9 +28,7 @@ const oneHour = 1000 * 60 * 60;
 var zhongqingReading = (function () {
   var read = (i) => {
     i = i || 1;
-    swipe1(300, 700, 300, 400);
-    sleep(3000);
-    swipe1(300, 400, 300, 700);
+    oneUpDown(3000);
     if (i < 50) {
       sleep(3000);
       read(i + 1);
@@ -42,26 +44,29 @@ var zhongqingReading = (function () {
     click1(50, 70);
   }
   var start
-  var work = () => {
+  var work = (readTime) => {
+    console.log(Date.now(), start, readTime)
     enterP();
     sleep(3000);
-    click1(715, 300);
+    // click1(715, 300);
     sleep(1000);
     read();
     leave();
     sleep(1000);
     refresh();
     sleep(2000);
-    if (Date.now() - start < oneHour * 2) {
-      return work();
+    readTime = readTime || 2.2
+    if (readTime <= 0) {
+      readTime = 2;
+    }
+    if (Date.now() - start < 1000 * 60 * 60 * readTime) {
+      return work(readTime);
     }
   }
 
-  return function () {
-    if (!start) {
-      start = Date.now();
-    }
-    work();
+  return function (rt) {
+    start = Date.now();
+    work(rt);
   }
 })();
 
@@ -84,9 +89,9 @@ var zhongqingSearch = (function () {
       }
     }
 
-    click1(700, 460);
-    sleep(1000);
-    click1(700, 470);
+    click1(700, 260);
+    sleep(2000);
+    click1(700, 270);
     sleep(2000);
     upDown(0);
 
@@ -115,17 +120,19 @@ var zhongqingKanKan = (function () {
     sleep(3000);
     const changeSite = (y) => {
       if (y > 0) {
-        ra.swipe(350, 870, 350, 270, 700);
+        ra.swipe(350, 870, 350, 270, 700, 2);
+        sleep(600);
+        click1(350, 120);
         sleep(800);
         return changeSite(y - 1)
       }
     }
-    click1(715, 350)
+    // click1(715, 350)
     changeSite(i);
     click1(300, 600);
     sleep(3000);
-    click1(715, 350, 1);
-    sleep(1000);
+    // click1(715, 350, 1);
+    // sleep(1000);
     const upDown = (j) => {
       oneUpDown(3000);
       if (j > 2) {
@@ -134,7 +141,7 @@ var zhongqingKanKan = (function () {
         return upDown(j + 1)
       }
     }
-    upDown(0);
+    upDown(1);
     back();
     sleep(2000);
     click1(150, 50);
@@ -155,25 +162,78 @@ var zhongqingKanKan = (function () {
     }
   }
 
-  return function beginReading(last, from) {
+  function beginReading(last, from) {
     formatLs(last ? 6 : 9);
-    var lg = ls.length;
-    sleep(2000);
     from = from || 0;
-    while (lg-- > from) {
+    var lg = ls.length - from;
+    sleep(2000);
+    while (lg--) {
       aa1(0, ls[lg]);
-      sleep(3000);
-      break;
+      sleep(15000);
     }
-    return;
-    ra.swipe(500, 1200, 500, 140, 800);
+    if (last) {
+      return;
+    }
+    ra.swipe(500, 1200, 500, 140, 800, 2);
+    sleep(2000);
+    click1(250, 100);
+    sleep(1000);
     sleep(3000);
     beginReading(true)
   }
+  return beginReading
+})()
+var zhongqingTool = (function () {
+  function backToMain() {
+    let i = 3;
+    while (i--) {
+      back();
+      sleep(2000)
+    }
+    click1(150, 50);
+    sleep(2000);
+    click1(100, 1240);
+    sleep(2000);
+  }
+  var intoZhongqingKankan = () => {
+    click1(700, 1200);
+    sleep(2000);
+    click1(130, 530);
+    sleep(8000);
+    click1(460, 760);
+    sleep(6000);
+  }
+  var intoZhongqingSearch = () => {
+    click1(700, 1200);
+    sleep(2000);
+    click1(130, 530);
+    sleep(8000);
+    click1(560, 760);
+    sleep(6000);
+  }
+  return {
+    backToMain: backToMain,
+    intoZhongqingKankan: intoZhongqingKankan,
+    intoZhongqingSearch: intoZhongqingSearch,
+    open: function (isClone) {
+      launchApp("中青看点");
+      sleep(2000);
+      click1(isClone ? 550 : 250, 900);
+      sleep(1000);
+      click1(600, 1160);
+      sleep(25000);
+      back();
+      sleep(4000);
+      back();
+      sleep(4000);
+    }
+  }
 })()
 
-var zhongqingKankanBefore = () => {
-  ra.swipe(500, 600, 500, 100, 800);
+var zhongqingKankanBefore = (hasTop) => {
+  // click1(250, 400);
+  // sleep(2000);
+  ra.swipe(500, hasTop ? 460 : 600, 500, 100, 800, 2);
   sleep(2000);
   click1(250, 100);
   sleep(1000);
@@ -186,22 +246,39 @@ var zhongqingShiPing = (function () {
       return;
     }
     click1(680, 220);
-    sleep(1000 * 60 * 55);
+    sleep(1000 * 55);
     click1(680, 80);
-    sleep(1000 * 60 * 55);
-    return dd(i++)
+    sleep(1000 * 68);
+    return dd(ih + 1);
   }
 })()
 
 
 var hongbaoMainReading = (function () {
   function nextTitle() {
-    ra.swipe(700, 500, 100, 520, 200);
+    ra.swipe(700, 500, 20, 520, 300, 2);
+    sleep(600);
+    click1(300, 120);
+    sleep(1000);
+  }
+
+  function refresh() {
+    ra.swipe(400, 350, 400, 900, 800, 2);
+    sleep(600);
+    click1(300, 120);
+    sleep(1000);
   }
 
   function nextPaper() {
     // return controller.swipe(500, 400, 520, 70, 500);
     ra.swipe(400, 350, 400, 900, 800);
+  }
+
+  function readone() {
+    ra.swipe(400, 500, 400, 350, 200, 2);
+    sleep(600);
+    click1(300, 120);
+    sleep(2000);
   }
 
   function enterPaper() {
@@ -214,9 +291,10 @@ var hongbaoMainReading = (function () {
   return function work(last) {
     if (!start) {
       start = Date.now();
+      nextTitle();
     }
     last = last || 1.3;
-    if (Date.now() - start > oneHour * last) {
+    if (Date.now() - start > 1000 * 60 * 60 * last) {
       return;
     }
     if (read > maxRead) {
@@ -224,44 +302,107 @@ var hongbaoMainReading = (function () {
       sleep(2000);
       read = 0;
     }
-    ra.swipe(400, 350, 400, 900, 800);
+    refresh();
     sleep(2000);
     enterPaper();
     sleep(1000);
-    aa();
-    var i = 1;
+    aa(0);
 
-    async function aa() {
+    function aa(l) {
       sleep(2000);
-      ra.swipe1(400, 500, 400, 350, 200);
-      i++;
-      if (i < 13) {
-        aa()
+      readone();
+      if (l < 7) {
+        aa(l + 1)
       } else {
         sleep(1000);
-        leavePaper();
+        back();
         sleep(1000);
         read++;
-        work();
+        work(last);
       }
     }
   }
 })();
 
 var hongbaoLauch = function (isClone) {
-  launch("红包头条");
+  launchApp("红包头条");
   sleep(2000);
-  click1(isClone ? 550 : 250, 900)
+  click1(isClone ? 550 : 250, 900);
+  sleep(1500);
+  click1(600, 1160);
+  sleep(10000);
+}
+
+function zhongqingJob(opts) {
+  opts = opts || {
+
+  }
+  var isClone = opts.isClone;
+  var open = opts.open;
+  var reading = opts.reading;
+  var search = opts.search;
+  var kankan = opts.kankan;
+  if (open) {
+    zhongqingTool.open(isClone);
+  }
+  if (reading > 0) {
+    zhongqingReading(reading);
+  }
+
+  if (search) {
+    zhongqingTool.intoZhongqingSearch();
+    zhongqingSearch();
+  }
+  if (kankan) {
+    if (search) {
+      zhongqingTool.backToMain();
+    }
+    zhongqingTool.intoZhongqingKankan();
+    var shiPing = kankan.shiPing;
+    if (shiPing) {
+      zhongqingShiPing();
+    }
+    var subKankan = kankan.subKankan || false;
+    var from = kankan.from || 0;
+    zhongqingKankanBefore(true);
+    zhongqingKanKan(subKankan, from);
+  }
 }
 
 function begin() {
   sleep(2000);
-  //   zhongqingKankanBefore();
-  //   zhongqingKanKan();
-  zhongqingReading();
-  //   zhongqingShiPing();
-  //   zhongqingSearch(true);
-  // hongbaoMainReading()
+  zhongqingJob({
+    open: true,
+    reading: 2
+  });
+  hongbaoLauch();
+  hongbaoMainReading(1.3);
+  zhongqingJob({
+    isClone: true,
+    open: true,
+    reading: 2
+  })
+  hongbaoLauch();
+  hongbaoMainReading(0.15);
+  zhongqingJob({
+    open: true,
+    search: true,
+    kankan: {
+      shiPing: true,
+    }
+  });
+  hongbaoLauch();
+  hongbaoMainReading(0.15);
+  zhongqingJob({
+    isClone: true,
+    open: true,
+    search: true,
+    kankan: {
+      shiPing: true,
+    }
+  });
+  hongbaoLauch();
+  hongbaoMainReading(0.15);
 }
 
 begin();

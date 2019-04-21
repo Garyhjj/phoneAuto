@@ -23,9 +23,9 @@ async function aa(i) {
   if (i > 18) {
     return
   }
-  await zhongqing.controller.click(1000, 430);
+  // await zhongqing.controller.click(1000, 430);
   await zhongqing.controller.wait(1500);
-  await zhongqing.controller.click(100, 570);
+  await zhongqing.controller.click(200, 570);
   await zhongqing.controller.wait(3000);
   const upDown = async (j) => {
     await zhongqing.controller.swipe(350, 770, 350, 270, 800);
@@ -147,7 +147,18 @@ const beginReading = async () => {
     await zhongqing.controller.wait(1000);
   }
 }
-beginReading();
+// beginReading();
 
-// aa(0)
+// (async () => {await aa(0);await aa(2, true)})();
+
+async function puyu() {
+  const ctr = zhongqing.controller;
+  await ctr.click(300,Math.floor(Math.random() * 400) + 200);
+  await ctr.wait(1000);
+  await ctr.click(1700,Math.floor(Math.random() * 400) + 200);
+  await ctr.wait(1000);
+  return puyu()
+}
+
+puyu()
 module.exports = () => doAllSchedule(list, schedueList);

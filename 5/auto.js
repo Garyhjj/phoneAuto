@@ -5,7 +5,6 @@ function begin() {
   zhongqingJob();
   lauchJu();
   juReading();
-  // click(1000,540);
 }
 
 begin();
@@ -14,7 +13,8 @@ function zhongqingJob() {
   //   zhongqingReading();
   lauchZQ();
   zhongqingReading();
-  // zhongqingSearch();
+  // zhongqingSearch(true);
+  // zhongqingKankan();
 }
 
 function zhongqingReading(rt) {
@@ -40,7 +40,6 @@ function zhongqingReading(rt) {
     console.log(Date.now(), start, readTime)
     enterP();
     sleep(3000);
-    // click1(715, 300);
     sleep(1000);
     read();
     if (click('查看详情')) {
@@ -67,14 +66,16 @@ function zhongqingReading(rt) {
 
 function zhongqingSearch(isSub) {
   function aa(i, isSub) {
-
     if (i > 10) {
       return
     }
 
     sleep(3000);
-    click(500, isSub ? 1170 : 670);
-    sleep(5000);
+    click(500, isSub ? 1200 : 670);
+    while(!click('搜索') && !click('百度一下')) {
+      sleep(1000);
+    }
+    sleep(3000);
     const upDown = (j) => {
       oneUpDown(2000)
       if (j > 1) {
@@ -85,9 +86,14 @@ function zhongqingSearch(isSub) {
     }
     upDown(1);
     sleep(2000);
-    click(1000, 330);
-    sleep(1000);
-    click(700, 530);
+    swipe(500,300,500,1000,500);
+    sleep(3000);
+    if(click('搜索')) {
+
+    }else {
+      sleep(1000);
+      click('百度一下')
+    }
     sleep(2000);
     upDown(1);
 
@@ -108,12 +114,20 @@ function zhongqingkankanBefore() {
     sleep(1000);
 }
 function zhongqingKankan(l, f) {
-    function aa1(i, site) {
-        if (i > 6) {
+    function aa1(i, btn) {
+        if (i > 9) {
           return
         }
-        click(site[0], site[1]);
-        sleep(3000);
+        btn.click();
+        var waitTime = 0;
+        while(!textContains('青豆').exists()) {
+          sleep(2000)
+          waitTime = waitTime + 1;
+          if(waitTime > 12) {
+            break;
+          }
+        }
+        sleep(2000)
         const changeSite = (y) => {
           if (y > 0) {
             swipe(350, 870, 350, 270, 700);
@@ -133,11 +147,18 @@ function zhongqingKankan(l, f) {
           }
         }
         upDown(2);
+        var done;
+        if(textContains('青豆奖励').exists()) {
+          done = true;
+        }
         back();
         sleep(2000);
-        click1(230, 100);
-        sleep(2000);;
-        return aa1(i + 1, site)
+        click(230, 100);
+        sleep(2000);
+        if(done) {
+          return;
+        }
+        return aa1(i + 1,btn)
       }
     
       const ls = [];
@@ -152,23 +173,24 @@ function zhongqingKankan(l, f) {
           ls.push([900, y]);
         }
       }
-      function beginReading(last, from) {
-        formatLs(last ? 6 : 9);
-        from = from || 0;
-        var lg = ls.length - from;
-        sleep(2000);
-        while (lg--) {
-          aa1(0, ls[lg]);
-          sleep(7000);
+      var readingTime = 0;
+      function beginReading() {
+        var target = text('去完成').findOne(6000);
+        if(!target) {
+          target = text('进行中').findOne(6000);
         }
-        if(last) {
+        if(!target) {
           return;
         }
-        swipe(500, 1200, 500, 140, 800);
-        sleep(3000);
-        beginReading(true)
+        aa1(0, target);
+        sleep(2000);
+        readingTime = readingTime + 1;
+        if(readingTime > 60) {
+          return;
+        }
+        return beginReading()
       }
-      return beginReading(l, f)
+      return beginReading()
 }
 
 function lauchZQ() {
@@ -214,7 +236,7 @@ function duofuReading(rt) {
     sleep(1000);
     refresh();
     sleep(2000);
-    readTime = readTime || 2
+    readTime = readTime || 2.2
     if (readTime <= 0) {
       readTime = 2;
     }
@@ -239,7 +261,7 @@ function juReading(rt) {
   var read = (i) => {
     i = i || 1;
     oneUpDown(3000);
-    if (i < 27) {
+    if (i < 15) {
       sleep(3000);
       read(i + 1);
     }
@@ -268,7 +290,7 @@ function juReading(rt) {
     // }
     sleep(1000);
     refresh();
-    sleep(2000);
+    sleep(4000);
     readTime = readTime || 2.2
     if (readTime <= 0) {
       readTime = 2;

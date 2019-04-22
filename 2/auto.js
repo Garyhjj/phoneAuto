@@ -89,11 +89,11 @@ var zhongqingSearch = (function () {
       }
     }
 
-    click1(700, 260);
+    click1(630, 420);
     sleep(2000);
-    click1(700, 270);
+    click1(630, 420)
     sleep(2000);
-    upDown(0);
+    upDown(2);
 
     back();
     sleep(1000);
@@ -350,7 +350,7 @@ function zhongqingJob(opts) {
   }
 
   if (search) {
-    zhongqingTool.intoZhongqingSearch();
+    // zhongqingTool.intoZhongqingSearch();
     zhongqingSearch();
   }
   if (kankan) {
@@ -373,14 +373,14 @@ function begin() {
   sleep(2000);
   zhongqingJob({
     open: true,
-    reading: 2
+    reading: 2.2
   });
   hongbaoLauch();
   hongbaoMainReading(1.3);
   zhongqingJob({
     isClone: true,
     open: true,
-    reading: 2
+    reading: 2.2
   })
   hongbaoLauch();
   hongbaoMainReading(0.15);

@@ -328,7 +328,7 @@ var hongbaoLauch = function (isClone) {
   launchApp("红包头条");
   sleep(2000);
   click1(isClone ? 550 : 250, 900);
-  sleep(1500);
+  sleep(1000);
   click1(600, 1160);
   sleep(10000);
 }

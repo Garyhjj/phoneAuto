@@ -188,7 +188,7 @@ var zhongqingTool = (function () {
     let i = 3;
     while (i--) {
       back();
-      sleep(2000)
+      sleep(3000)
     }
     click1(150, 50);
     sleep(2000);
@@ -326,10 +326,10 @@ var hongbaoMainReading = (function () {
 
 var hongbaoLauch = function (isClone) {
   launchApp("红包头条");
-  sleep(2000);
-  click1(isClone ? 550 : 250, 900);
-  sleep(1000);
-  click1(600, 1160);
+  // sleep(2000);
+  // click1(isClone ? 550 : 250, 900);
+  // sleep(1000);
+  // click1(600, 1160);
   sleep(10000);
 }
 
@@ -350,7 +350,7 @@ function zhongqingJob(opts) {
   }
 
   if (search) {
-    // zhongqingTool.intoZhongqingSearch();
+    zhongqingTool.intoZhongqingSearch();
     zhongqingSearch();
   }
   if (kankan) {
@@ -368,9 +368,59 @@ function zhongqingJob(opts) {
     zhongqingKanKan(subKankan, from);
   }
 }
+var souhuReading = (function () {
+  function nextTitle() {
+    ra.swipe(700, 500, 20, 520, 300, 2);
+    sleep(600);
+    click1(300, 30);
+    sleep(1000);
+  }
+  var read = (i) => {
+    i = i || 1;
+    oneUpDown(3000);
+    if (i < 13) {
+      sleep(3000);
+      read(i + 1);
+    }
+  }
+  var refresh = () => {
+    click1(50, 1200);
+  }
+  var enterP = () => {
+    click1(300, 490);
+  }
+  var leave = () => {
+    back();
+  }
+  var start
+  var work = (readTime) => {
+    enterP();
+    sleep(3000);
+    // click1(715, 300);
+    sleep(1000);
+    read();
+    leave();
+    sleep(1000);
+    refresh();
+    sleep(2000);
+    readTime = readTime || 1.5
+    if (readTime <= 0) {
+      readTime = 2;
+    }
+    if (Date.now() - start < 1000 * 60 * 60 * readTime) {
+      return work(readTime);
+    }
+  }
 
+  return function (rt) {
+    start = Date.now();
+    nextTitle();
+    work(rt);
+  }
+})();
 function begin() {
-  sleep(2000);
+  sleep(5000);
+  souhuReading();
   zhongqingJob({
     open: true,
     reading: 2.2
@@ -382,27 +432,27 @@ function begin() {
     open: true,
     reading: 2.2
   })
-  hongbaoLauch();
-  hongbaoMainReading(0.15);
-  zhongqingJob({
-    open: true,
-    search: true,
-    kankan: {
-      shiPing: true,
-    }
-  });
-  hongbaoLauch();
-  hongbaoMainReading(0.15);
-  zhongqingJob({
-    isClone: true,
-    open: true,
-    search: true,
-    kankan: {
-      shiPing: true,
-    }
-  });
-  hongbaoLauch();
-  hongbaoMainReading(0.15);
+  // hongbaoLauch();
+  // hongbaoMainReading(0.15);
+  // zhongqingJob({
+  //   open: true,
+  //   search: true,
+  //   kankan: {
+  //     shiPing: true,
+  //   }
+  // });
+  // hongbaoLauch();
+  // hongbaoMainReading(0.15);
+  // zhongqingJob({
+  //   isClone: true,
+  //   open: true,
+  //   search: true,
+  //   kankan: {
+  //     shiPing: true,
+  //   }
+  // });
+  // hongbaoLauch();
+  // hongbaoMainReading(0.15);
 }
 
 begin();

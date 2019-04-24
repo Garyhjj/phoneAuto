@@ -216,12 +216,14 @@ var zhongqingTool = (function () {
     intoZhongqingKankan: intoZhongqingKankan,
     intoZhongqingSearch: intoZhongqingSearch,
     open: function (isClone) {
+      home();
+      sleep(2000);
+      home();
+      sleep(2000);
       launchApp("中青看点");
       sleep(2000);
       click1(isClone ? 550 : 250, 900);
-      sleep(1000);
-      click1(600, 1160);
-      sleep(25000);
+      sleep(20000);
       back();
       sleep(4000);
       back();
@@ -231,8 +233,6 @@ var zhongqingTool = (function () {
 })()
 
 var zhongqingKankanBefore = (hasTop) => {
-  // click1(250, 400);
-  // sleep(2000);
   ra.swipe(500, hasTop ? 460 : 600, 500, 100, 800, 2);
   sleep(2000);
   click1(250, 100);
@@ -270,7 +270,6 @@ var hongbaoMainReading = (function () {
   }
 
   function nextPaper() {
-    // return controller.swipe(500, 400, 520, 70, 500);
     ra.swipe(400, 350, 400, 900, 800);
   }
 
@@ -325,12 +324,14 @@ var hongbaoMainReading = (function () {
 })();
 
 var hongbaoLauch = function (isClone) {
+  home();
+  sleep(2000);
+  home();
+  sleep(8000);
   launchApp("红包头条");
-  // sleep(2000);
-  // click1(isClone ? 550 : 250, 900);
-  // sleep(1000);
-  // click1(600, 1160);
   sleep(10000);
+  back();
+  sleep(3000);
 }
 
 function zhongqingJob(opts) {
@@ -403,7 +404,7 @@ var souhuReading = (function () {
     sleep(1000);
     refresh();
     sleep(2000);
-    readTime = readTime || 1.5
+    readTime = readTime || 1.1
     if (readTime <= 0) {
       readTime = 2;
     }
@@ -420,27 +421,27 @@ var souhuReading = (function () {
 })();
 function begin() {
   sleep(5000);
-  souhuReading();
-  zhongqingJob({
-    open: true,
-    reading: 2.2
-  });
-  hongbaoLauch();
-  hongbaoMainReading(1.3);
-  zhongqingJob({
-    isClone: true,
-    open: true,
-    reading: 2.2
-  })
-  // hongbaoLauch();
-  // hongbaoMainReading(0.15);
+  // souhuReading();
   // zhongqingJob({
   //   open: true,
-  //   search: true,
-  //   kankan: {
-  //     shiPing: true,
-  //   }
+  //   reading: 2.2
   // });
+  hongbaoLauch();
+  hongbaoMainReading(0.8);
+  // zhongqingJob({
+  //   isClone: true,
+  //   open: true,
+  //   reading: 2.2
+  // })
+  // hongbaoLauch();
+  // hongbaoMainReading(0.15);
+  zhongqingJob({
+    open: true,
+    search: true,
+    kankan: {
+      shiPing: true,
+    }
+  });
   // hongbaoLauch();
   // hongbaoMainReading(0.15);
   // zhongqingJob({

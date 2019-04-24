@@ -58,13 +58,14 @@ function eastReading(rt) {
 }
 
 function zhongqingJob() {
-  //   zhongqingReading();
-  // lauchZQ();
-  // zhongqingReading();
-  // backToMainZhongQing()
-  // intoZhongQingRenWu(2);
-  zhongqingSearch(true);
-  // zhongqingKankan();
+  lauchZQ();
+  zhongqingReading();
+  intoZhongQingRenWu(1);
+  zhongqingKankan();
+  backToMainZhongQing()
+  intoZhongQingRenWu(2);
+  zhongqingSearch();
+  // 
   // click('搜索赚')
 }
 function backToMainZhongQing() {
@@ -277,6 +278,8 @@ function zhongqingKankan(l, f) {
 }
 
 function lauchZQ() {
+  home();
+  sleep(5000);
   launch('中青看点');
   sleep(15000);
   back();
@@ -332,12 +335,16 @@ function duofuReading(rt) {
 }
 
 function lauchJu() {
+  home();
+  sleep(5000);
   launch('聚看点');
   sleep(15000);
   back();
   sleep(3000);
   click('继续挣钱');
   sleep(2000);
+  back();
+  sleep(3000);
 }
 
 function juReading(rt) {

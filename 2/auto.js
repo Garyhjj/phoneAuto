@@ -421,20 +421,20 @@ var souhuReading = (function () {
 })();
 function begin() {
   sleep(5000);
-  // souhuReading();
-  // zhongqingJob({
-  //   open: true,
-  //   reading: 2.2
-  // });
+  souhuReading();
+  zhongqingJob({
+    open: true,
+    reading: 2.2
+  });
   hongbaoLauch();
-  hongbaoMainReading(0.8);
-  // zhongqingJob({
-  //   isClone: true,
-  //   open: true,
-  //   reading: 2.2
-  // })
-  // hongbaoLauch();
-  // hongbaoMainReading(0.15);
+  hongbaoMainReading(1.3);
+  zhongqingJob({
+    isClone: true,
+    open: true,
+    reading: 2.2
+  })
+  hongbaoLauch();
+  hongbaoMainReading(0.15);
   zhongqingJob({
     open: true,
     search: true,
@@ -442,16 +442,16 @@ function begin() {
       shiPing: true,
     }
   });
-  // hongbaoLauch();
-  // hongbaoMainReading(0.15);
-  // zhongqingJob({
-  //   isClone: true,
-  //   open: true,
-  //   search: true,
-  //   kankan: {
-  //     shiPing: true,
-  //   }
-  // });
+  hongbaoLauch();
+  hongbaoMainReading(0.15);
+  zhongqingJob({
+    isClone: true,
+    open: true,
+    search: true,
+    kankan: {
+      shiPing: true,
+    }
+  });
   // hongbaoLauch();
   // hongbaoMainReading(0.15);
 }

@@ -221,7 +221,7 @@ var zhongqingTool = (function () {
       home();
       sleep(2000);
       launchApp("中青看点");
-      sleep(2000);
+      sleep(9000);
       click1(isClone ? 550 : 250, 900);
       sleep(20000);
       back();

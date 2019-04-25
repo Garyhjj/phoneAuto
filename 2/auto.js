@@ -455,5 +455,7 @@ function begin() {
   // hongbaoLauch();
   // hongbaoMainReading(0.15);
 }
-
+function ca() {
+  return currentActivity()
+}
 begin();

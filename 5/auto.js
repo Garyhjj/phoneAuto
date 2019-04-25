@@ -411,3 +411,7 @@ function launch(name) {
     click('允许');
   }
 }
+
+function ca() {
+  return currentActivity()
+}

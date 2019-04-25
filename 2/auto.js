@@ -1,3 +1,5 @@
+var zhongQing = 'com.weishang.wxrd.activity.MainActivity';
+
 var ra = new RootAutomator();
 events.on('exit', function () {
   ra.exit();
@@ -353,6 +355,9 @@ function zhongqingJob(opts) {
   if (search) {
     zhongqingTool.intoZhongqingSearch();
     zhongqingSearch();
+    if(!inZhongQing()) {
+      zhongqingReading(reading);
+    }
   }
   if (kankan) {
     if (search) {
@@ -362,6 +367,10 @@ function zhongqingJob(opts) {
     var shiPing = kankan.shiPing;
     if (shiPing) {
       zhongqingShiPing();
+    }
+    if(!inZhongQing()) {
+      zhongqingReading(reading);
+      zhongqingTool.intoZhongqingKankan();
     }
     var subKankan = kankan.subKankan || false;
     var from = kankan.from || 0;
@@ -458,4 +467,9 @@ function begin() {
 function ca() {
   return currentActivity()
 }
+
+function inZhongQing() {
+  return ca().indexOf('weishang') > -1
+}
 begin();
+

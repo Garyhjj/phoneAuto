@@ -1,5 +1,6 @@
 var zhongQing = 'weishang.wxrd';
 var juKan = 'xiangzi.jukandian';
+
 function begin() {
   sleep(2000)
   lauchDuoFu();
@@ -27,7 +28,7 @@ function eastReading(rt) {
     swipe(400, 350, 400, 900, 800)
   }
   var enterP = () => {
-    click(400, textContains('恭喜你获得').exists()? 920: 600)
+    click(400, textContains('恭喜你获得').exists() ? 920 : 600)
   }
   var leave = () => {
     back();
@@ -57,20 +58,15 @@ function eastReading(rt) {
 function zhongqingJob() {
   lauchZQ();
   zhongqingReading();
-  if(!inZhongQing()) {
-    lauchZQ();
-  }
   intoZhongQingRenWu(1);
   zhongqingKankan();
   backToMainZhongQing()
-  if(!inZhongQing()) {
-    lauchZQ();
-  }
   intoZhongQingRenWu(2);
   zhongqingSearch();
   // 
   // click('搜索赚')
 }
+
 function backToMainZhongQing() {
   let i = 3;
   while (i--) {
@@ -79,11 +75,12 @@ function backToMainZhongQing() {
   }
   click(230, 100);
   sleep(2000);
-  click(150,1880);
+  click(150, 1880);
   sleep(2000);
 }
+
 function intoZhongQingRenWu(type) {
-  click(980,1880);
+  click(980, 1880);
   sleep(4000);
   click('任务中心');
   var str
@@ -171,12 +168,12 @@ function zhongqingSearch(isSub) {
     sleep(2000);
     swipe(500, 300, 500, 1000, 500);
     sleep(3000);
-    if (click('百度一下',0)) {
+    if (click('百度一下', 0)) {
 
     } else {
       sleep(1000);
-      click(850,320)
-      
+      click(850, 320)
+
     }
     sleep(2000);
     upDown(1);
@@ -264,26 +261,24 @@ function zhongqingKankan(l, f) {
     }
     return beginReading()
   }
-  return () => {
-    var yinyun = text('幸运红包').findOne();
-    if(yinyun) {
-      yinyun.click();
-      sleep(65 *1000);
-      back();
-      sleep(2000);
-      click(230, 100);
-      sleep(2000);
-    }
-    var ls = text('去完成').find();
-    var lg1 = ls.length;
-    while(lg1 --) {
-      beginReading(ls[lg1]);
-    }
-    var ls1 = text('进行中').find();
-    var lg2 = ls1.length;
-    while(lg2 --) {
-      beginReading(ls[lg2]);
-    }
+  var yinyun = text('幸运红包').findOne(3000);
+  if (yinyun) {
+    yinyun.click();
+    sleep(65 * 1000);
+    back();
+    sleep(2000);
+    click(230, 100);
+    sleep(2000);
+  }
+  var ls = text('去完成').find();
+  var lg1 = ls.length;
+  while (lg1--) {
+    beginReading(ls[lg1]);
+  }
+  var ls1 = text('进行中').find();
+  var lg2 = ls1.length;
+  while (lg2--) {
+    beginReading(ls[lg2]);
   }
 }
 
@@ -291,7 +286,7 @@ function lauchZQ() {
   home();
   sleep(5000);
   launch('中青看点');
-  if(!isActivityExists(zhongQing, 15000)) {
+  if (!isActivityExists(zhongQing, 15000)) {
     lauchZQ();
   };
   sleep(15000);
@@ -302,12 +297,12 @@ function lauchZQ() {
 }
 
 function isActivityExists(ac, waitTime) {
-  if(ca().indexOf(ac) > -1) {
+  if (ca().indexOf(ac) > -1) {
     return true;
   }
   var begin = Date.now();
-  while(Date.now() - begin < waitTime) {
-    if(ca().indexOf(ac) > -1) {
+  while (Date.now() - begin < waitTime) {
+    if (ca().indexOf(ac) > -1) {
       return true;
     }
     sleep(2000);
@@ -363,7 +358,7 @@ function lauchJu() {
   home();
   sleep(5000);
   launch('聚看点');
-  if(!isActivityExists(juKan, 15000)) {
+  if (!isActivityExists(juKan, 15000)) {
     lauchJu();
   };
   sleep(15000);
@@ -404,7 +399,7 @@ function juReading(rt) {
     if (click('关闭广告')) {
       sleep(2000);
     }
-    if(textContains('继续赚钱').exists()) {
+    if (textContains('继续赚钱').exists()) {
       textContains('继续赚钱').findOne().click();
       sleep(1500);
     }
@@ -437,7 +432,7 @@ function launch(name) {
   if (name) {
     launchApp(name);
     sleep(1500);
-    click('允许');
+    click('允许', 1);
   }
 }
 

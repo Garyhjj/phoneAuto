@@ -147,7 +147,7 @@ var zhongqingKanKan = (function () {
     back();
     sleep(2000);
     click1(150, 50);
-    sleep(2000);;
+    sleep(10000);;
     return aa1(i + 1, site)
   }
 
@@ -171,7 +171,7 @@ var zhongqingKanKan = (function () {
     sleep(2000);
     while (lg--) {
       aa1(0, ls[lg]);
-      sleep(15000);
+      sleep(20000);
     }
     if (last) {
       return;
@@ -355,9 +355,6 @@ function zhongqingJob(opts) {
   if (search) {
     zhongqingTool.intoZhongqingSearch();
     zhongqingSearch();
-    if(!inZhongQing()) {
-      zhongqingReading(reading);
-    }
   }
   if (kankan) {
     if (search) {
@@ -367,10 +364,6 @@ function zhongqingJob(opts) {
     var shiPing = kankan.shiPing;
     if (shiPing) {
       zhongqingShiPing();
-    }
-    if(!inZhongQing()) {
-      zhongqingReading(reading);
-      zhongqingTool.intoZhongqingKankan();
     }
     var subKankan = kankan.subKankan || false;
     var from = kankan.from || 0;

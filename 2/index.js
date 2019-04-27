@@ -12,7 +12,7 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 let list = [{
-    app:  tou,
+    app:  tou2,
     last: 1000 * 60 * 150
 }];
 
@@ -177,7 +177,7 @@ const beginReading = async (last) => {
 
 const shipingGuangGao = async (i) => {
     i = i || 0;
-    if(i > 10) {
+    if(i > 20) {
         return;
     }
     await zhongqing.controller.click(680,220);

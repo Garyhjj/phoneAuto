@@ -1,5 +1,6 @@
-var util = require('../util.js');
-var oneUpDown = util.oneUpDown;
+
+sleep(5000);
+zhongqingReading();
 function zhongqingReading(rt) {
     var read = (i) => {
       i = i || 1;
@@ -44,5 +45,8 @@ function zhongqingReading(rt) {
     start = Date.now();
     work(rt);
   }
-  // zhongqingReading();
-module.exports = zhongqingReading
+  function oneUpDown(sl) {
+    swipe(350, 770, 350, 270, 800);
+    sleep(sl || 1000);
+    swipe(350, 270, 350, 770, 800);
+  }

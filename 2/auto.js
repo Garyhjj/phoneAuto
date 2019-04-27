@@ -11,10 +11,6 @@ var click1 = (x, y) => {
   ra.tap(x, y, 1);
 }
 
-var swipe1 = (x1, y1, x2, y2) => {
-  ra.swipe(x1, y1, x2, y2);
-}
-
 const oneUpDown = (sl) => {
   ra.swipe(350, 770, 350, 270, 600, 2);
   sleep(600);
@@ -445,7 +441,7 @@ function begin() {
     }
   });
   hongbaoLauch();
-  hongbaoMainReading(0.15);
+  hongbaoMainReading(0.5);
   zhongqingJob({
     isClone: true,
     open: true,
@@ -454,8 +450,8 @@ function begin() {
       shiPing: true,
     }
   });
-  // hongbaoLauch();
-  // hongbaoMainReading(0.15);
+  hongbaoLauch();
+  hongbaoMainReading(0.15);
 }
 function ca() {
   return currentActivity()
@@ -465,4 +461,4 @@ function inZhongQing() {
   return ca().indexOf('weishang') > -1
 }
 begin();
-
+// zhongqingKanKan(false, 1)

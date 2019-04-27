@@ -1,5 +1,5 @@
 var zhongQing = 'weishang.wxrd';
-var util = require('../util.js');
+var util = require('util.js');
 var launch = util.launch;
 function lauchZQ() {
     home();

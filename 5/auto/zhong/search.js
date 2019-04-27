@@ -1,9 +1,11 @@
-var util = require('../util.js');
-var oneUpDown = util.oneUpDown;
+
+
+sleep(5000);
+zhongqingSearch();
 
 function zhongqingSearch(isSub) {
     function aa(i, isSub) {
-      if (i > 10) {
+      if (i > 15) {
         return
       }
   
@@ -47,5 +49,8 @@ function zhongqingSearch(isSub) {
     aa(2, true)
   
   }
-//  zhongqingSearch();
-  module.exports = zhongqingSearch;
+  function oneUpDown(sl) {
+    swipe(350, 770, 350, 270, 800);
+    sleep(sl || 1000);
+    swipe(350, 270, 350, 770, 800);
+  }

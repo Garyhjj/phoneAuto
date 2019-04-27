@@ -1,5 +1,6 @@
-var util = require('../util.js');
-var oneUpDown = util.oneUpDown;
+sleep(5000);
+juReading();
+
 
 function juReading(rt) {
     var read = (i) => {
@@ -52,4 +53,8 @@ function juReading(rt) {
 
 }
 
-module.exports = juReading
+function oneUpDown(sl) {
+    swipe(350, 770, 350, 270, 800);
+    sleep(sl || 1000);
+    swipe(350, 270, 350, 770, 800);
+  }

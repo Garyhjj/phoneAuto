@@ -23,7 +23,7 @@ schedueList = [];
 
 async function aa(i, isSub) {
     
-    if(i > 10) {
+    if(i > 15) {
         return
     }
     // await  zhongqing.controller.wait(2000);
@@ -181,18 +181,19 @@ const shipingGuangGao = async (i) => {
         return;
     }
     await zhongqing.controller.click(680,220);
-    await zhongqing.controller.wait(1000*60*55);
+    await zhongqing.controller.wait(1000*45);
     await zhongqing.controller.click(680,80);
-    await zhongqing.controller.wait(1000*60*55);
+    await zhongqing.controller.wait(1000*66);
     return shipingGuangGao(i++)
 }
  
 
-// list = [];
+list = [];
+// shipingGuangGao();
 // backToMain();
 // beginReading();
 
-// (async () => {await aa(0);await aa(2, true)})();
+(async () => {await aa(7);await aa(7, true)})();
 
 // (() => {
     // zhongqing.controller.swipe(500,560,500,100,800);

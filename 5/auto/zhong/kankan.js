@@ -129,7 +129,7 @@ function noteType() {
 }
 
 function firstClickType() {
-  var ls = ['玩赚看点', '巨头前沿', '蚂蚁资讯', '育儿常识'];
+  var ls = ['玩赚看点', '巨头前沿', '蚂蚁资讯', '育儿常识', '完美小说', '奇闻趣事'];
   var lg = ls.length;
   while (lg--) {
     var ls1 = text(ls[lg]).find();

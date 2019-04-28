@@ -17,7 +17,7 @@ function begin(minute) {
         sleep(1000 * times);
         back();
         sleep(2000);
-        if (Date.now - start < 1000 * 60 * minute) {
+        if (Date.now() - start < 1000 * 60 * minute) {
             one();
         }
     }

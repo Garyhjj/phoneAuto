@@ -14,7 +14,7 @@ function begin (minute) {
         sleep(1000 * times);
         swipe(900,900,150,900,300);
         sleep(2000);
-        if(Date.now - start < 1000 *60 * minute) {
+        if(Date.now() - start < 1000 *60 * minute) {
             one();
         }
     }

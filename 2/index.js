@@ -12,7 +12,7 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 let list = [{
-    app:  tou2,
+    app:  tou,
     last: 1000 * 60 * 150
 }];
 
@@ -183,17 +183,17 @@ const shipingGuangGao = async (i) => {
     await zhongqing.controller.click(680,220);
     await zhongqing.controller.wait(1000*45);
     await zhongqing.controller.click(680,80);
-    await zhongqing.controller.wait(1000*66);
+    await zhongqing.controller.wait(1000*15);
     return shipingGuangGao(i++)
 }
  
 
-list = [];
+// list = [];
 // shipingGuangGao();
 // backToMain();
 // beginReading();
 
-(async () => {await aa(7);await aa(7, true)})();
+// (async () => {await aa(7);await aa(7, true)})();
 
 // (() => {
     // zhongqing.controller.swipe(500,560,500,100,800);

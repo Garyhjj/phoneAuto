@@ -176,10 +176,12 @@ function firstClickType() {
 }
 
 function videoType() {
-  var ls = ['下贤视频'];
+  // var ls = ['下贤视频','下贤视频','贤贤视频','苹果视频'];
+  var ls = textEndsWith('视频').find();
   var lg = ls.length;
   while (lg--) {
-    var tar = text(ls[lg]).findOne(3000);
+    // var tar = text(ls[lg]).findOne(3000);
+    var tar = ls[lg];
     if (tar) {
       tar.click();
       var waitTime = 0;

@@ -70,6 +70,7 @@ var zhongqingReading = (function () {
   return function (rt) {
     start = Date.now();
     nextTitle();
+    sleep(3000);
     work(rt);
   }
 })();

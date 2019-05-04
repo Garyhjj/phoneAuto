@@ -192,6 +192,7 @@ function zhongqingReading(rt) {
   }
   start = Date.now();
   swipe(900, 500, 200, 520, 200);
+  sleep(3000);
   work(rt);
 
 }

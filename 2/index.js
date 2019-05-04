@@ -12,7 +12,7 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 let list = [{
-    app:  tou,
+    app:  zhongqing,
     last: 1000 * 60 * 150
 }];
 
@@ -155,8 +155,8 @@ const backToMain =async () => {
 }
 const beginReading = async (last) => {
     formatLs(last?6:9);
-    let lg = ls.length;
-    await zhongqing.controller.swipe(500,560,500,100,800);
+    let lg = ls.length ;
+    // await zhongqing.controller.swipe(500,560,500,100,800);
     await zhongqing.controller.wait(2000);
     while(lg -- ) {
         await aa1(0,ls[lg]);

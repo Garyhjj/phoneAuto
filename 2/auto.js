@@ -61,9 +61,15 @@ var zhongqingReading = (function () {
       return work(readTime);
     }
   }
-
+  function nextTitle() {
+    ra.swipe(700, 500, 20, 520, 300, 2);
+    sleep(600);
+    click1(300, 120);
+    sleep(1000);
+  }
   return function (rt) {
     start = Date.now();
+    nextTitle();
     work(rt);
   }
 })();
@@ -376,7 +382,13 @@ var souhuReading = (function () {
   }
   var read = (i) => {
     i = i || 1;
-    oneUpDown(3000);
+    ra.swipe(350, 870, 350, 270, 600, 2);
+    sleep(600);
+    click1(350, 20);
+    sleep(3000);
+    ra.swipe(350, 270, 350, 870, 600, 2);
+    sleep(600);
+    click1(350, 20);
     if (i < 13) {
       sleep(3000);
       read(i + 1);
@@ -417,9 +429,10 @@ var souhuReading = (function () {
     work(rt);
   }
 })();
+
 function begin() {
   sleep(5000);
-  souhuReading();
+  // souhuReading();
   zhongqingJob({
     open: true,
     reading: 2.2
@@ -453,6 +466,7 @@ function begin() {
   hongbaoLauch();
   hongbaoMainReading(0.15);
 }
+
 function ca() {
   return currentActivity()
 }

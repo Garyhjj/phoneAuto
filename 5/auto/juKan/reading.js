@@ -5,7 +5,7 @@ juReading();
 function juReading(rt) {
     var read = (i) => {
         i = i || 1;
-        oneUpDown(3000);
+        oneUpDown(2000);
         if (i < 16) {
             sleep(2000);
             read(i + 1);
@@ -14,30 +14,40 @@ function juReading(rt) {
     var refresh = () => {
         swipe(400, 350, 400, 900, 800)
     }
-    var enterP = () => {
-        click(400, 380)
+    var enterP = (btn) => {
+        // click(400, 380)
+        btn.click();
     }
     var leave = () => {
         back();
     }
     var start
     var work = (readTime) => {
-        enterP();
-        sleep(3000);
-        sleep(1000);
-        read();
-        leave();
-        if (click('关闭广告')) {
-            sleep(2000);
-        }
-        if (textContains('继续赚钱').exists()) {
-            textContains('继续赚钱').findOne().click();
-            sleep(1500);
+        var ts = id('item_artical_three_parent').find();
+        var lg = ts.length;
+        while(lg --) {
+            enterP(ts[lg]);
+            sleep(3000);
+            sleep(1000);
+            read();
+            leave();
+            if (click('关闭广告')) {
+                sleep(2000);
+            }
+            if (textContains('继续赚钱').exists()) {
+                textContains('继续赚钱').findOne(3000).click();
+                sleep(1500);
+            }
+            if (text('忽略').exists()) {
+                textContains('忽略').findOne(3000).click();
+                sleep(1500);
+            }
+            sleep(1000);
         }
         // if(click('领取')) {
         //   sleep(2000);
         // }
-        sleep(1000);
+        
         refresh();
         sleep(4000);
         readTime = readTime || 2.2
@@ -54,7 +64,7 @@ function juReading(rt) {
 }
 
 function oneUpDown(sl) {
-    swipe(350, 770, 350, 270, 800);
+    swipe(350, 1070, 350, 270, 800);
     sleep(sl || 1000);
-    swipe(350, 270, 350, 770, 800);
+    swipe(350, 270, 350, 1070, 800);
   }

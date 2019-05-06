@@ -436,14 +436,14 @@ function begin() {
   // souhuReading();
   zhongqingJob({
     open: true,
-    reading: 2.2
+    reading: 2.5
   });
   hongbaoLauch();
   hongbaoMainReading(1.3);
   zhongqingJob({
     isClone: true,
     open: true,
-    reading: 2.2
+    reading: 2.5
   })
   hongbaoLauch();
   hongbaoMainReading(0.15);

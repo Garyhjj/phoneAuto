@@ -2,12 +2,14 @@ var zhongQing = 'weishang.wxrd';
 var juKan = 'xiangzi.jukandian';
 
 function begin() {
+  device.keepScreenDim();
   sleep(2000)
   eastJob();
   zhongqingJob();
   juJob();
   lauchDuoFu();
   duofuReading();
+  device.cancelKeepingAwake();
   // textContains('分钟').findOne().click();
 }
 
@@ -57,7 +59,12 @@ function eastReading(rt) {
   }
   var refresh = () => {
     // swipe(400, 350, 400, 1500, 800);
-    id('kt').findOne().click();
+    var btn = id('kt').findOne(6000);
+    if(btn) {
+      btn.click();
+    }else {
+      return;
+    }
     sleep(2000);
     while(textContains('刷新中').exists()) {
       sleep(2000);
@@ -71,6 +78,7 @@ function eastReading(rt) {
     back();
   }
   var start
+  var tryRefresh = 0;
   var work = (readTime) => {
     if(textContains('恭喜你获得').exists()) {
       click(800,460);
@@ -85,6 +93,7 @@ function eastReading(rt) {
     var all = ts.concat(vs);
     var lg = all.length;
     while (lg --) {
+      tryRefresh = 0;
       enterP(all[lg]);
       sleep(3000);
       sleep(1000);
@@ -93,6 +102,10 @@ function eastReading(rt) {
       sleep(3000);
     }
     refresh();
+    tryRefresh = tryRefresh + 1;
+    if(tryRefresh > 10) {
+      return;
+    }  
     sleep(2000);
     readTime = readTime || 2.2
     if (readTime <= 0) {
@@ -299,11 +312,13 @@ function juVideo(minute) {
         entry.click();
         sleep(2000);
         var video = id('l1').findOne(5000);
-        video.click();
-        const times = 35 + ~~(Math.random() * 20);
-        sleep(1000 * times);
-        back();
-        sleep(2000);
+        if(video) {
+          video.click();
+          const times = 35 + ~~(Math.random() * 20);
+          sleep(1000 * times);
+          back();
+          sleep(2000);
+        }
         if (Date.now() - start < 1000 * 60 * minute) {
             one();
         }
@@ -329,11 +344,13 @@ function juReading(rt) {
   var leave = () => {
       back();
   }
-  var start
+  var start;
+  var tryRefresh = 0;
   var work = (readTime) => {
       var ts = id('item_artical_three_parent').find();
       var lg = ts.length;
       while(lg --) {
+          tryRefresh = 0;
           enterP(ts[lg]);
           sleep(3000);
           sleep(1000);
@@ -357,6 +374,10 @@ function juReading(rt) {
       // }
       
       refresh();
+      tryRefresh = tryRefresh + 1;
+      if(tryRefresh > 10) {
+        return;
+      }
       sleep(4000);
       readTime = readTime || 2.2
       if (readTime <= 0) {

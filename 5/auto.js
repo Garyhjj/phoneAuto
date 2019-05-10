@@ -99,7 +99,7 @@ function eastReading(rt) {
       sleep(1000);
       read();
       click('忽略');
-      sleep(2000);
+      sleep(2000); 
       leave();
       sleep(3000);
     }

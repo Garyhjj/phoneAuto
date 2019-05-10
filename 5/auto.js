@@ -80,14 +80,14 @@ function eastReading(rt) {
   var start
   var tryRefresh = 0;
   var work = (readTime) => {
-    if(textContains('恭喜你获得').exists()) {
-      click(800,460);
-      sleep(66000);
-      back();
-      sleep(500);
-      click(990,140);
-      sleep(6000);
-    }
+    // if(textContains('恭喜你获得').exists()) {
+    //   click(800,460);
+    //   sleep(66000);
+    //   back();
+    //   sleep(500);
+    //   click(990,140);
+    //   sleep(6000);
+    // }
     var ts = id('q4').find();
     var vs = id('i7').find();
     var all = ts.concat(vs);
@@ -98,6 +98,8 @@ function eastReading(rt) {
       sleep(3000);
       sleep(1000);
       read();
+      click('忽略');
+      sleep(2000);
       leave();
       sleep(3000);
     }

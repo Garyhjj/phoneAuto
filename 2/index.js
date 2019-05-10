@@ -155,7 +155,7 @@ const backToMain =async () => {
 }
 const beginReading = async (last) => {
     formatLs(last?6:9);
-    let lg = ls.length ;
+    let lg = ls.length -8;
     // await zhongqing.controller.swipe(500,560,500,100,800);
     await zhongqing.controller.wait(2000);
     while(lg -- ) {
@@ -191,7 +191,7 @@ const shipingGuangGao = async (i) => {
 // list = [];
 // shipingGuangGao();
 // backToMain();
-// beginReading();
+// beginReading(s);
 
 // (async () => {await aa(7);await aa(7, true)})();
 

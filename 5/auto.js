@@ -2,13 +2,13 @@ var zhongQing = 'weishang.wxrd';
 var juKan = 'xiangzi.jukandian';
 
 function begin() {
-  device.keepScreenDim();
+  device.keepScreenOn();
   sleep(2000)
-  eastJob();
   zhongqingJob();
-  juJob();
   lauchDuoFu();
   duofuReading();
+  juJob();
+  eastJob();
   device.cancelKeepingAwake();
   // textContains('分钟').findOne().click();
 }
@@ -23,7 +23,7 @@ function juJob() {
 function eastJob() {
   launch('东方头条');
   sleep(10000);
-  eastReading(1.3);
+  eastReading(1.5);
   sleep(2000);
   eastSmallVideo();
 }
@@ -31,9 +31,11 @@ function eastJob() {
 function eastSmallVideo (minute) {
   minute = minute> 0? minute: 30;
   var entry = id('l1').findOne(5000);
+  if(!entry) return ;
   entry.click();
   sleep(2000);
   var video = id('a_f').findOne(5000);
+  if(!video) return;
   video.click();
   var start = Date.now();
   var one = () => {
@@ -310,6 +312,7 @@ function juVideo(minute) {
     minute = minute > 0 ? minute : 30;
     var entry = id(entryID).findOne(5000);
     var start = Date.now();
+    if(!entry) return; 
     var one = () => {
         entry.click();
         sleep(2000);
@@ -350,7 +353,7 @@ function juReading(rt) {
   var tryRefresh = 0;
   var work = (readTime) => {
       var ts = id('item_artical_three_parent').find();
-      var lg = ts.length;
+      var lg = ts && ts.length;
       while(lg --) {
           tryRefresh = 0;
           enterP(ts[lg]);

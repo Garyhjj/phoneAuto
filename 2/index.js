@@ -12,7 +12,7 @@ const zhongqing = require('./zhongqing'),
     } = require('../util');
 
 let list = [{
-    app:  zhongqing,
+    app:  tou,
     last: 1000 * 60 * 150
 }];
 
@@ -188,10 +188,10 @@ const shipingGuangGao = async (i) => {
 }
  
 
-// list = [];
+list = [];
 // shipingGuangGao();
 // backToMain();
-// beginReading(s);
+beginReading();
 
 // (async () => {await aa(7);await aa(7, true)})();
 

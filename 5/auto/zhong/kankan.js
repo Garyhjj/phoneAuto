@@ -85,10 +85,12 @@ function begin(l, f) {
   var ls = text('去完成').find();
   var lg1 = ls.length;
   while (lg1--) {
-    beginReading(ls[lg1]);
+    var tar = text('去完成').findOne(6000);
+    beginReading(tar);
   }
   while (lg2--) {
-    beginReading(ls1[lg2]);
+    var tar = text('进行中').findOne(6000);
+    beginReading(tar);
   }
 }
 

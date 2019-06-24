@@ -14,7 +14,14 @@ const zhongqing = require('./zhongqing'),
 let list = [{
     app:  zhongqing,
     last: 1000 * 60 * 150
-}];
+},
+{
+    app:  tou,
+    last: 1000 * 60 * 10
+},{
+    app:  zhongqing,
+    last: 1000 * 60 * 150
+},];
 
 schedueList = [];
 
@@ -108,7 +115,8 @@ async function aa1(i, site) {
     await zhongqing.controller.back();
     await zhongqing.controller.wait(2000);
     await zhongqing.controller.click(150, 50);
-    await zhongqing.controller.wait(2000);;
+    await zhongqing.controller.wait(2000);
+    await zhongqing.controller.wait(15000);
     return aa1(i+1,site)
     
     // if (i < 40) {
@@ -155,7 +163,7 @@ const backToMain =async () => {
 }
 const beginReading = async (last) => {
     formatLs(last?6:9);
-    let lg = ls.length -8;
+    let lg = ls.length -2;
     // await zhongqing.controller.swipe(500,560,500,100,800);
     await zhongqing.controller.wait(2000);
     while(lg -- ) {
@@ -195,18 +203,31 @@ const shipingGuangGao1 = async (i) => {
         return ;
     }
     await zhongqing.controller.click(580,400);
-    await zhongqing.controller.wait(1000*35);
+    await zhongqing.controller.wait(1000*60);
     await zhongqing.controller.click(680,80);
     await zhongqing.controller.wait(1000*66);
     return shipingGuangGao(i++)
 }
- 
 
-list = [];
+const choujiang = async (i) => {
+    i = i || 0;
+    await zhongqing.controller.click(100,700);
+    await zhongqing.controller.wait(1000*4);
+    await zhongqing.controller.click(365,700);
+    await zhongqing.controller.wait(1000*2.5);
+    await zhongqing.controller.back();
+    await zhongqing.controller.wait(1000*4);
+    if(i < 50) {
+        return choujiang(i + 1)
+    }
+}
+
+// list = [];
+// choujiang(1);
 // shipingGuangGao1(0);
 // shipingGuangGao(10);
 // backToMain();
-beginReading();
+// beginReading();
 // (async () => {await aa(7);await aa(7, true)})();
 
 // (() => {

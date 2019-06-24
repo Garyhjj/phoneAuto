@@ -2,15 +2,11 @@ var zhongQing = 'weishang.wxrd';
 var juKan = 'xiangzi.jukandian';
 
 function begin() {
-  device.keepScreenOn();
   sleep(2000)
   zhongqingJob();
   lauchDuoFu();
   duofuReading();
   juJob();
-  eastJob();
-  device.cancelKeepingAwake();
-  // textContains('分钟').findOne().click();
 }
 
 begin();
@@ -20,151 +16,12 @@ function juJob() {
   juReading();
   juVideo();
 }
-function eastJob() {
-  launch('东方头条');
-  sleep(10000);
-  eastReading(1.5);
-  sleep(2000);
-  eastSmallVideo();
-}
-
-function eastSmallVideo (minute) {
-  minute = minute> 0? minute: 30;
-  var entry = id('l1').findOne(5000);
-  if(!entry) return ;
-  entry.click();
-  sleep(2000);
-  var video = id('a_f').findOne(5000);
-  if(!video) return;
-  video.click();
-  var start = Date.now();
-  var one = () => {
-      const times = 10 + ~~(Math.random()*15);
-      sleep(1000 * times);
-      swipe(900,900,150,900,300);
-      sleep(2000);
-      if(Date.now() - start < 1000 *60 * minute) {
-          one();
-      }
-  }
-  one();
-}
-
-function eastReading(rt) {
-  var read = (i) => {
-    i = i || 1;
-    swipe(350, ~~(Math.random() * 500 + 700), 350, 270, 800);
-    if (i < 18) {
-      sleep(2000);
-      read(i + 1);
-    }
-  }
-  var refresh = () => {
-    // swipe(400, 350, 400, 1500, 800);
-    var btn = id('kt').findOne(6000);
-    if(btn) {
-      btn.click();
-    }else {
-      return;
-    }
-    sleep(2000);
-    while(textContains('刷新中').exists()) {
-      sleep(2000);
-    }
-  }
-  var enterP = (btn) => {
-    // click(400, textContains('恭喜你获得').exists() ? 920 : 600);
-    btn.click();
-  }
-  var leave = () => {
-    back();
-  }
-  var start
-  var tryRefresh = 0;
-  var work = (readTime) => {
-    // if(textContains('恭喜你获得').exists()) {
-    //   click(800,460);
-    //   sleep(66000);
-    //   back();
-    //   sleep(500);
-    //   click(990,140);
-    //   sleep(6000);
-    // }
-    var ts = id('q4').find();
-    var vs = id('i7').find();
-    var all = ts.concat(vs);
-    var lg = all.length;
-    while (lg --) {
-      tryRefresh = 0;
-      enterP(all[lg]);
-      sleep(3000);
-      sleep(1000);
-      read();
-      click('忽略');
-      sleep(2000); 
-      leave();
-      sleep(3000);
-    }
-    refresh();
-    tryRefresh = tryRefresh + 1;
-    if(tryRefresh > 10) {
-      return;
-    }  
-    sleep(2000);
-    readTime = readTime || 2.2
-    if (readTime <= 0) {
-      readTime = 2;
-    }
-    if (Date.now() - start < 1000 * 60 * 60 * readTime) {
-      return work(readTime);
-    }
-  }
-  start = Date.now();
-  work(rt);
-}
 
 function zhongqingJob() {
   lauchZQ();
   zhongqingReading();
-  // intoZhongQingRenWu(1);
-  // zhongqingKankan1();
-  // backToMainZhongQing()
-  // intoZhongQingRenWu(2);
-  // zhongqingSearch();
-  // 
-  // click('搜索赚')
 }
 
-function backToMainZhongQing() {
-  let i = 3;
-  while (i--) {
-    back();
-    sleep(3000)
-  }
-  click(230, 100);
-  sleep(2000);
-  click(150, 1880);
-  sleep(2000);
-}
-
-function intoZhongQingRenWu(type) {
-  click(980, 1880);
-  sleep(4000);
-  click('任务中心');
-  var str
-  if (type === 1) {
-    str = '看看赚'
-  } else if (type === 2) {
-    str = '搜索'
-  }
-  while (!textContains(str).exists()) {
-    sleep(1000);
-  }
-  textContains(str).findOne().click();
-  while (!textContains('任务说明').exists()) {
-    sleep(1000);
-  }
-}
 
 function zhongqingReading(rt) {
   var read = (i) => {
@@ -219,9 +76,9 @@ function lauchZQ() {
   home();
   sleep(5000);
   launch('中青看点');
-  if (!isActivityExists(zhongQing, 15000)) {
-    lauchZQ();
-  };
+  // if (!isActivityExists(zhongQing, 15000)) {
+  //   lauchZQ();
+  // };
   sleep(15000);
   back();
   sleep(3000);
@@ -243,6 +100,7 @@ function isActivityExists(ac, waitTime) {
 }
 
 function lauchDuoFu() {
+  home();
   launch('多福看看');
   sleep(10000);
 }
@@ -291,9 +149,6 @@ function lauchJu() {
   home();
   sleep(5000);
   launch('聚看点');
-  if (!isActivityExists(juKan, 15000)) {
-    lauchJu();
-  };
   sleep(15000);
   back();
   sleep(3000);

@@ -79,18 +79,29 @@ function begin(l, f) {
     click(230, 100);
     sleep(2000);
   }
-  videoType();
-  noteType();
-  firstClickType();
+  // videoType();
+  // noteType();
+  // firstClickType();
   var ls = text('去完成').find();
   var lg1 = ls.length;
   while (lg1--) {
     var tar = text('去完成').findOne(6000);
-    beginReading(tar);
+    var bounds = tar.bounds();
+    // click(bounds.centerX(), bounds.centerY());
+    beginReading({
+      click: function() {
+        click(bounds.centerX(), bounds.centerY());
+      }
+    });
   }
   while (lg2--) {
     var tar = text('进行中').findOne(6000);
-    beginReading(tar);
+    var bounds = tar.bounds();
+    beginReading({
+      click: function() {
+        click(bounds.centerX(), bounds.centerY());
+      }
+    });
   }
 }
 

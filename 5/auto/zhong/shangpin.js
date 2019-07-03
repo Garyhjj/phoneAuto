@@ -4,11 +4,11 @@ begin2(0);
 // var a = textContains('销量').find();
 // toast(a.length);
 // console.log(a.length)
-var ls = ['女装','百货','男装', '美妆', '鞋包','内衣', '水果', '母婴'];
+
 function begin2(i) {
+  var ls = ['女装','百货','男装', '美妆', '鞋包','内衣', '水果', '母婴'];
   i = i|| 0;
-  i = i+ 1;
-  if(i === 1) {
+  if(i === 0) {
     var name = ls.shift();
     if(name) {
       click(name);
@@ -18,7 +18,7 @@ function begin2(i) {
     }
   }
   var a = textContains('销量').find();
-  var bounds = a[i].bounds();
+  var bounds = a[i+ 1].bounds();
   click(bounds.left - 100, bounds.top - 120);
   secondEnter();
   watch();

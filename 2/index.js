@@ -222,8 +222,8 @@ const choujiang = async (i) => {
     }
 }
 
-list = [];
-choujiang(1);
+// list = [];
+// choujiang(1);
 // doAllSchedule([{
 //         app:  tou,
 //         last: 1000 * 60 * 130 

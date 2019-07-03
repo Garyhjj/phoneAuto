@@ -1,19 +1,31 @@
 sleep(5000);
 begin2();
 
-
+// var a = textContains('+40青豆').findOne(2000)
+// toast(a.bounds().top);
+// console.log(a.bounds().top)
 function begin2() {
   firstEnter();
+  watch();
+  sleep(10000);
+  var a = text('看视频得青豆').findOne(4000);
+  if(a) {
+      return begin2();
+  }
   secondEnter();
   watch();
   closeLast();
-  sleep(3000);
+  sleep(20000);
   return begin2();
 }
 
 function firstEnter() {
-  click('领取奖励');
-  sleep(2000);
+  var a = text('看视频得青豆').findOne(2000);
+  if(!a) {
+      return firstEnter();
+  }else {
+      a.click();
+  }
 }
 
 function findSecondStep(justOne) {
@@ -93,77 +105,13 @@ function getCloseWay() {
 }
 
 function closeLast() {
-  textContains('+40青豆').waitFor();
-  click(950, 788);
-  sleep(2000);
+  textContains('+40青豆').waitFor(); // 679
+  var a = textContains('+40青豆').findOne(1000);
+  click(950, a.bounds().top - 64);
+  console.log(a.bounds().top - 64)
+  sleep(6000);
   if(textContains('+40青豆').findOne(1000)) {
     click(950, 615);
     sleep(2000);
   }
-}
-
-// begin();
-// click('领取奖励');
-// click('点我继续领青豆');
-
-// //请求横屏截图
-// requestScreenCapture(true);
-// //截图
-// var img = captureScreen();
-// //获取在点(100, 100)的颜色值
-// var color = images.pixel(img, 985, 112);
-// //显示该颜色值
-// toast(colors.toString(color));
-// console.log(color,3212);
-
-// var a = textContains('点击下载').findOne(2000);
-// console.log(a.bounds().top) //1266
-
-// var b = textContains('立即下载').findOne(2000);
-// console.log(b.bounds().top) //1110
-
-// var b = textContains('立即查看').findOne(2000);
-// console.log(b.bounds().top) //1728 
-function begin(i) {
-  i = i || 0;
-  click(600, 1350);
-  hasEnter();
-  sleep(35 * 1000);
-  back();
-  sleep(2000);
-  if (!hasLeave()) {
-    click(985, 112);
-    sleep(2000);
-  }
-  closeJiangli();
-  if (i > 20 || textContains('20/20').exists()) {
-    return;
-  }
-  sleep(9000);
-  return begin(i + 1)
-}
-
-function hasEnter() {
-  if (textContains('领9元现金').exists()) {
-    sleep(1000);
-    return hasEnter();
-  } else {
-    return;
-  }
-}
-
-function hasLeave() {
-  return textContains('看视频得奖励').exists()
-}
-
-function closeJiangli() {
-  if (text('点我赚更多青豆').exists()) {
-    sleep(2000);
-    click(945, 570);
-    sleep(2000);
-  } else {
-    sleep(1000);
-    return closeJiangli();
-  }
-
 }

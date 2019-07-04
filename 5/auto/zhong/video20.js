@@ -13,7 +13,7 @@ function begin2() {
       return begin2();
   }
   secondEnter();
-  watch();
+  watch(true);
   closeLast();
   sleep(20000);
   return begin2();
@@ -56,12 +56,12 @@ function secondEnter() {
   sleep(1000);
 }
 
-function watch() {
+function watch(check) {
   sleep(15000);
   const close = getCloseWay();
   close();
   sleep(2000);
-  if (findSecondStep(true)) {
+  if (findSecondStep(true) && check) {
     secondEnter();
     return watch();
   }

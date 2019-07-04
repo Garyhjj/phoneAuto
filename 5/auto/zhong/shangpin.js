@@ -1,4 +1,7 @@
 sleep(5000);
+
+var ls = ['女装','百货','男装', '美妆', '鞋包','内衣', '水果', '母婴'];
+
 begin2(0);
 
 // var a = textContains('销量').find();
@@ -6,7 +9,6 @@ begin2(0);
 // console.log(a.length)
 
 function begin2(i) {
-  var ls = ['女装','百货','男装', '美妆', '鞋包','内衣', '水果', '母婴'];
   i = i|| 0;
   if(i === 0) {
     var name = ls.shift();
@@ -17,8 +19,8 @@ function begin2(i) {
       return;
     }
   }
-  var a = textContains('销量').find();
-  var bounds = a[i+ 1].bounds();
+  var a = textContains('销量').find().slice(1);
+  var bounds = a[i].bounds();
   click(bounds.left - 100, bounds.top - 120);
   secondEnter();
   watch();
@@ -26,7 +28,7 @@ function begin2(i) {
   sleep(1000);
   back();
   sleep(3000);
-  return begin2(i === 4?0: i+ 1);
+  return begin2(i === 3?0: i+ 1);
 }
 
 function firstEnter() {

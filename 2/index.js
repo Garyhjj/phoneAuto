@@ -11,10 +11,11 @@ const zhongqing = require('./zhongqing'),
         doAllSchedule
     } = require('../util');
 
-let list = [{
-    app:  zhongqing,
-    last: 1000 * 60 * 150
-},
+let list = [
+    {
+        app:  zhongqing,
+        last: 1000 * 60 * 150
+    },
 {
     app:  tou,
     last: 1000 * 60 * 10

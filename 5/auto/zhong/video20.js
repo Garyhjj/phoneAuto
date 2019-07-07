@@ -1,8 +1,8 @@
 sleep(5000);
-begin2();
+// begin2();
 
-// var a = textContains('+40青豆').findOne(2000)
-// toast(a.bounds().top);
+var a = textContains('立即查看').findOne(500)
+toast(a.bounds().top);
 // console.log(a.bounds().top)
 function begin2() {
   firstEnter();
@@ -68,33 +68,20 @@ function watch(check) {
 }
 
 function getCloseWay() {
-  var a = textContains('点击下载').findOne(2000);
-  if (a) {
-    if (a.bounds().top < 1300) {
-      return function () {
-        click(100, 60)
-      };
-    } else {
-      sleep(2000);
-      return getCloseWay();
-    }
+  var getALL = () => {
+    return textContains('立即下载').findOne(500)
+    || textContains('立即查看').findOne(500)
+    ||  textContains('点击下载').findOne(500)
   }
-  var b = textContains('立即下载').findOne(2000);
-  if (b) {
-    if (b.bounds().top < 1300) {
+  var s = getALL();
+  if(s) {
+    if (s.bounds().top < 1620) {
       return function () {
-        click(985, 112)
-      };
-    } else {
-      sleep(2000);
-      return getCloseWay();
-    }
-  }
-  var c = textContains('立即查看').findOne(2000);
-  if (c) {
-    if (c.bounds().top < 1620) {
-      return function () {
-        click(985, 112)
+        click(985, 112);
+        sleep(2000);
+        if(getALL()) {
+          back();
+        }
       };
     } else {
       sleep(2000);
@@ -103,6 +90,7 @@ function getCloseWay() {
   }
   return getCloseWay();
 }
+
 
 function closeLast() {
   textContains('+40青豆').waitFor(); // 679

@@ -23,7 +23,11 @@ function play(i) {
     sleep(500);
     swipe(800,860,800,480,400);
     sleep(500);
-    if(i<70) {
+    if(i < 8) {
+      click(900,577);
+      sleep(200);
+    }
+    if(i<40) {
         return play(i+1);
     }
 }
@@ -35,8 +39,6 @@ function firstEnter() {
       var b = a.bounds();
       click(b.left +30, b.top -150);
       sleep(10000);
-      click(900,577);
-      sleep(2000);
       click(900,577);
       sleep(2000);
   }
@@ -82,33 +84,20 @@ function watch() {
 }
 
 function getCloseWay() {
-  var a = textContains('点击下载').findOne(2000);
-  if (a) {
-    if (a.bounds().top < 1300) {
-      return function () {
-        click(100, 60)
-      };
-    } else {
-      sleep(2000);
-      return getCloseWay();
-    }
+  var getALL = () => {
+    return textContains('立即下载').findOne(500)
+    || textContains('立即查看').findOne(500)
+    ||  textContains('点击下载').findOne(500)
   }
-  var b = textContains('立即下载').findOne(2000);
-  if (b) {
-    if (b.bounds().top < 1300) {
+  var s = getALL();
+  if(s) {
+    if (s.bounds().top < 1620) {
       return function () {
-        click(985, 112)
-      };
-    } else {
-      sleep(2000);
-      return getCloseWay();
-    }
-  }
-  var c = textContains('立即查看').findOne(2000);
-  if (c) {
-    if (c.bounds().top < 1620) {
-      return function () {
-        click(985, 112)
+        click(985, 112);
+        sleep(2000);
+        if(getALL()) {
+          back();
+        }
       };
     } else {
       sleep(2000);

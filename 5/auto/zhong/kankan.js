@@ -25,7 +25,7 @@ function begin(l, f) {
         break;
       }
     }
-    sleep(6000)
+    sleep(6000);
     const changeSite = (y) => {
       if (y > 0) {
         swipe(350, 870, 350, 270, 700);
@@ -34,9 +34,82 @@ function begin(l, f) {
       }
     }
     changeSite(i);
-    click(300, 700);
+    click(300, 550);
     sleep(3000);
     upDown(2);
+    let try44= 0;
+    if(text('百度公益').exists()) {
+      done = true;
+    }
+    while(text('搜一下').exists() && try44 < 7) {
+      click('搜一下');
+      try44 = try44+1;
+      sleep(2000);
+      upDown(2);
+      if (textContains('青豆奖励').exists()) {
+        break;
+      }
+    }
+    while(text('百度一下').exists() && try44 < 7) {
+      click('百度一下');
+      try44 = try44+1;
+      sleep(2000);
+      upDown(2);
+      if (textContains('青豆奖励').exists()) {
+        break;
+      }
+    }
+    while(text('下一章').exists() && try44 < 7) {
+      click('下一章');
+      sleep(2000);
+      try44 = try44+1;
+      upDown(2);
+      if (textContains('青豆奖励').exists()) {
+        break;
+      }
+    }
+    while(text('下一页').exists() && try44 < 7) {
+      click('下一页');
+      try44 = try44+1;
+      sleep(2000);
+      upDown(2);
+      if (textContains('青豆奖励').exists()) {
+        break;
+      }
+    }
+    while(text('聚合商家推荐').exists() && try44 < 7) {
+      click(300,550);
+      sleep(500);
+      back();
+      sleep(2000);
+      try44 = try44+1;
+      upDown(2);
+      if (textContains('青豆奖励').exists()) {
+        break;
+      }
+    }
+    while(text('商家列表').exists() && try44 < 7) {
+      click(300,550);
+      sleep(500);
+      back();
+      sleep(2000);
+      try44 = try44+1;
+      upDown(2);
+      if (textContains('青豆奖励').exists()) {
+        break;
+      }
+    }
+    while(text('为您推荐').exists() && try44 < 7) {
+      click(300,600);
+      sleep(500);
+      back();
+      sleep(2000);
+      try44 = try44+1;
+      upDown(2);
+      if (textContains('青豆奖励').exists()) {
+        break;
+      }
+    }
     var done;
     if (textContains('青豆奖励').exists()) {
       done = true;
@@ -68,7 +141,7 @@ function begin(l, f) {
     }
     return beginReading()
   }
-  var ls1 = text('进行中').find();
+  var ls1 = text('进行中').find().reverse();
   var lg2 = ls1.length;
   var yinyun = text('幸运红包').findOne(3000);
   if (lg2 === 0 && yinyun) {
@@ -79,27 +152,27 @@ function begin(l, f) {
     click(230, 100);
     sleep(2000);
   }
-  // videoType();
-  // noteType();
-  // firstClickType();
-  var ls = text('去完成').find();
+  var ls = text('去完成').find().reverse();
   var lg1 = ls.length;
   while (lg1--) {
-    var tar = text('去完成').findOne(6000);
+    var tar = text('去完成').findOne(800);
+    if(!tar) {
+      break;
+    }
     var bounds = tar.bounds();
     // click(bounds.centerX(), bounds.centerY());
     beginReading({
       click: function() {
-        click(bounds.centerX(), bounds.centerY());
+        click(bounds.centerX(), bounds.centerY() -30);
       }
     });
   }
   while (lg2--) {
-    var tar = text('进行中').findOne(6000);
+    var tar = ls1[lg2];
     var bounds = tar.bounds();
     beginReading({
       click: function() {
-        click(bounds.centerX(), bounds.centerY());
+        click(bounds.centerX(), bounds.centerY() -30);
       }
     });
   }

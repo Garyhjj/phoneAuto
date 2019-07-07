@@ -1,6 +1,6 @@
 sleep(5000);
 
-var ls = ['女装','百货','男装', '美妆', '鞋包','内衣', '水果', '母婴'];
+var ls = ['女装','百货','男装', '美妆', '鞋包','内衣', '水果', '母婴'].slice(0);
 
 begin2(0);
 
@@ -80,33 +80,20 @@ function watch() {
 }
 
 function getCloseWay() {
-  var a = textContains('点击下载').findOne(2000);
-  if (a) {
-    if (a.bounds().top < 1300) {
-      return function () {
-        click(100, 60)
-      };
-    } else {
-      sleep(2000);
-      return getCloseWay();
-    }
+  var getALL = () => {
+    return textContains('立即下载').findOne(500)
+    || textContains('立即查看').findOne(500)
+    ||  textContains('点击下载').findOne(500)
   }
-  var b = textContains('立即下载').findOne(2000);
-  if (b) {
-    if (b.bounds().top < 1300) {
+  var s = getALL();
+  if(s) {
+    if (s.bounds().top < 1620) {
       return function () {
-        click(985, 112)
-      };
-    } else {
-      sleep(2000);
-      return getCloseWay();
-    }
-  }
-  var c = textContains('立即查看').findOne(2000);
-  if (c) {
-    if (c.bounds().top < 1620) {
-      return function () {
-        click(985, 112)
+        click(985, 112);
+        sleep(2000);
+        if(getALL()) {
+          back();
+        }
       };
     } else {
       sleep(2000);

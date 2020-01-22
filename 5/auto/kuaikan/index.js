@@ -1,18 +1,35 @@
-
 sleep(5000);
-zhongqingReading();
-function zhongqingReading(rt) {
+kuaikanJob(0.5);
+
+function kuaikanJob(last) {
+  home();
+  sleep(3000);
+  launch();
+  sleep(15000);
+  back();
+  sleep(2000);
+  click('收入囊中');
+  sleep(2000);
+  try {
+    click('首页');
+    sleep(3000);
+    click('娱乐');
+    sleep(3000);
+    zhongqingReading(last);
+  } catch (err) {
+    console.log(err);
+  }
+  home();
+
+  function zhongqingReading(rt) {
     var time;
     var read = (i) => {
-      if(Date.now() - time > 1000 * 43) {
+      if (Date.now() - time > 1000 * 60) {
         return;
       }
       i = i || 1;
       oneUpDown(3000);
       if (i < 50) {
-        if(i< 4) {
-          click('查看全文，奖励更多');
-        }
         sleep(3000);
         read(i + 1);
       }
@@ -27,9 +44,9 @@ function zhongqingReading(rt) {
       click(400, 800)
     }
     var nextPage = (right) => {
-      if(right) {
+      if (right) {
         swipe(950, 600, 50, 600, 800);
-      }else {
+      } else {
         swipe(50, 600, 950, 600, 800);
       }
       sleep(5000);
@@ -46,13 +63,23 @@ function zhongqingReading(rt) {
         sleep(3000);
         time = Date.now();
         read();
-        if (click('查看详情')) {
-          sleep(3000);
-          leave();
-          sleep(3000);
+        var a = text('继续阅读').findOne(2000);
+        if (a) {
+          a.click();
+        } else {
+          back();
         }
+        sleep(1000);
         leave();
         sleep(2000);
+        if (!text('首页').exists()) {
+          sleep(40 * 1000);
+          click(985, 112);
+          back();
+          sleep(1000);
+          leave();
+          sleep(2000);
+        }
       }
       enterP();
       inRead();
@@ -60,17 +87,17 @@ function zhongqingReading(rt) {
       inRead();
       refresh();
       sleep(4000);
-      onePageRefreshTime +=1;
-      readTime = readTime || 2.2
+      onePageRefreshTime += 1;
+      readTime = readTime || 1.3
       if (readTime <= 0) {
         readTime = 2;
       }
       if (Date.now() - start < 1000 * 60 * 60 * readTime) {
-        if(onePageRefreshTime > 2) {
+        if (onePageRefreshTime > 1) {
           onePageRefreshTime = 0;
           nextPage(dirRight);
-          swipeTime +=1;
-          if(swipeTime > 12) {
+          swipeTime += 1;
+          if (swipeTime > 7) {
             dirRight = !!dirRight;
             swipeTime = 0;
           }
@@ -81,8 +108,16 @@ function zhongqingReading(rt) {
     start = Date.now();
     work(rt);
   }
+
   function oneUpDown(sl) {
-    swipe(350, 770, 350, 270, 800);
+    swipe(350, 770, 350, 270, 400);
     sleep(sl || 1000);
-    swipe(350, 270, 350, 770, 800);
+    swipe(350, 270, 350, 770, 400);
   }
+
+  function launch(isFirst) {
+    launchApp('快看点');
+    sleep(16000);
+    click('允许', 1);
+  }
+}

@@ -3,28 +3,32 @@ sleep(5000);
 zhongqingReading();
 function zhongqingReading(rt) {
     var time;
+    var oneReadSecond = 80;
     var read = (i) => {
-      if(Date.now() - time > 1000 * 43) {
+      if(Date.now() - time > 1000 * oneReadSecond) {
         return;
       }
       i = i || 1;
       oneUpDown(3000);
       if (i < 50) {
         if(i< 4) {
-          click('查看全文，奖励更多');
+          click('展开全文');
         }
         sleep(3000);
         read(i + 1);
       }
     }
     var refresh = () => {
-      swipe(400, 350, 400, 900, 800)
+      click('刷新');
+      sleep(5000);
+      swipe(600, 1600, 600, 100, 700);
+      sleep(1000);
     }
     var enterP = () => {
-      click(400, 430)
+      click(400, 680)
     }
     var enterP1 = () => {
-      click(400, 800)
+      click(400, 1230)
     }
     var nextPage = (right) => {
       if(right) {
@@ -45,12 +49,8 @@ function zhongqingReading(rt) {
       var inRead = () => {
         sleep(3000);
         time = Date.now();
+        oneReadSecond = ~~(Math.random() * 30 +30);
         read();
-        if (click('查看详情')) {
-          sleep(3000);
-          leave();
-          sleep(3000);
-        }
         leave();
         sleep(2000);
       }
@@ -79,6 +79,8 @@ function zhongqingReading(rt) {
       }
     }
     start = Date.now();
+    nextPage(1);
+    refresh();
     work(rt);
   }
   function oneUpDown(sl) {

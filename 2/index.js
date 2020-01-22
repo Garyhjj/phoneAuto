@@ -14,15 +14,8 @@ const zhongqing = require('./zhongqing'),
 let list = [
     {
         app:  zhongqing,
-        last: 1000 * 60 * 150
-    },
-{
-    app:  tou,
-    last: 1000 * 60 * 10
-},{
-    app:  zhongqing,
-    last: 1000 * 60 * 150
-},];
+        last: 1000 * 60 * 180
+    }]
 
 schedueList = [];
 
@@ -218,7 +211,7 @@ const choujiang = async (i) => {
     await zhongqing.controller.wait(1000*2.5);
     await zhongqing.controller.back();
     await zhongqing.controller.wait(1000*4);
-    if(i < 50) {
+    if(i < 80) {
         return choujiang(i + 1)
     }
 }

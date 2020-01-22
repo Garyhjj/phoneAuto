@@ -8,11 +8,11 @@ function begin2(i) {
   firstEnter();
   play();
   back();
-  secondEnter();
-  watch();
-  closeLast();
-  sleep(3000);
-  return begin2(i === 3?0: i+ 1);
+//  secondEnter();
+ // watch();
+//  closeLast();
+ // sleep(3000);
+//  return begin2(i === 3?0: i+ 1);
 }
 
 function play(i) {
@@ -27,7 +27,7 @@ function play(i) {
       click(900,577);
       sleep(200);
     }
-    if(i<40) {
+    if(i<140) {
         return play(i+1);
     }
 }
@@ -85,9 +85,16 @@ function watch() {
 
 function getCloseWay() {
   var getALL = () => {
-    return textContains('立即下载').findOne(500)
-    || textContains('立即查看').findOne(500)
-    ||  textContains('点击下载').findOne(500)
+    return textContains('立即下载').findOne(200)
+    || textContains('立即查看').findOne(200)
+    ||  textContains('点击下载').findOne(200)
+   || textContains('点击打开').findOne(200)
+    || textContains('试试看').findOne(200)
+   || textContains('点我下载').findOne(200)
+    || textContains('去玩一下').findOne(200)
+        || textContains('体验一下').findOne(200)
+           || textContains('点我试玩').findOne(200)
+
   }
   var s = getALL();
   if(s) {
@@ -108,12 +115,12 @@ function getCloseWay() {
 }
 
 function closeLast() {
-  textContains('+40青豆').waitFor(); // 679
-  var a = textContains('+40青豆').findOne(1000);
+  textContains('+30青豆').waitFor(); // 679
+  var a = textContains('+30青豆').findOne(1000);
   click(950, a.bounds().top - 64);
   console.log(a.bounds().top - 64)
   sleep(6000);
-  if(textContains('+40青豆').findOne(1000)) {
+  if(textContains('+30青豆').findOne(1000)) {
     click(950, 615);
     sleep(2000);
   }

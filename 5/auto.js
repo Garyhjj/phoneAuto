@@ -500,6 +500,7 @@ function launch(name) {
   sleep(200);
   back();
   sleep(1000);
+  // launch2(name);
   if (name) {
     launchApp(name);
     sleep(1500);
@@ -545,4 +546,19 @@ function videoUpDown(isX) {
   swipe(900, isX ? 770 : 1600, 900, 60, 500);
   sleep(700);
   swipe(900, 120, 900, isX ? 780 : 1600, 500);
+}
+
+function launch2(name) {
+  home();
+  sleep(2000);
+  home();
+  sleep(2000);
+  var tar = text(name).findOne(2000);
+  while(!tar || tar.bounds().left < 8 || tar.bounds().left > 900) {
+    swipe(950, 600, 50, 600, 400);
+    sleep(2500);
+    tar = text(name).findOne(2000);
+  }
+  const bounds = tar.bounds();
+  click(bounds.left +60, bounds.top - 100);
 }

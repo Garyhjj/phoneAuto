@@ -1,30 +1,46 @@
 sleep(5000);
-// begin2();
+begin2(0);
 
-var a = textContains('立即查看').findOne(500)
-toast(a.bounds().top);
-// console.log(a.bounds().top)
-function begin2() {
+// var a = textContains('开心小农场').findOne(2000);
+// toast(a.bounds().top);
+
+function begin2(i) {
   firstEnter();
-  watch();
-  sleep(10000);
-  var a = text('看视频得青豆').findOne(4000);
-  if(a) {
-      return begin2();
-  }
+  play();
+  back();
   secondEnter();
-  watch(true);
+  watch();
   closeLast();
-  sleep(20000);
-  return begin2();
+  sleep(3000);
+  return begin2(i === 3?0: i+ 1);
 }
 
+function play(i) {
+    i = i|| 0;
+    swipe(290,1100,310,430,400);
+    sleep(500);
+    swipe(570,1170,440,330,400);
+    sleep(500);
+    swipe(800,860,800,480,400);
+    sleep(500);
+    if(i < 8) {
+      click(900,577);
+      sleep(200);
+    }
+    if(i<40) {
+        return play(i+1);
+    }
+}
 function firstEnter() {
-  var a = text('看视频得青豆').findOne(2000);
+  var a = text('开心小农场').findOne(2000);
   if(!a) {
       return firstEnter();
   }else {
-      a.click();
+      var b = a.bounds();
+      click(b.left +30, b.top -150);
+      sleep(10000);
+      click(900,577);
+      sleep(2000);
   }
 }
 
@@ -56,12 +72,12 @@ function secondEnter() {
   sleep(1000);
 }
 
-function watch(check) {
+function watch() {
   sleep(15000);
   const close = getCloseWay();
   close();
   sleep(2000);
-  if (findSecondStep(true) && check) {
+  if (findSecondStep(true)) {
     secondEnter();
     return watch();
   }
@@ -90,7 +106,6 @@ function getCloseWay() {
   }
   return getCloseWay();
 }
-
 
 function closeLast() {
   textContains('+40青豆').waitFor(); // 679

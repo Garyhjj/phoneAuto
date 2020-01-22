@@ -6,11 +6,11 @@ function begin() {
   // lauchDuoFu();
   //duofuReading(0.8);
   //   zhongJob(0.4,true);
-  // kuaikanJob(1.1);
-  // home();
 
-  // lauchDuoFu();
-  // duofuReading(1.1);
+  kuaikanJob(1.1);
+
+  lauchDuoFu();
+  duofuReading(1.1);
 
   xiangKanJob();
 

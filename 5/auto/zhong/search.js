@@ -1,22 +1,34 @@
 
 
 sleep(5000);
-zhongqingSearch();
+all();
 
+function all() {
+  var ls = text('去搜索').find();
+  var lg1 = ls.length;
+  while(lg1 --) {
+    ls[lg1].click();
+    sleep(5000);
+    zhongqingSearch();
+    sleep(3000);
+    back();
+    sleep(5000);
+  }
+}
 function zhongqingSearch(isSub) {
     function aa(i, isSub) {
-      if (i > 15) {
+      if (i > 5) {
         return
       }
   
       sleep(3000);
-      click(500, isSub ? 1200 : 670);
+      click(500, isSub ? 870 : 1070);
       while (!textContains('搜索').exists() && !textContains('百度一下').exists()) {
         sleep(1000);
       }
       sleep(3000);
       const upDown = (j) => {
-        oneUpDown(2000)
+        oneUpDown(4000)
         if (j > 1) {
           return
         } else {

@@ -1,3 +1,5 @@
+var isDefLaunch = true;
+
 home();
 begin();
 
@@ -6,8 +8,9 @@ function begin() {
   // lauchDuoFu();
   //duofuReading(0.8);
   //   zhongJob(0.4,true);
+  quTouTiaoR()
 
-  kuaikanJob(1.1);
+  kuaikanJob(0.6);
 
   lauchDuoFu();
   duofuReading(1.1);
@@ -18,7 +21,98 @@ function begin() {
 
   kReading();
 
-  zhongJob(0.4, true);
+  zhongJob(1.2, true);
+}
+
+function quTouTiaoR() {
+  home();
+  launch('趣头条');
+  sleep(23000);
+  nextPage(true);
+  nextPage(true);
+  nextPage(true);
+  // click('健康');
+  // sleep(7000);
+  commonReading({
+    readTime: 1.2,
+    upDownRead: false,
+    enterP: function () {
+      sleep(2000);
+      var a = getTitle();
+      a.click();
+    },
+    enterP1: function () {
+      swipe(300, 1700, 300, 450, 400);
+      sleep(600);
+      swipe(300, 1700, 300, 450, 400);
+      sleep(600);
+      var a = getTitle();
+      a.click();
+    },
+    refresh: function () {
+      click('刷新');
+    },
+    beforeLeavePage: findCaiDan,
+    afterEnterPage: findCaiDan
+  });
+
+  function findCaiDan() {
+    var id1 = 'btj';
+    var id2 = 'w1';
+    if (id(id1).exists()) {
+      var caidan = id(id1).findOne(1000);
+      click(caidan.bounds().left + 10, caidan.bounds().top + 10);
+      sleep(5000);
+      if (id(id2).exists()) {
+        id(id2).findOne(1000).click();
+        var tryT = 0;
+        while (!textContains('点击重播').exists()) {
+          sleep(2000);
+          if(tryT > 32) {
+            click(985, 112);
+            back();
+            sleep(1000);
+            break;
+          }
+        }
+        if(tryT <= 32) {
+          sleep(5000);
+          back();
+        }
+        sleep(3000);
+        id(id2).findOne(1000).click();
+        sleep(1000);
+      }
+    }
+  }
+
+  function getTitle() {
+    var ls = text('刚刚').find(); // textContains('分钟前').findOne(1000)
+    if (ls.length === 0) {
+      ls = textContains('分钟前').find();
+    }
+    var lg = ls.length;
+    var a;
+    while (lg--) {
+      var l = ls[lg];
+      var bounds = l.bounds();
+      var top = bounds.top;
+      var left = bounds.left;
+      if (top > 350 && top < 1700 && left > 0 && left < 700) {
+        a = l;
+        break;
+      };
+    }
+    if (a) {
+      var bounds = a.bounds();
+      return {
+        click: () => click(bounds.left, bounds.top - 10)
+      };
+    }
+    swipe(300, 1600, 300, 450, 500);
+    sleep(600);
+    return getTitle();
+  }
 }
 
 function xiangKanJob() {
@@ -27,9 +121,10 @@ function xiangKanJob() {
   sleep(16000);
   nextPage(true);
   nextPage(true);
+    nextPage(true);
   commonReading({
     readTime: 1.2,
-    afterEnterPage: function() {
+    afterEnterPage: function () {
       sleep(2000);
       if (id('more_minute_btn').exists()) {
         var c = id('iv_close').findOne(2000);
@@ -72,10 +167,10 @@ function littleVideo(minute) {
   sleep(2000);
   var start = Date.now();
   var one = (i) => {
-    const times = 10 + ~~(Math.random() * 15);
+    var times = 10 + ~~(Math.random() * 15);
     sleep(1000 * times);
-    const x = ~~(Math.random() * 300 + 400);
-    const y = ~~(Math.random() * 100);
+    var x = ~~(Math.random() * 300 + 400);
+    var y = ~~(Math.random() * 100);
     swipe(x, 1600, x + 10, 200, 400);
     sleep(2000);
     if (Date.now() - start < 1000 * 60 * minute) {
@@ -160,7 +255,7 @@ function caidan() {
           break;
         }
       }
-      const times = 8;
+      var times = 8;
       sleepAndDo(times, video);
       swipe(900, 1600, 900, 60, 500);
       sleepAndDo(0.5, video);
@@ -253,10 +348,10 @@ function kReading() {
   }
 
   function normal() {
-    const times = 6 + ~~(Math.random() * 6);
+    var times = 6 + ~~(Math.random() * 6);
     sleep(times * 1000);
-    const x = ~~(Math.random() * 300 + 400);
-    const y = ~~(Math.random() * 100);
+    var x = ~~(Math.random() * 300 + 400);
+    var y = ~~(Math.random() * 100);
     swipe(x, 1800 - y, x + 10, 100 + y, 500);
     sleep(2000);
   }
@@ -274,7 +369,7 @@ function zhongJob(last, isF) {
       beforeLeavePage: function () {
         if (click('查看详情')) {
           sleep(3000);
-          leave();
+          back();
           sleep(3000);
         }
       },
@@ -308,7 +403,7 @@ function zhongJob(last, isF) {
 
     function begin(minute) {
 
-      minute = minute > 0 ? minute : 150;
+      minute = minute > 0 ? minute : 50;
       var start = Date.now();
       var one = (i) => {
         var list = [];
@@ -321,11 +416,11 @@ function zhongJob(last, isF) {
           }
         }
         if (!skip) {
-          const times = 10 + ~~(Math.random() * 8);
+          var times = 10 + ~~(Math.random() * 8);
           sleepAndDo(times, video);
         }
-        const x = ~~(Math.random() * 300 + 400);
-        const y = ~~(Math.random() * 100);
+        var x = ~~(Math.random() * 300 + 400);
+        var y = ~~(Math.random() * 100);
         swipe(x, 1800 - y, x + 10, 100 + y, 500);
         sleep(2000);
         if (Date.now() - start < 1000 * 60 * minute) {
@@ -387,14 +482,14 @@ function kuaikanJob(last) {
           back();
         }
         sleep(1000);
-        leave();
+        back();
         sleep(2000);
         if (!text('首页').exists()) {
           sleep(36 * 1000);
           click(985, 112);
           back();
           sleep(1000);
-          leave();
+          back();
         }
         return true;
       }
@@ -413,7 +508,11 @@ function commonReading(option) {
     beforeLeavePage: noneFn,
     afterEnterPage: noneFn,
     beforeOneUpDown: noneFn,
-    canReadTwo: true
+    canReadTwo: true,
+    refresh: defRefresh,
+    enterP1: defEnterP1,
+    enterP: defEnterP,
+    upDownRead: true
   }
   option = option ? Object.assign(def, option) : def;
   var oneReadTime = option.oneReadTime;
@@ -422,6 +521,10 @@ function commonReading(option) {
   var beforeOneUpDown = option.beforeOneUpDown;
   var canReadTwo = option.canReadTwo;
   var afterEnterPage = option.afterEnterPage;
+  var refresh = option.refresh;
+  var enterP = option.enterP;
+  var enterP1 = option.enterP1;
+  var upDownRead = option.upDownRead;
   oneReadTime = oneReadTime || 60;
   var time;
   var read = (i) => {
@@ -429,20 +532,27 @@ function commonReading(option) {
       return;
     }
     i = i || 1;
-    oneUpDown(3000);
+    if(upDownRead) {
+      oneUpDown(3000);
+    } else {
+      twoDown(3000);
+    }
     if (i < 50) {
       beforeOneUpDown(i);
       sleep(3000);
       read(i + 1);
     }
   }
-  var refresh = () => {
+
+  function defRefresh() {
     swipe(400, 350, 400, 900, 800)
   }
-  var enterP = () => {
+
+  function defEnterP() {
     click(400, 430)
   }
-  var enterP1 = () => {
+
+  function defEnterP1() {
     click(400, 800)
   }
   var leave = () => {
@@ -500,11 +610,15 @@ function launch(name) {
   sleep(200);
   back();
   sleep(1000);
-  // launch2(name);
-  if (name) {
-    launchApp(name);
-    sleep(1500);
-    click('允许', 1);
+  if (!isDefLaunch) {
+    launch2(name);
+
+  } else {
+    if (name) {
+      launchApp(name);
+      sleep(5000);
+      click('允许', 1);
+    }
   }
 }
 
@@ -514,7 +628,13 @@ function oneUpDown(sl) {
   swipe(350, 270, 350, 770, 400);
 }
 
-function nextPage(right){
+function twoDown(sl) {
+  swipe(350, 770, 350, 270, 400);
+  sleep(sl || 1000);
+  swipe(350, 770, 350, 270, 400);
+}
+
+function nextPage(right) {
   if (right) {
     swipe(950, 600, 50, 600, 800);
   } else {
@@ -529,6 +649,7 @@ function videoFanFu(last, oneTime) {
   oneTime = oneTime || 8;
   var start = Date.now();
   startR();
+
   function startR() {
     if (Date.now() - start < 1000 * 60 * 60 * last) {
       sleep(oneTime * 1000);
@@ -554,11 +675,11 @@ function launch2(name) {
   home();
   sleep(2000);
   var tar = text(name).findOne(2000);
-  while(!tar || tar.bounds().left < 8 || tar.bounds().left > 900) {
+  while (!tar || tar.bounds().left < 8 || tar.bounds().left > 900) {
     swipe(950, 600, 50, 600, 400);
     sleep(2500);
     tar = text(name).findOne(2000);
   }
-  const bounds = tar.bounds();
-  click(bounds.left +60, bounds.top - 100);
+  var bounds = tar.bounds();
+  click(bounds.left + 60, bounds.top + 100);
 }

@@ -7,7 +7,10 @@ function zhongVideo() {
   sleep(3000);
   click('允许');
   sleep(13000);
-  click(500,1797);
+  // click(500,1797);
+  click(280,1797);
+  sleep(3000);
+  click('小视频');
   sleep(2000);
   click(200,300);
   begin();
@@ -28,7 +31,7 @@ function zhongVideo() {
         }
       }
       if(!skip) {
-        const times = 8 + ~~(Math.random() * 15);
+        const times = 8 + ~~(Math.random() * 8);
         sleepAndDo(times, video);
       }
       const x = ~~(Math.random() * 300 + 400);
@@ -56,12 +59,16 @@ function zhongVideo() {
 
 
   function video() {
-    if (text('免费领取').exists()) {
-      while(!text('待领取').exists()) {
-          sleep(2000);
+    if(text('广告').exists()) {
+      if (text('免费领取').exists()) {
+        while(!text('待领取').exists()) {
+            sleep(2000);
+        }
+        click('待领取');
+      }else {
+        swipe(300, 1700, 300, 190, 500);
       }
-      click('待领取');
-    }
+    } 
   }
 
   function launch(name) {
@@ -76,7 +83,6 @@ function zhongVideo() {
       tar = text(name).findOne(2000);
     }
     const bounds = tar.bounds();
-    console.log(bounds, bounds.top, bounds.left)
     click(bounds.left +60, bounds.top + 100);
   }
 }

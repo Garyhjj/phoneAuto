@@ -1,5 +1,11 @@
 var isDefLaunch = true;
 
+var quTouTiaoId1 = isDefLaunch? 'axh': 'aub';
+var quTouTiaoId2 = isDefLaunch? 'a68': 'a4z';
+var caidanReadingT = isDefLaunch? 60 : 40;
+var kReadingT = isDefLaunch? 520: 480;
+var zhongVideoT= isDefLaunch? 40 : 50;
+
 home();
 begin();
 
@@ -8,20 +14,27 @@ function begin() {
   // lauchDuoFu();
   //duofuReading(0.8);
   //   zhongJob(0.4,true);
-  quTouTiaoR()
 
-  kuaikanJob(0.6);
+  kuaikanJob(0.7);
 
-  lauchDuoFu();
-  duofuReading(1.1);
+  if(!isDefLaunch) {
+    lauchDuoFu();
+    duofuReading(0.7);
+  
+    kuaikanJob(0.01);
+  }
 
   xiangKanJob();
 
   caidan();
 
+  zhongJob(isDefLaunch? 0.4: 1.2, true);
+
   kReading();
 
-  zhongJob(1.2, true);
+  quTouTiaoR();
+
+  kuaikanJob(0.7);
 }
 
 function quTouTiaoR() {
@@ -31,8 +44,8 @@ function quTouTiaoR() {
   nextPage(true);
   nextPage(true);
   nextPage(true);
-  // click('健康');
-  // sleep(7000);
+  nextPage(true);
+  nextPage(true);
   commonReading({
     readTime: 1.2,
     upDownRead: false,
@@ -57,8 +70,8 @@ function quTouTiaoR() {
   });
 
   function findCaiDan() {
-    var id1 = 'btj';
-    var id2 = 'w1';
+    var id1 = quTouTiaoId1;
+    var id2 = quTouTiaoId2;
     if (id(id1).exists()) {
       var caidan = id(id1).findOne(1000);
       click(caidan.bounds().left + 10, caidan.bounds().top + 10);
@@ -68,20 +81,18 @@ function quTouTiaoR() {
         var tryT = 0;
         while (!textContains('点击重播').exists()) {
           sleep(2000);
-          if(tryT > 32) {
+          if (tryT > 32) {
             click(985, 112);
             back();
             sleep(1000);
             break;
           }
         }
-        if(tryT <= 32) {
+        if (tryT <= 32) {
           sleep(5000);
           back();
         }
         sleep(3000);
-        id(id2).findOne(1000).click();
-        sleep(1000);
       }
     }
   }
@@ -121,7 +132,8 @@ function xiangKanJob() {
   sleep(16000);
   nextPage(true);
   nextPage(true);
-    nextPage(true);
+  nextPage(true);
+  nextPage(true);
   commonReading({
     readTime: 1.2,
     afterEnterPage: function () {
@@ -132,6 +144,15 @@ function xiangKanJob() {
           c.click();
           sleep(1000);
         }
+      }
+    },
+    beforeLeavePage() {
+      var txt1 = '读完文章，送您一个彩蛋';
+      if(text(txt1).exists()) {
+        click(txt1);
+        sleep(2000);
+        click('继续看文章');
+        sleep(1000);
       }
     },
     beforeOneUpDown() {
@@ -243,7 +264,7 @@ function caidan() {
 
   function begin(minute) {
 
-    minute = minute > 0 ? minute : 40;
+    minute = minute > 0 ? minute : caidanReadingT;
     var start = Date.now();
     var one = (i) => {
       var list = ['立即下载', '查看详情'];
@@ -322,7 +343,7 @@ function kReading() {
       normal();
       isL = isLong();
     }
-    if (i > 480) {
+    if (i > kReadingT) {
       return;
     }
     start(i + 1);
@@ -362,6 +383,8 @@ function zhongJob(last, isF) {
   sleep(3000);
   launch('中青看点');
   sleep(25000);
+  nextPage(true);
+  nextPage(true);
   try {
     commonReading({
       readTime: last,
@@ -382,7 +405,7 @@ function zhongJob(last, isF) {
   } catch (err) {
     console.log(err);
   }
-  zhongVideo();
+  zhongVideo(zhongVideoT);
 
   home();
 
@@ -392,10 +415,10 @@ function zhongJob(last, isF) {
     // sleep(3000);
     //  click('允许');
     sleep(5000);
-    //   click(500, 1797);
-    click(280, 1797);
-    sleep(3000);
-    click('小视频');
+    // click(500, 1797);
+    // click(280, 1797);
+    // sleep(3000);
+    // click('小视频');
     sleep(6000);
     click(200, 300);
     begin();
@@ -532,7 +555,7 @@ function commonReading(option) {
       return;
     }
     i = i || 1;
-    if(upDownRead) {
+    if (upDownRead) {
       oneUpDown(3000);
     } else {
       twoDown(3000);
@@ -607,7 +630,7 @@ function commonReading(option) {
 
 function launch(name) {
   back();
-  sleep(200);
+  sleep(100);
   back();
   sleep(1000);
   if (!isDefLaunch) {

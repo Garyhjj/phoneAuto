@@ -1,10 +1,10 @@
 var isDefLaunch = true;
 
-var quTouTiaoId1 = isDefLaunch? 'axh': 'aub';
-var quTouTiaoId2 = isDefLaunch? 'a68': 'a4z';
-var caidanReadingT = isDefLaunch? 60 : 40;
-var kReadingT = isDefLaunch? 520: 480;
-var zhongVideoT= isDefLaunch? 40 : 50;
+var quTouTiaoId1 = isDefLaunch ? 'axh' : 'aub';
+var quTouTiaoId2 = isDefLaunch ? 'a68' : 'a4z';
+var caidanReadingT = isDefLaunch ? 60 : 40;
+var kReadingT = isDefLaunch ? 520 : 200;
+var zhongVideoT = isDefLaunch ? 40 : 50;
 
 home();
 begin();
@@ -17,10 +17,10 @@ function begin() {
 
   kuaikanJob(0.7);
 
-  if(!isDefLaunch) {
+  if (!isDefLaunch) {
     lauchDuoFu();
     duofuReading(0.7);
-  
+
     kuaikanJob(0.01);
   }
 
@@ -28,7 +28,7 @@ function begin() {
 
   caidan();
 
-  zhongJob(isDefLaunch? 0.4: 1.2, true);
+  zhongJob(isDefLaunch ? 0.4 : 1.2, true);
 
   kReading();
 
@@ -148,7 +148,7 @@ function xiangKanJob() {
     },
     beforeLeavePage() {
       var txt1 = '读完文章，送您一个彩蛋';
-      if(text(txt1).exists()) {
+      if (text(txt1).exists()) {
         click(txt1);
         sleep(2000);
         click('继续看文章');
@@ -161,14 +161,19 @@ function xiangKanJob() {
         if (c) {
           c.click();
           sleep(3000);
-          if (id('more_minute_btn').exists()) {
-            var c = id('iv_close').findOne(2000);
-            if (c) {
-              c.click();
-              sleep(1000);
-            }
+          var c1 = id('iv_close').findOne(2000);
+          if (c1) {
+            c1.click();
+            sleep(1000);
           }
         }
+      }
+      if(id('iv_close').exists()) {
+        var c1 = id('iv_close').findOne(2000);
+          if (c1) {
+            c1.click();
+            sleep(1000);
+          }
       }
     }
   })
@@ -415,7 +420,7 @@ function zhongJob(last, isF) {
     // sleep(3000);
     //  click('允许');
     sleep(5000);
-    // click(500, 1797);
+    click(500, 1797);
     // click(280, 1797);
     // sleep(3000);
     // click('小视频');

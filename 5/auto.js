@@ -122,6 +122,10 @@ function quTouTiaoR() {
     }
     swipe(300, 1600, 300, 450, 500);
     sleep(600);
+    if(text('残忍离开').exists()) {
+      back();
+      sleep(2000);
+    }
     return getTitle();
   }
 }
@@ -135,7 +139,7 @@ function xiangKanJob() {
   nextPage(true);
   nextPage(true);
   commonReading({
-    readTime: 1.2,
+    readTime: 1.3,
     afterEnterPage: function () {
       sleep(2000);
       if (id('more_minute_btn').exists()) {

@@ -1,7 +1,7 @@
 var isDefLaunch = true;
 
-var quTouTiaoId1 = isDefLaunch ? 'axh' : 'aub';
-var quTouTiaoId2 = isDefLaunch ? 'a68' : 'a4z';
+var quTouTiaoId1 = isDefLaunch ? 'axh' : 'axf';
+var quTouTiaoId2 = isDefLaunch ? 'a68' : 'a5x';
 var caidanReadingT = isDefLaunch ? 60 : 40;
 var kReadingT = isDefLaunch ? 520 : 200;
 var zhongVideoT = isDefLaunch ? 40 : 50;

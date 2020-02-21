@@ -339,7 +339,7 @@ function kReading() {
   function start(i) {
     if (i < 50) {
       click('我知道了', 1);
-      back();
+      // back();
     }
     if (isL) {
       fanfu();

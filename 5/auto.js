@@ -1,13 +1,14 @@
 var isDefLaunch = true;
 
 var quTouTiaoId1 = isDefLaunch ? 'axh' : 'axf';
-var quTouTiaoId2 = isDefLaunch ? 'a68' : 'a5x';
+var quTouTiaoId2 = isDefLaunch ? 'w1' : 'vv'; // 'a68' : 'a5x';
 var caidanReadingT = isDefLaunch ? 60 : 40;
 var kReadingT = isDefLaunch ? 520 : 200;
 var zhongVideoT = isDefLaunch ? 40 : 50;
 
 home();
 begin();
+home();
 
 function begin() {
   sleep(2000)
@@ -38,7 +39,6 @@ function begin() {
 }
 
 function quTouTiaoR() {
-  home();
   launch('趣头条');
   sleep(23000);
   nextPage(true);
@@ -131,7 +131,6 @@ function quTouTiaoR() {
 }
 
 function xiangKanJob() {
-  home();
   launch('想看');
   sleep(16000);
   nextPage(true);
@@ -212,7 +211,6 @@ function littleVideo(minute) {
 
 
 function lauchDuoFu() {
-  home();
   launch('多福看看');
   sleep(10000);
 }
@@ -264,7 +262,6 @@ function duofuReading(rt) {
 }
 
 function caidan() {
-  home();
   launch('彩蛋视频');
   sleep(3000);
   click('允许');
@@ -329,7 +326,6 @@ function caidan() {
 function kReading() {
   var tx = ['广告', '桔子好物分享'];
   var isL = false;
-  home();
   sleep(3000);
   launch('快手极速版');
   sleep(8000);
@@ -338,7 +334,6 @@ function kReading() {
   } catch (err) {
     console.log(err);
   }
-  home();
 
 
   function start(i) {
@@ -388,7 +383,6 @@ function kReading() {
 }
 
 function zhongJob(last, isF) {
-  home();
   sleep(3000);
   launch('中青看点');
   sleep(25000);
@@ -416,8 +410,6 @@ function zhongJob(last, isF) {
   }
   zhongVideo(zhongVideoT);
 
-  home();
-
   function zhongVideo() {
     //  home();
     // launch('中青看点');
@@ -431,7 +423,6 @@ function zhongJob(last, isF) {
     sleep(6000);
     click(200, 300);
     begin();
-    home();
 
     function begin(minute) {
 
@@ -489,7 +480,6 @@ function zhongJob(last, isF) {
 
 
 function kuaikanJob(last) {
-  home();
   sleep(3000);
   launch('快看点');
   sleep(15000);
@@ -529,7 +519,6 @@ function kuaikanJob(last) {
   } catch (err) {
     console.log(err);
   }
-  home();
 }
 
 
@@ -641,7 +630,7 @@ function launch(name) {
   back();
   sleep(100);
   back();
-  sleep(1000);
+  sleep(4000);
   if (!isDefLaunch) {
     launch2(name);
 

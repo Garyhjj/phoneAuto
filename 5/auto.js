@@ -2,9 +2,9 @@ var isDefLaunch = true;
 
 var quTouTiaoId1 = isDefLaunch ? 'av9' : 'av9';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'uu'; // 'a68' : 'a5x';
-var caidanReadingT = isDefLaunch ? 75 : 60;
+var caidanReadingT = isDefLaunch ? 90 : 60;
 var kReadingT = isDefLaunch ? 500 : 400;
-var zhongVideoT = isDefLaunch ? 40 : 30;
+var zhongVideoT = isDefLaunch ? 25 : 30;
 
 home();
 begin();
@@ -133,6 +133,7 @@ function quTouTiaoR() {
       click('刷新');
       sleep(3000);
     }
+    closeNoReact();
     return getTitle();
   }
 }

@@ -1,8 +1,8 @@
 var isDefLaunch = true;
 
-var quTouTiaoId1 = isDefLaunch ? 'av9' : 'av9';
+var quTouTiaoId1 = isDefLaunch ? 'avi' : 'avi';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'uu'; // 'a68' : 'a5x';
-var caidanReadingT = isDefLaunch ? 90 : 60;
+var caidanReadingT = isDefLaunch ? 100 : 80;
 var kReadingT = isDefLaunch ? 500 : 400;
 var zhongVideoT = isDefLaunch ? 25 : 30;
 
@@ -12,17 +12,10 @@ home();
 
 function begin() {
   sleep(2000)
-  // lauchDuoFu();
-  //duofuReading(0.8);
-  //   zhongJob(0.4,true);
-
-  kuaikanJob(0.7);
 
   if (!isDefLaunch) {
     lauchDuoFu();
     duofuReading(0.7);
-
-    kuaikanJob(0.01);
   }
 
   xiangKanJob();
@@ -30,8 +23,6 @@ function begin() {
   caidan();
 
   zhongJob(isDefLaunch ? 0.3 : 0.8, true);
-
-  kuaikanJob(0.7);
 
   quTouTiaoR();
 
@@ -46,10 +37,9 @@ function quTouTiaoR() {
   nextPage(true);
   nextPage(true);
   nextPage(true);
-  nextPage(true);
   commonReading({
-    readTime: 1.2,
-    upDownRead: false,
+    readTime: 1.0,
+    // upDownRead: false,
     enterP: function () {
       sleep(2000);
       var a = getTitle();
@@ -82,14 +72,15 @@ function quTouTiaoR() {
         var tryT = 0;
         while (!textContains('点击重播').exists()) {
           sleep(2000);
-          if (tryT > 32) {
+          if (tryT > 25) {
             click(985, 112);
             back();
             sleep(1000);
             break;
           }
+          tryT = tryT + 1;
         }
-        if (tryT <= 32) {
+        if (tryT <= 25) {
           sleep(5000);
           back();
         }
@@ -100,9 +91,12 @@ function quTouTiaoR() {
 
   function getTitle(tryT) {
     tryT = tryT || 0;
-    var ls = text('刚刚').find(); // textContains('分钟前').findOne(1000)
+    var ls = textContains('评论').find(); // textContains('分钟前').findOne(1000)
     if (ls.length === 0) {
-      ls = textContains('分钟前').find();
+      ls = textContains('小时前').find();
+    }
+    if (ls.length === 0) {
+      ls = textContains('天前').find();
     }
     var lg = ls.length;
     var a;
@@ -129,12 +123,14 @@ function quTouTiaoR() {
       sleep(2000);
     }
     if(tryT > 2) {
+      back();
+      sleep(3000);
       nextPage(true);
       click('刷新');
       sleep(3000);
     }
     closeNoReact();
-    return getTitle();
+    return getTitle(tryT + 1);
   }
 }
 
@@ -696,7 +692,7 @@ function videoFanFu(last, oneTime) {
     if (Date.now() - start < 1000 * 60 * 60 * last) {
       sleep(oneTime * 1000);
       videoUpDown()
-      back();
+      // back();
       sleep(1000);
       return startR();
     }

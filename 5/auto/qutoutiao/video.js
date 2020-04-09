@@ -2,27 +2,16 @@ sleep(5000);
 zhongVideo();
 
 function zhongVideo() {
-  begin();
+  qVideo();
   home();
 
-  function begin(minute) {
-
+  function qVideo(minute) {
+    click(550, 1840);
     minute = minute > 0 ? minute : 90;
     var start = Date.now();
     var one = (i) => {
-      var list = [];
-      var skip = false;
-      var lg = list.length;
-      while (lg--) {
-        if (textContains(list[lg]).exists()) {
-          skip = true;
-          break;
-        }
-      }
-      if (!skip) {
-        const times = 8 + ~~(Math.random() * 6);
-        sleepAndDo(times, video);
-      }
+      const times = 1 + ~~(Math.random() * 1);
+      sleepAndDo(times);
       const x = ~~(Math.random() * 300 + 400);
       const y = ~~(Math.random() * 100);
       swipe(x, 1800 - y, x + 10, 100 + y, 500);
@@ -34,18 +23,20 @@ function zhongVideo() {
     one(0);
   }
 
-  function sleepAndDo(times, fn) {
-    sleep(3 * 1000);
-    if (text('+50').exists()) {
-      sleep(16 * 1000)
-    } else {
-      sleep((times - 3) * 1000);
+  function sleepAndDo(times) {
+    var id1 = 'avi';
+    if (id(id1).exists()) {
+      var caidan = id(id1).findOne(1000);
+      click(caidan.bounds().left + 10, caidan.bounds().top + 10);
+      sleep(5000);
+      back();
     }
-  }
-
-
-  function video() {
-
+    sleep(1 * 1000);
+    if (text('+50').exists()) {
+      sleep(11 * 1000)
+    } else {
+      sleep((times - 1) * 1000);
+    }
   }
 
   function launch(name) {

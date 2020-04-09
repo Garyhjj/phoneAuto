@@ -1,50 +1,76 @@
+//   click(925,497);
+quTouTiaoVideo();
 
-    //   click(925,497);
-    caidan();
-function caidan() {
-    launchApp('趣铃声');
-    sleep(3000);
-    click('允许');
-    sleep(12000);
-    begin();
-  
-    function begin(minute) {
-  
-      minute = minute > 0 ? minute : 60;
-      var start = Date.now();
-      var one = (i) => {
-        var times = 12;
-        sleepAndDo(times, video);
-        swipe(900, 1600, 900, 60, 500);
-        sleepAndDo(2, video);
-        swipe(900, 120, 900, 1600, 500);
-        sleepAndDo(2, video);
-        if (Date.now() - start < 1000 * 60 * minute) {
-          one(i + 1);
-        }
-      }
-      one(0);
-    }
-  
-    function sleepAndDo(times, fn) {
-      var one = 3;
-      if (times > one) {
-        sleep(one * 1000);
-        fn();
-        return sleepAndDo(times - one, fn);
-      } else {
-        sleep(times*1000);
-        fn();
+function quTouTiaoVideo() {
+  launchApp('趣铃声');
+  sleep(3000);
+  click('允许');
+  sleep(20000);
+  click(550, 1500);
+  sleep(2000);
+  click('小视频');
+  begin();
+
+  function begin(minute) {
+
+    minute = minute > 0 ? minute : 60;
+    var start = Date.now();
+    var one = (i) => {
+      const times = 6 + ~~(Math.random() * 6);
+      sleepAndDo(times, video);
+      const x = ~~(Math.random() * 300 + 400);
+      const y = ~~(Math.random() * 100);
+      swipe(x, 1800 - y, x + 10, 100 + y, 500);
+      sleep(2000);
+      if (Date.now() - start < 1000 * 60 * minute) {
+        one(i + 1);
       }
     }
-  
-  
-    function video() {
-      if (!textContains('看视频再领').exists()) {
-        return;
-      }
-      sleep(5000);
-      click(925,497);
-      return;
+    one(0);
+  }
+
+  function sleepAndDo(times, fn) {
+    var one = 3;
+    if (times > one) {
+      sleep(one * 1000);
+      fn();
+      return sleepAndDo(times - one, fn);
+    } else {
+      sleep(times * 1000);
+      fn();
     }
   }
+
+
+  function video() {
+    if (!textContains('看视频再领').exists()) {
+      return;
+    }
+    textContains('看视频再领').findOne(2000).click();
+    watch();
+  }
+
+
+  function watch() {
+    var tryT = 0;
+    while (!textContains('点击重播').exists() ||
+      !textContains('奖励已到账').exists() ||
+      !textContains('金币发放成功').exists() ||
+      !textContains('金币领取成功').exists()) {
+      sleep(2000);
+      if (tryT > 25) {
+        back();
+        sleep(2000);
+        click(985, 112);
+        break;
+      }
+      tryT = tryT + 1;
+    }
+    if (tryT <= 25) {
+      sleep(5000);
+      back();
+    }
+    sleep(3000);
+    click(925,650);
+  }
+}

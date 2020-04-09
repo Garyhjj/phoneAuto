@@ -1,10 +1,28 @@
 var isDefLaunch = true;
+var isAdmin = true;
 
-var quTouTiaoId1 = isDefLaunch ? 'avi' : 'avi';
-var quTouTiaoId2 = isDefLaunch ? 'uu' : 'uu'; // 'a68' : 'a5x';
-var caidanReadingT = isDefLaunch ? 100 : 80;
+var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
+var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
+var caidanReadingT = isDefLaunch ? 60 : 33;
 var kReadingT = isDefLaunch ? 500 : 400;
 var zhongVideoT = isDefLaunch ? 25 : 30;
+var noVideoFirst = false;
+var stopReading = false;
+
+if (!isAdmin && isDefLaunch) {
+  quTouTiaoId1 = 'awx';
+  quTouTiaoId2 = 'v7';
+}
+
+// zhongQingSearch();
+// xiangKanVideo();
+// zhongQingVideoKa();
+// noVideoFirst = false;
+//  tianTian();
+
+//  quLingSheng();
+// caidanDown();
+// quKankan();
 
 home();
 begin();
@@ -13,21 +31,111 @@ home();
 function begin() {
   sleep(2000)
 
-  if (!isDefLaunch) {
+  if (isDefLaunch) {
+    //  tianTian();
+
+    quLingSheng();
+
+    caidanDown();
+
+    xiangKanJob();
+
+    zhongJob(0.27);
+
+    if (!isAdmin) {
+      caidanDown();
+    }
+
+    // kReading();
+
+    if (isAdmin) {
+      zhongQingSearch();
+    }
+    tianTian();
+
+
+    quLingSheng();
+
+    if (isAdmin) {
+      zhongQingSearch();
+    }
+
+    quTouTiaoR();
+
+    // quLingSheng();
+
+    tianTian();
+
+    zhongQingVideoKa();
+
+    xiangKanVideo();
+
+    if (!isAdmin) {
+      zhongQingSearch();
+    }
+
+  } else {
+    // tianTian();
+
+    // quLingSheng();
+
     lauchDuoFu();
-    duofuReading(0.7);
+    duofuReading(0.1);
+
+    xiangKanJob();
+
+    zhongJob(0.8);
+
+    caidanDown();
+
+    quLingSheng();
+
+    tianTian();
+
+    zhongQingSearch();
+
+    // zhongJob(0.8);
+
+    quLingSheng();
+
+    tianTian();
+
+    zhongQingVideoKa();
+
+    xiangKanVideo();
   }
+}
 
-  xiangKanJob();
+function quKankan() {
+  launch('趣看看');
+  sleep(20000);
+  nextPage(true);
+  commonReading({
+    readTime: 1.2,
+    upDownRead: false,
+    oneReadTime: 40,
+    enterP: function () {
+      sleep(2000);
+      checkModal();
+      click(330, 400);
+    },
+    enterP1: function () {
+      checkModal();
+      swipe(300, 1700, 300, 450, 400);
+      sleep(600);
+      click(330, 1600);
+    },
+    refresh: function () {
+      click('刷新');
+    },
+  });
 
-  caidan();
-
-  zhongJob(isDefLaunch ? 0.3 : 0.8, true);
-
-  quTouTiaoR();
-
-  kReading();
-
+  function checkModal() {
+    if (text('继续阅读').exists()) {
+      click('继续阅读');
+      sleep(1000);
+    }
+  }
 }
 
 function quTouTiaoR() {
@@ -37,9 +145,11 @@ function quTouTiaoR() {
   nextPage(true);
   nextPage(true);
   nextPage(true);
+  nextPage(true);
   commonReading({
-    readTime: 1.0,
-    // upDownRead: false,
+    readTime: 0.8,
+    upDownRead: false,
+    oneReadTime: 45,
     enterP: function () {
       sleep(2000);
       var a = getTitle();
@@ -56,9 +166,13 @@ function quTouTiaoR() {
     refresh: function () {
       click('刷新');
     },
-    beforeLeavePage: findCaiDan,
-    afterEnterPage: findCaiDan
+    beforeOneUpDown: findCaiDan,
+    // beforeLeavePage: findCaiDan,
+    // afterEnterPage: findCaiDan
   });
+  // if (isDefLaunch) {
+  //   qVideo(20);
+  // }
 
   function findCaiDan() {
     var id1 = quTouTiaoId1;
@@ -69,25 +183,11 @@ function quTouTiaoR() {
       sleep(5000);
       if (id(id2).exists()) {
         id(id2).findOne(1000).click();
-        var tryT = 0;
-        while (!textContains('点击重播').exists()) {
-          sleep(2000);
-          if (tryT > 25) {
-            click(985, 112);
-            back();
-            sleep(1000);
-            break;
-          }
-          tryT = tryT + 1;
-        }
-        if (tryT <= 25) {
-          sleep(5000);
-          back();
-        }
-        sleep(3000);
+        quTouTiaoWatch('金币领取成功');
       }
     }
   }
+  var failT = 0;
 
   function getTitle(tryT) {
     tryT = tryT || 0;
@@ -111,26 +211,69 @@ function quTouTiaoR() {
       };
     }
     if (a) {
+      failT = 0;
       var bounds = a.bounds();
       return {
         click: () => click(bounds.left, bounds.top - 10)
       };
     }
+    failT = failT + 1;
+    if (failT > 8) {
+      stopReading = true;
+      return {
+        click: () => click(10, 10)
+      };
+    }
     swipe(300, 1600, 300, 450, 500);
     sleep(600);
-    if(text('残忍离开').exists()) {
+    if (text('残忍离开').exists()) {
       back();
       sleep(2000);
     }
-    if(tryT > 2) {
+    if (tryT > 2) {
       back();
       sleep(3000);
       nextPage(true);
       click('刷新');
       sleep(3000);
+      tryT = -1;
     }
     closeNoReact();
     return getTitle(tryT + 1);
+  }
+
+  function qVideo(minute) {
+    click(550, 1840);
+    minute = minute > 0 ? minute : 90;
+    var start = Date.now();
+    var one = (i) => {
+      var times = 1 + ~~(Math.random() * 1);
+      sleepAndDo(times);
+      var x = ~~(Math.random() * 300 + 400);
+      var y = ~~(Math.random() * 100);
+      swipe(x, 1800 - y, x + 10, 100 + y, 500);
+      sleep(2000);
+      if (Date.now() - start < 1000 * 60 * minute) {
+        one(i + 1);
+      }
+    }
+    one(0);
+  }
+
+  function sleepAndDo(times) {
+    var id1 = quTouTiaoId1;
+    if (id(id1).exists()) {
+      var caidan = id(id1).findOne(1000);
+      click(caidan.bounds().left + 10, caidan.bounds().top + 10);
+      sleep(5000);
+      back();
+    }
+    sleep(1 * 1000);
+    if (text('+50').exists()) {
+      sleep(11 * 1000)
+    } else {
+      sleep((times - 1) * 1000);
+    }
   }
 }
 
@@ -142,7 +285,7 @@ function xiangKanJob() {
   nextPage(true);
   nextPage(true);
   commonReading({
-    readTime: 1.3,
+    readTime: 1.2,
     afterEnterPage: function () {
       sleep(2000);
       if (id('more_minute_btn').exists()) {
@@ -175,12 +318,12 @@ function xiangKanJob() {
           }
         }
       }
-      if(id('iv_close').exists()) {
+      if (id('iv_close').exists()) {
         var c1 = id('iv_close').findOne(2000);
-          if (c1) {
-            c1.click();
-            sleep(1000);
-          }
+        if (c1) {
+          c1.click();
+          sleep(1000);
+        }
       }
     }
   })
@@ -265,11 +408,25 @@ function duofuReading(rt) {
   work(rt);
 }
 
+function caidanDown() {
+  launch('彩蛋视频');
+  sleep(20000);
+  quTouTiaoVideo({
+    readTime: 43,
+    hasVideoText: '立即翻倍',
+    beforeOneBegin: function (i) {
+      if (i < 7) {
+        back();
+      }
+    }
+  });
+}
+
 function caidan() {
   launch('彩蛋视频');
   sleep(3000);
   click('允许');
-  sleep(8000);
+  sleep(20000);
   begin();
 
   function begin(minute) {
@@ -390,7 +547,7 @@ function kReading() {
   }
 }
 
-function zhongJob(last, isF) {
+function zhongJob(last) {
   sleep(3000);
   launch('中青看点');
   sleep(25000);
@@ -406,7 +563,7 @@ function zhongJob(last, isF) {
           back();
           sleep(3000);
         }
-        if(id('n_').exists()) {
+        if (id('n_').exists()) {
           var jiangli = id('n_').findOne(1000);
           var bound = jiangli.bounds();
           click(bound.left, bound.top);
@@ -432,7 +589,7 @@ function zhongJob(last, isF) {
     // sleep(3000);
     //  click('允许');
     sleep(5000);
-    click(500, 1797);
+    click(500, 1815);
     // click(280, 1797);
     // sleep(3000);
     // click('小视频');
@@ -442,7 +599,7 @@ function zhongJob(last, isF) {
 
     function begin(minute) {
 
-      minute = minute > 0 ? minute : 50;
+      minute = minute > 0 ? minute : 20;
       var start = Date.now();
       var one = (i) => {
         var list = [];
@@ -455,7 +612,7 @@ function zhongJob(last, isF) {
           }
         }
         if (!skip) {
-          var times = 10 + ~~(Math.random() * 8);
+          var times = 6 + ~~(Math.random() * 8);
           sleepAndDo(times, video);
         }
         var x = ~~(Math.random() * 300 + 400);
@@ -492,6 +649,160 @@ function zhongJob(last, isF) {
     }
   }
 
+}
+
+function xiangKanVideo() {
+  launch('想看');
+  sleep(16000);
+  back();
+  sleep(2000);
+  click(300, 1800);
+  sleep(4000);
+  back();
+  sleep(2000);
+  click(500, 590);
+  xkVideo(0);
+
+  function xkVideo(i) {
+    if (i > 68) return;
+    if (id('fudai_icon').exists()) {
+      var c = id('fudai_icon').findOne(2000);
+      if (c) {
+        c.click();
+        sleep(3000);
+        var c1 = id('iv_close').findOne(2000);
+        if (c1) {
+          c1.click();
+          sleep(1000);
+        }
+      }
+    }
+    if (id('iv_close').exists()) {
+      var c1 = id('iv_close').findOne(2000);
+      if (c1) {
+        c1.click();
+        sleep(1000);
+      }
+    }
+
+    sleep(1000 * 60);
+    click(500, 1480);
+    xkVideo(i + 1);
+
+  }
+}
+
+function zhongQingVideoKa() {
+  launch('中青看点');
+  sleep(25000);
+  back();
+  sleep(3000);
+  click(500, 1815);
+  sleep(5000);
+  click(200, 300);
+  sleep(500);
+  click(193, 1400);
+  sleep(2000);
+  back();
+  sleep(1000 * 60 * 24 * 1.5);
+}
+
+function zhongQingSearch() {
+  launch('中青看点');
+  sleep(25000);
+  back();
+  sleep(3000);
+  click(700, 1815);
+  sleep(5000);
+  click('立即搜索');
+  sleep(5000);
+  try {
+    all();
+  } catch (e) {
+    console.log(e);
+  }
+
+  function all() {
+    var ls = text('去搜索').find();
+    var lgAll = ls.length - 0;
+    while (lgAll--) {
+      ls = text('去搜索').find();
+      ls[lgAll].click();
+      sleep(5000);
+      var max = 4;
+      for (var j = 5; j < 12; j++) {
+        if (textContains(j + '次搜索').exists()) {
+          max = j - 1;
+          break;
+        }
+      }
+      zhongqingSearch(max);
+      sleep(3000);
+      back();
+      sleep(6000);
+    }
+
+    function zhongqingSearch(times) {
+      function aa(i) {
+        var max = times || 4;
+        var t = max + 1;
+        if (i > max || textContains(t + '/' + t).exists()) {
+          return
+        }
+
+        sleep(3000);
+        var tar = text('热').findOne(2000);
+        if (tar) {
+          tar.click();
+        } else {
+          click('换一批');
+          return aa(i + 1)
+        }
+        while (!textContains('搜索').exists() && !textContains('百度一下').exists()) {
+          sleep(1000);
+        }
+        sleep(3000);
+        var upDown = (j) => {
+          oneUpDown(4000)
+          if (j > 1) {
+            return
+          } else {
+            upDown(j + 1)
+          }
+        }
+        if (!textContains('页面失联了').exists()) {
+          upDown(1);
+          sleep(2000);
+          swipe(500, 300, 500, 1000, 500);
+          sleep(3000);
+          if (click('百度一下', 0)) {
+
+          } else {
+            sleep(1000);
+            click(850, 320);
+            click(600, 600);
+          }
+          sleep(2000);
+          upDown(1);
+        }
+        back()
+        sleep(2000);
+        if (!textContains('搜索赚').exists()) {
+          sleep(1000);
+          click(230, 100);
+        }
+        sleep(1500);
+        return aa(i + 1)
+      }
+      aa(0);
+    }
+
+    function oneUpDown(sl) {
+      swipe(350, 770, 350, 270, 800);
+      sleep(sl || 1000);
+      swipe(350, 270, 350, 770, 800);
+    }
+  }
 }
 
 
@@ -537,6 +848,74 @@ function kuaikanJob(last) {
   }
 }
 
+function quLingSheng(readTime) {
+  launch('趣铃声');
+  sleep(20000);
+  click(550, 1500);
+  sleep(2000);
+  click('小视频');
+  quTouTiaoVideo({
+    afterVideo: function () {
+      var c = id('iv_close').findOne(2000);
+      if (c) {
+        c.click();
+      }
+      sleep(800);
+      click('小视频');
+    },
+    readTime: readTime || 35,
+    upDownReadNoVideoTime: 5,
+    upDownReadTime: 35,
+    textE: '金币发放成功',
+    goDown: function () {
+      click('铃声');
+    },
+    goUp: function () {
+      click('小视频');
+    },
+    beforeDownRead: function () {
+      click('小视频');
+    }
+  });
+}
+
+
+function tianTian(readTime) {
+  launch(isDefLaunch && isAdmin ? '每日爱清理' : '天天爱清理');
+  sleep(8000);
+  click('停止扫描');
+  sleep(5000);
+  click('停止扫描');
+  sleep(5000);
+  click('停止扫描');
+  sleep(5000);
+  click('视频');
+  quTouTiaoVideo({
+    readTime: readTime || 20,
+    upDownReadNoVideoTime: 5,
+    upDownReadTime: 45,
+    textE: '奖励已到账',
+    goDown: function () {
+      click('首页');
+    },
+    goUp: function () {
+      click('视频');
+    },
+    beforeDownRead: function () {
+      click('视频');
+    },
+    beforeOneBegin: function (i) {
+      if (i < 7) {
+        click('暂不领取');
+        var c = id('iv_close').findOne(2000);
+        if (c) {
+          c.click();
+        }
+      }
+      click('继续加油')
+    }
+  });
+}
 
 function commonReading(option) {
   var def = {
@@ -563,6 +942,7 @@ function commonReading(option) {
   var enterP1 = option.enterP1;
   var upDownRead = option.upDownRead;
   oneReadTime = oneReadTime || 60;
+  stopReading = false;
   var time;
   var read = (i) => {
     if (Date.now() - time > 1000 * oneReadTime) {
@@ -625,13 +1005,13 @@ function commonReading(option) {
     if (readTime <= 0) {
       readTime = 2;
     }
-    if (Date.now() - start < 1000 * 60 * 60 * readTime) {
+    if (Date.now() - start < 1000 * 60 * 60 * readTime && !stopReading) {
       if (onePageRefreshTime > 1) {
         onePageRefreshTime = 0;
         nextPage(dirRight);
         swipeTime += 1;
         if (swipeTime > 8) {
-          dirRight = !!dirRight;
+          dirRight = !dirRight;
           swipeTime = 0;
         }
       }
@@ -723,7 +1103,158 @@ function launch2(name) {
 }
 
 function closeNoReact() {
-  if(textContains('没有响应').exists() && text('等待').exists()) {
+  if (textContains('没有响应').exists() && text('等待').exists()) {
     click('等待');
   }
+}
+
+function quTouTiaoVideo(opt) {
+  var defOpt = {
+    afterVideo: function () {
+      back();
+    },
+    readTime: 0,
+    upDownReadTime: 0,
+    upDownReadNoVideoTime: 0,
+    textE: '',
+    hasVideoText: '看视频再领',
+    goDown: function () {
+      swipe(900, 1600, 900, 60, 500);
+    },
+    goUp: function () {
+      swipe(900, 120, 900, 1600, 500);
+    },
+    beforeDownRead: noneFn,
+    beforeOneBegin: noneFn
+  }
+  opt = opt ? Object.assign(defOpt, opt) : defOpt;
+
+  var afterVideo = opt.afterVideo;
+  var textE = opt.textE;
+  var goDown = opt.goDown;
+  var goUp = opt.goUp;
+  var beforeDownRead = opt.beforeDownRead;
+  var beforeOneBegin = opt.beforeOneBegin;
+  var hasVideoText = opt.hasVideoText;
+  var upDownWatchVideo = true;
+
+  function noVideoUpDown() {
+    if (opt.upDownReadNoVideoTime) {
+      upDownWatchVideo = false;
+      updownRead(opt.upDownReadNoVideoTime);
+      upDownWatchVideo = true;
+    }
+  }
+  if (noVideoFirst) {
+    beforeDownRead();
+    noVideoUpDown();
+  }
+  if (opt.upDownReadTime) {
+    beforeDownRead();
+    updownRead(opt.upDownReadTime)
+  }
+  if (!noVideoFirst) {
+    beforeDownRead();
+    noVideoUpDown();
+  }
+  beforeDownRead();
+  downRead(opt.readTime);
+
+  function downRead(minute) {
+    minute = minute > 0 ? minute : 20;
+    var start = Date.now();
+    var one = (i) => {
+      closeNoReact();
+      var times = 6 + ~~(Math.random() * 6);
+      sleepAndDo(times, video);
+      var x = ~~(Math.random() * 300 + 400);
+      var y = ~~(Math.random() * 100);
+      swipe(x, 1800 - y, x + 10, 100 + y, 500);
+      sleep(2000);
+      if (Date.now() - start < 1000 * 60 * minute) {
+        beforeOneBegin(i + 1);
+        one(i + 1);
+      }
+    }
+    one(0);
+  }
+
+  function updownRead(minute) {
+
+    minute = minute > 0 ? minute : 40;
+    var start = Date.now();
+    var one = (i) => {
+      closeNoReact();
+      var times = 12;
+      sleepAndDo(times, video);
+      goDown();
+      sleepAndDo(0.8, video);
+      goUp();
+      sleepAndDo(2, video);
+      if (Date.now() - start < 1000 * 60 * minute) {
+        beforeOneBegin(i + 1);
+        one(i + 1);
+      }
+    }
+    one(0);
+  }
+
+  function sleepAndDo(times, fn) {
+    var one = 3;
+    if (times > one) {
+      sleep(one * 1000);
+      fn();
+      return sleepAndDo(times - one, fn);
+    } else {
+      sleep(times * 1000);
+      fn();
+    }
+  }
+
+
+  function video() {
+    hasVideoText = hasVideoText || '看视频再领';
+    if (!textContains(hasVideoText).exists()) {
+      return;
+    }
+    if (upDownWatchVideo) {
+      textContains(hasVideoText).findOne(2000).click();
+      quTouTiaoWatch(textE);
+    } else {
+      sleep(1000);
+    }
+    afterVideo();
+  }
+}
+
+function quTouTiaoWatch(textE) {
+  var def = '点击重播';
+  textE = textE || def;
+  var hasDef = textE === def;
+
+  function notEnd() {
+    return hasDef ? !textContains(textE).exists() :
+      !textContains(textE).exists() && !textContains(def).exists();
+  }
+  var tryT = 0;
+  while (notEnd()) {
+    sleep(2000);
+    if (tryT > 30) {
+      back();
+      sleep(5000);
+      if (text('继续观看').exists()) {
+        click('继续观看');
+        tryT = 10;
+      } else {
+        click(985, 112);
+        break;
+      }
+    }
+    tryT = tryT + 1;
+  }
+  if (tryT <= 30) {
+    sleep(2000);
+    back();
+  }
+  sleep(3000);
 }

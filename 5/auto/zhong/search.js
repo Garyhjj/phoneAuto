@@ -22,7 +22,7 @@ function zhongQingSearch() {
       ls[lgAll].click();
       sleep(5000);
       var max = 4;
-      for (var j = 5; j < 12; j++) {
+      for (var j = 5; j < 15; j++) {
         if (textContains(j + '次搜索').exists()) {
           max = j - 1;
           break;

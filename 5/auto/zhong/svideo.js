@@ -2,17 +2,17 @@ sleep(5000);
 zhongVideo();
 
 function zhongVideo() {
-  home();
-  launch('中青看点');
-  sleep(3000);
-  click('允许');
-  sleep(13000);
-  // click(500,1797);
-  click(280,1797);
-  sleep(3000);
-  click('小视频');
-  sleep(2000);
-  click(200,300);
+  // home();
+  // launch('中青看点');
+  // sleep(3000);
+  // click('允许');
+  // sleep(13000);
+  // // click(500,1797);
+  // click(280,1797);
+  // sleep(3000);
+  // click('小视频');
+  // sleep(2000);
+  // click(200,300);
   begin();
   home();
 

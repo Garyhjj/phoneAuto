@@ -29,3 +29,5 @@ nextTick(() => nextTick(() => {
     console.log(5);
     Promise.resolve().then(() => nextTick(() => console.log(6)))
 }))
+
+console.log('\x1b[32m', '', 'I  am cyan');

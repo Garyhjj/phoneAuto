@@ -7,7 +7,7 @@ var useStorage = true;
 var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
 var caidanReadingT = isDefLaunch ? 60 : 33;
-var kReadingT = isDefLaunch ? 700 : 600;
+var kReadingT = isDefLaunch ? 800 : 800;
 var zhongVideoT = isDefLaunch ? 0 : 0;
 var easyVideoT = 5;
 var noVideoFirst = false;
@@ -112,7 +112,7 @@ huohuoOthers();
 // quLingSheng2();
 // qulingBaoXiang()
 // qulingShengChengjiu();
-qulingShengPai();
+// qulingShengPai();
 
 huohuo(30);
 huohuoHongBao();
@@ -152,7 +152,7 @@ huohuoOthers();
 
 // qulingBaoXiang()
 // qulingShengChengjiu();
-qulingShengPai();
+// qulingShengPai();
 
 // if (!isAdmin) {
 //   tianTianLeftGame();
@@ -182,15 +182,16 @@ zhongQingLongVideo(100);
 kReading();
 runUnDoneFn();
 
+if (!isDefLaunch) {
+  zhongQingSearch();
+}
+
 if (!isAdmin) {
   tianTianLeftGame();
   tianTianGuaFen();
   tiantianLittle();
 }
 
-if (!isDefLaunch) {
-  zhongQingSearch();
-}
 
 home();
 
@@ -1052,7 +1053,7 @@ function tianTianGuaFen() {
 }
 
 function launchTianTian() {
-  var res = launch(isDefLaunch ? '每日爱清理' : '天天爱清理');
+  var res = launch('每日爱清理');
   if (res) {
     sleep(3000);
     if (isAdmin) {
@@ -1779,6 +1780,21 @@ function shuaBao() {
         return 5 + ~~(Math.random() * 5);
       }
     });
+    click('我');
+    var res = myWaitUntil(function() {
+      return id('tv_gold_num').exists();
+    });
+    if(res) {
+      sleep(10000);
+      var a = id('tv_gold_num').findOne(2000);
+      if(a) {
+        var t = a.text();
+        if(!(+ t > 6600)) {
+          getStorage().remove('shuaBao__During');
+          return false;
+        }
+      }
+    }
   }, 'shuaBao', 70, 60);
 }
 
@@ -1992,7 +2008,7 @@ function kuai7LiuLan(r) {
         }
       }
     });
-  }, 'kuai7LiuLan', 60 + Math.floor(Math.random() * 5), r || 60);
+  }, 'kuai7LiuLan', 60 + Math.floor(Math.random() * 5), r || 72);
 
 }
 
@@ -3064,7 +3080,7 @@ function zhongQingLongVideo(t) {
         lastI = i;
       }
     }
-  }, 'zhongQingLongVideo', 120, t);
+  }, 'zhongQingLongVideo', 150, t);
 }
 
 function zhongQingZhuanPan() {
@@ -3116,6 +3132,10 @@ function zhongQingZhuanPan() {
 }
 
 function zhongQingSearch() {
+  var keyP = 'zhongQingSearch';
+  if(isDone(keyP)) {
+    return;
+  }
   launch('中青看点');
   sleep(25000);
   back();
@@ -3124,14 +3144,28 @@ function zhongQingSearch() {
   sleep(5000);
   click('立即搜索');
   sleep(5000);
+  var done = false;
   try {
-    all();
+    done = all();
   } catch (e) {
     console.log(e);
   }
+  if(!done) {
+    saveUnDoneFn(function() {
+      zhongQingSearch();
+      if(!isAdmin && isDefLaunch) {
+        zhongQingSearch();
+      }
+    }, keyP);
+  } else {
+    markDone(keyP);
+  }
 
   function all() {
+    var doneT = 0;
+    var allT = 0;
     var ls = text('去搜索').find();
+    allT = ls.length;
     var lgAll = ls.length - 0;
     while (lgAll--) {
       ls = text('去搜索').find();
@@ -3145,6 +3179,7 @@ function zhongQingSearch() {
         }
       }
       if (max === 8 && !isDefLaunch) {
+        doneT = doneT + 1;
         back();
         myWaitUntil('去搜索');
         sleep(1000);
@@ -3152,10 +3187,16 @@ function zhongQingSearch() {
       }
       zhongqingSearch(max);
       sleep(3000);
+      if (textContains((max+1) + '/' + (max+1)).exists()) {
+        doneT = doneT + 1;
+      }
+      toast('done__' + doneT);
       back();
       myWaitUntil('去搜索');
       sleep(1000);
     }
+
+    return doneT > 0 && doneT === allT;
 
     function zhongqingSearch(times) {
       function aa(i) {
@@ -4004,6 +4045,9 @@ function runAndMarkByDuring(fn, key, max, addDuring) {
       res = fn(addDuring, addInFn);
     }
     if (res === false) {
+      saveUnDoneFn(function() {
+        return runAndMarkByDuring(fn, key, max, addDuring)
+      }, key);
       return;
     }
     if(shouldCheckT && !anotherDay && getStorageKey() !== sKey) {
@@ -4040,7 +4084,6 @@ function runAndMark(fn, key) {
       return true;
     }
   } else {
-    toast(key + '__Done');
     return true;
   }
 }
@@ -4058,7 +4101,11 @@ function isDone(key) {
     return;
   }
   var s = getStorage();
-  return !!s.get(key);
+  var done = !!s.get(key);
+  if(done) {
+    toast('done__' + key);
+  }
+  return done;
 }
 
 function getStorage() {
@@ -4088,13 +4135,12 @@ function saveUnDoneFn(fn, key) {
 }
 
 function runUnDoneFn() {
-  var lg = unDoneFnForSave.length;
-  if (lg > 0) {
-    while (lg--) {
-      var a = unDoneFnForSave.pop();
-      unDoneFnForRun.push(a);
-    }
+  unDoneFnForRun.length = 0;
+  for (var i = 0; i < unDoneFnForSave.length; i++) {
+    var a = unDoneFnForRun[i];
+    unDoneFnForRun.push(a);
   }
+  unDoneFnForSave.length = 0;
   for (var i = 0; i < unDoneFnForRun.length; i++) {
     var fn = unDoneFnForRun[i];
     if (typeof fn === 'function') {

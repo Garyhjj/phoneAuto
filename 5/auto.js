@@ -1,4 +1,4 @@
-var isDefLaunch = false;
+var isDefLaunch = true;
 var isAdmin = false;
 
 var videoCheckLs = [];
@@ -7,7 +7,7 @@ var useStorage = true;
 var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
 var caidanReadingT = isDefLaunch ? 60 : 33;
-var kReadingT = isDefLaunch ? 800 : 800;
+var kReadingT = isDefLaunch ? 1000 : 1000;
 var zhongVideoT = isDefLaunch ? 0 : 0;
 var easyVideoT = 5;
 var noVideoFirst = false;
@@ -27,6 +27,7 @@ initVideoCheckListener();
 sleep(5000);
 useStorage = false;
 
+// kuaiYinLiuLan();
 // zhongQingZhuanPan();
 // quTouTiaoWaBao();
 // quTouTiaoQiu();
@@ -37,6 +38,7 @@ useStorage = false;
 // sleep(1000 * 10000);
 // kuai7LeftGames();
 // kuai7LiuLan(60);
+// kuai7GuaKa();
 // kuai7Chengjiu();
 // kuai7RightGames();
 // kuai7RightGames2();
@@ -102,19 +104,17 @@ useStorage = true;
 
 home();
 begin();
+
 if (isAdmin) {
   douYin(25);
+} else {
+  kuai7GuaKa();
 }
 
 huohuo(30);
 huohuoOthers();
 
-// quLingSheng2();
-// qulingBaoXiang()
-// qulingShengChengjiu();
-// qulingShengPai();
-
-huohuo(30);
+huohuo(40);
 huohuoHongBao();
 huohuoOthers();
 huohuoChengjiu();
@@ -122,6 +122,7 @@ huohuoChengjiu();
 if (!isAdmin) {
   kuai7LeftGames();
   kuai7LiuLan(60);
+  kuai7GuaKa();
   kuai7Chengjiu();
   kuai7RightGames();
   kuai7RightGames2();
@@ -142,28 +143,13 @@ if (isDefLaunch) {
   zhongQingSearch();
   if (!isAdmin) {
     zhongQingSearch();
+    kuaiYinLiuLan();
   }
 }
 
-// caidanOthers();
+runUnDoneFn();
 
-huohuo();
-huohuoOthers();
-
-// qulingBaoXiang()
-// qulingShengChengjiu();
 // qulingShengPai();
-
-// if (!isAdmin) {
-//   tianTianLeftGame();
-//   tianTianGuaFen();
-//   tiantianLittle();
-// }
-huohuoHongBao();
-huohuoChengjiu();
-huohuoOthers();
-
-// caidanOthers();
 
 quLingSheng(19);
 
@@ -186,15 +172,15 @@ if (!isDefLaunch) {
   zhongQingSearch();
 }
 
-if (!isAdmin) {
-  tianTianLeftGame();
-  tianTianGuaFen();
-  tiantianLittle();
-}
-
+runUnDoneFn();
+runUnDoneFn();
+quLingSheng();
+kuai7GuaKa();
+runUnDoneFn();
 
 home();
 
+console.log(new Date().toString())
 function begin() {
   sleep(2000)
 
@@ -1166,6 +1152,7 @@ function quTouTiaoXiaoShuo() {
 }
 
 function qulingShengPai() {
+  var keyP = 'qulingShengPai';
   var ls = [
     [150, 1400],
     [850, 1400],
@@ -1174,7 +1161,7 @@ function qulingShengPai() {
   ];
   var tar = 0;
   var failT = 0;
-  runAndMark(function () {
+  var a = runAndMark(function () {
     goToD();
     var res = begin();
     toast(res);
@@ -1187,8 +1174,10 @@ function qulingShengPai() {
       back();
     }
     return res;
-  }, 'qulingShengPai');
-
+  }, keyP);
+  if (!a) {
+    saveUnDoneFn(qulingShengPai, keyP);
+  }
 
   function begin(i) {
     i = i || 0;
@@ -1429,22 +1418,22 @@ function huohuoOthers() {
       }
     });
   }, keyP + 'guaFen');
-  var a4 = runAndMark(function () {
-    sleep(2000);
-    click(500, 300);
-    myWaitUntil('提现记录');
-    var res = quTouTiaoBaoXiangAuto(function () {
-      var tar = id('a0u').findOne(1000);
-      if (tar) {
-        tar.click();
-        return true;
-      }
-    });
-    if (textContains('提现记录').exists()) {
-      back();
-    }
-    return res;
-  }, keyP + 'baoXiang');
+  // var a4 = runAndMark(function () {
+  //   sleep(2000);
+  //   click(500, 300);
+  //   myWaitUntil('提现记录');
+  //   var res = quTouTiaoBaoXiangAuto(function () {
+  //     var tar = id('a0u').findOne(1000);
+  //     if (tar) {
+  //       tar.click();
+  //       return true;
+  //     }
+  //   });
+  //   if (textContains('提现记录').exists()) {
+  //     back();
+  //   }
+  //   return res;
+  // }, keyP + 'baoXiang');
   // var a1 = runAndMark(function () {
   //   scrollIntoView('日常任务', 600);
   //   sleep(2000);
@@ -1478,7 +1467,7 @@ function huohuoOthers() {
 
 
 
-  if (a3 && a4) {
+  if (a3) {
     markDone(keyP);
   }
 
@@ -1511,18 +1500,18 @@ function huohuoOthers() {
 function huohuoHongBao() {
   var keyPrefix = 'huohuoHongBao';
   goToD();
-  runAndMark(function () {
-    return quTouTiaoJiaWaWaAuto('领奖品');
-  }, keyPrefix + 'JiaWaWa');
-  sleep(2000);
-  runAndMark(function () {
-    return quTouTiaoWaBaoAuto('赚金币', true);
-  }, keyPrefix + 'WaBao');
-  sleep(2000);
-  runAndMark(function () {
-    return quTouTiaoNiuDanAuto('抢福利', 8);
-  }, keyPrefix + 'WaBao');
-  sleep(2000);
+  // runAndMark(function () {
+  //   return quTouTiaoJiaWaWaAuto('领奖品');
+  // }, keyPrefix + 'JiaWaWa');
+  // sleep(2000);
+  // runAndMark(function () {
+  //   return quTouTiaoWaBaoAuto('赚金币', true);
+  // }, keyPrefix + 'WaBao');
+  // sleep(2000);
+  // runAndMark(function () {
+  //   return quTouTiaoNiuDanAuto('抢福利', 8);
+  // }, keyPrefix + 'WaBao');
+  // sleep(2000);
 
   begin();
 
@@ -1541,7 +1530,7 @@ function huohuoHongBao() {
     }
     runAndMark(function () {
       if (id('abc').exists()) {
-        id('abc').findOne().click();
+        id('abc').findOne(2000).click();
         quTouTiaoWatch();
         sleep(3000);
         closeHuoHuoModal();
@@ -1746,6 +1735,7 @@ function closeBackStopModal() {
     id('gi').findOne(200).click();
     sleep(800);
   }
+  click('不再提醒');
 }
 
 function shuaBao() {
@@ -1781,15 +1771,15 @@ function shuaBao() {
       }
     });
     click('我');
-    var res = myWaitUntil(function() {
+    var res = myWaitUntil(function () {
       return id('tv_gold_num').exists();
     });
-    if(res) {
+    if (res) {
       sleep(10000);
       var a = id('tv_gold_num').findOne(2000);
-      if(a) {
+      if (a) {
         var t = a.text();
-        if(!(+ t > 6600)) {
+        if (!(+t > 6600)) {
           getStorage().remove('shuaBao__During');
           return false;
         }
@@ -1815,7 +1805,7 @@ function kuai7Chengjiu() {
   back();
 
   function goToD() {
-    launch('快7浏览器');
+    launchKuai7();
     myWaitUntil('我的', 15);
     sleep(2000);
     clickOneByText('我的');
@@ -1873,7 +1863,7 @@ function kuai7RightGames2() {
   }
 
   function goToD() {
-    launch('快7浏览器');
+    launchKuai7();
     myWaitUntil('赚钱技巧', 15);
     sleep(2000);
     clickOneByText('赚钱技巧');
@@ -1895,23 +1885,23 @@ function kuai7RightGames() {
     return quTouTiaoQiuWithEnter('天天乐');
   }, keyP + 'Qiu');
 
-  var a3 = runAndMark(function () {
-    sleep(2000);
-    click('提现兑换');
-    myWaitUntil('提现记录');
-    return quTouTiaoBaoXiangAuto(function () {
-      click(900, 1360);
-      sleep(1500);
-      return true;
-    });
-  }, keyP + 'BaoXiang');
+  // var a3 = runAndMark(function () {
+  //   sleep(2000);
+  //   click('提现兑换');
+  //   myWaitUntil('提现记录');
+  //   return quTouTiaoBaoXiangAuto(function () {
+  //     click(900, 1360);
+  //     sleep(1500);
+  //     return true;
+  //   });
+  // }, keyP + 'BaoXiang');
 
-  if (a2 && a3) {
+  if (a2) {
     markDone(keyP);
   }
 
   function goToD() {
-    launch('快7浏览器');
+    launchKuai7();
     myWaitUntil('我的', 15);
     sleep(2000);
     clickOneByText('我的');
@@ -1951,7 +1941,7 @@ function kuai7LeftGames() {
   }
 
   function goToD() {
-    launch('快7浏览器');
+    launchKuai7();
     myWaitUntil('搜一搜', 15);
     sleep(2000);
     clickOneByText('搜一搜');
@@ -1959,14 +1949,137 @@ function kuai7LeftGames() {
   }
 }
 
-function kuai7LiuLan(r) {
+function launchKuai7() {
+  launch('快7浏览器');
+  sleep(14000);
+  back();
+  sleep(3000)
+  back();
+  sleep(2000)
+  var a = id('img_close').findOne(2000);
+  if (a) {
+    a.click();
+    sleep(800);
+  }
+}
+
+function kuai7GuaKa() {
+  var keyP = 'kuai7GuaKa';
+  var hour = new Date().getHours();
+  if (hour > -1 && hour < 8) {
+    keyP = keyP + '1';
+  } else if (hour >= 8 && hour < 14) {
+    keyP = keyP + '2';
+  } else if (hour >= 14 && hour < 20) {
+    keyP = keyP + '3';
+  } else {
+    keyP = keyP + '4';
+  }
+  if (isDone(keyP)) {
+    saveFn();
+    return;
+  }
+  goToD();
+  sleep(3000);
+  if (!textContains('看视频继续').exists()) {
+    myWaitUntil('开始刮卡', 12);
+    click('开始刮卡');
+    sleep(3000);
+    var lg = textContains('ggg==').find().length - 1;
+    if (lg > 0) {
+      while (lg--) {
+        if (textContains('看视频继续').exists()) {
+          break;
+        }
+        if(textContains('开始刮卡').exists()) {
+          click('开始刮卡');
+          sleep(1000)
+        }
+        click(500, 600);
+        var res = myWaitUntil('再刮一下', 5);
+        if (!res) {
+          quTouTiaoWatch();
+          var res1 = myWaitUntil('再刮一下', 9);
+          if (!res1) {
+            back();
+            sleep(3000);
+            continue;
+          }
+        }
+        sleep(3000);
+        swipe(80, 1110, 900, 1110, 500);
+        sleep(800);
+        swipe(80, 1810, 900, 1810, 500);
+        sleep(800);
+        swipe(80, 1110, 900, 1110, 500);
+        sleep(800);
+        swipe(80, 1810, 900, 1810, 500);
+        var res2 = myWaitUntil('知道了', 6);
+        back();
+        sleep(3000);
+      }
+    }
+  }
+  if (textContains('看视频继续').exists()) {
+    markDone(keyP);
+  }
+  saveFn();
+
+  function saveFn() {
+    if (!isDone('kuai7GuaKa4')) {
+      saveUnDoneFn(function () {
+        kuai7GuaKa();
+      }, 'kuai7GuaKa');
+    }
+  }
+
+  function goToD() {
+    launchKuai7();
+    myWaitUntil('搜一搜', 15);
+    sleep(2000);
+    clickOneByText('刮刮乐');
+  }
+}
+
+function kuaiYinLiuLan(r) {
+  var keyP = 'kuaiYinLiuLan';
   runAndMarkByDuring(function (readR, addInFn) {
-    launch('快7浏览器');
+    launch('快音');
     sleep(14000);
     back();
     sleep(3000)
     back();
     sleep(2000)
+    click(80, 1850);
+    var getOnePassTime = initGetLittleDuringTime();
+    quTouTiaoVideo({
+      readTime: readR || 40,
+      hasVideoText: '点击最高翻',
+      beforeOneBegin: function (i, passTime) {
+        if (i < 7) {
+          click(80, 1850);
+          back();
+        }
+        if (text('立即下载').exists()) {
+          swipe(500, 1600, 500, 60, 500);
+        }
+        if (text('查看详情').exists()) {
+          swipe(500, 1600, 500, 60, 500);
+        }
+        addInFn(getOnePassTime(passTime, 1.2));
+      },
+      oneReadTime: function () {
+        return 8 + ~~(Math.random() * 6);
+      }
+    });
+  }, keyP, 35 + Math.floor(Math.random() * 5), r || 32);
+
+}
+
+function kuai7LiuLan(r) {
+  var keyP = 'kuai7LiuLan';
+  runAndMarkByDuring(function (readR, addInFn) {
+    launchKuai7();
     click(530, 1850);
     var getOnePassTime = initGetLittleDuringTime();
     quTouTiaoVideo({
@@ -2002,13 +2115,31 @@ function kuai7LiuLan(r) {
         return 14 + ~~(Math.random() * 10);
       },
       clickVideoText: function (t) {
-        var tar = textContains(t).findOne();
+        var tar = textContains(t).findOne(2000);
         if (tar) {
           click(tar.bounds().left + 15, tar.bounds().top + 5);
         }
       }
     });
-  }, 'kuai7LiuLan', 60 + Math.floor(Math.random() * 5), r || 72);
+    click('我的');
+    var res = myWaitUntil(function () {
+      toast(id('tv_read_time').exists())
+
+      return id('tv_read_time').exists();
+    })
+    toast(res)
+    if (res) {
+      var a = id('tv_read_time').findOne(2000);
+      if (a) {
+        var txt = a.text();
+        var t = parseFloat(txt);
+        if (+t > 50) {} else {
+          setDuring(keyP, +t);
+          return false;
+        }
+      }
+    }
+  }, keyP, 60 + Math.floor(Math.random() * 5), r || 72);
 
 }
 
@@ -2184,7 +2315,7 @@ function quTouTiaoR() {
         break;
       };
     }
-    if(b) {
+    if (b) {
       var bounds = b.bounds();
       return {
         click: () => click(bounds.left - 30, bounds.top - 30)
@@ -2288,7 +2419,7 @@ function quTouTiaoR() {
 
 function xiangKanJob(t) {
   runAndMarkByDuring(function (realT, addInFn) {
-    launch(isDefLaunch && !isAdmin?'想看资讯':'想看');
+    launch(isDefLaunch && !isAdmin ? '想看资讯' : '想看');
     sleep(16000);
     nextPage(true);
     nextPage(true);
@@ -2339,7 +2470,7 @@ function xiangKanJob(t) {
         }
       }
     });
-  }, 'xiangKanJob', new Date().getDay() === 5 ? 2.1 : 1.2, t);
+  }, 'xiangKanJob', 1.0, t);
 }
 
 function quTouTiao() {
@@ -2757,7 +2888,7 @@ function kReading() {
     closeNoReact();
     if (isL) {
       fanfu();
-      if(i % 33 === 0) {
+      if (i % 33 === 0) {
         isL = false;
       }
     } else {
@@ -2944,7 +3075,7 @@ function xiangKanVideo() {
   runAndMarkByDuring(function (realT, addInFn) {
     fn = addInFn;
     oneMax = realT;
-    launch(isDefLaunch && !isAdmin?'想看资讯':'想看');
+    launch(isDefLaunch && !isAdmin ? '想看资讯' : '想看');
     sleep(16000);
     back();
     sleep(2000);
@@ -2955,7 +3086,7 @@ function xiangKanVideo() {
     closeAd();
     click(500, 480);
     xkVideo(0);
-  }, 'xiangKanVideo', 100, 50);
+  }, 'xiangKanVideo', 80, 20);
 
   function closeAd() {
     var ls = [id1, id2];
@@ -3035,7 +3166,7 @@ function zhongQingLongVideo(t) {
     var i = realT || 35;
     var lastI = i;
     while (i--) {
-      if(text('首页').exists()) {
+      if (text('首页').exists()) {
         click(500, 350);
       }
       sleep(3000);
@@ -3133,7 +3264,7 @@ function zhongQingZhuanPan() {
 
 function zhongQingSearch() {
   var keyP = 'zhongQingSearch';
-  if(isDone(keyP)) {
+  if (isDone(keyP)) {
     return;
   }
   launch('中青看点');
@@ -3150,10 +3281,10 @@ function zhongQingSearch() {
   } catch (e) {
     console.log(e);
   }
-  if(!done) {
-    saveUnDoneFn(function() {
+  if (!done) {
+    saveUnDoneFn(function () {
       zhongQingSearch();
-      if(!isAdmin && isDefLaunch) {
+      if (!isAdmin && isDefLaunch) {
         zhongQingSearch();
       }
     }, keyP);
@@ -3172,7 +3303,7 @@ function zhongQingSearch() {
       ls[lgAll].click();
       sleep(5000);
       var max = 4;
-      for (var j = 3; j < 16; j++) {
+      for (var j = 1; j < 16; j++) {
         if (textContains(j + '次搜索').exists()) {
           max = j - 1;
           break;
@@ -3187,7 +3318,7 @@ function zhongQingSearch() {
       }
       zhongqingSearch(max);
       sleep(3000);
-      if (textContains((max+1) + '/' + (max+1)).exists()) {
+      if (textContains((max + 1) + '/' + (max + 1)).exists()) {
         doneT = doneT + 1;
       }
       toast('done__' + doneT);
@@ -3195,8 +3326,9 @@ function zhongQingSearch() {
       myWaitUntil('去搜索');
       sleep(1000);
     }
-
-    return doneT > 0 && doneT === allT;
+    toast('doneT' + doneT)
+    toast('allT' + allT)
+    return doneT > 0 && (doneT - allT === 0);
 
     function zhongqingSearch(times) {
       function aa(i) {
@@ -3902,6 +4034,7 @@ function quTouTiaoWatch(textE) {
   }
   var tryT = 0;
   var isOutBreak = false;
+  var goOnClickTime = 0;
   while (notEnd()) {
     sleep(2000);
     if (text('关闭').exists()) {
@@ -3917,6 +4050,11 @@ function quTouTiaoWatch(textE) {
       back();
       sleep(5000);
       if (text('继续观看').exists()) {
+        if (goOnClickTime > 3) {
+          click('放弃');
+          break;
+        }
+        goOnClickTime = goOnClickTime + 1;
         click('继续观看');
         tryT = 10;
       } else {
@@ -3981,7 +4119,7 @@ function clickOneByText2(t) {
 function myWaitUntil(sel, t) {
   t = t || 15;
   var fn = sel;
-  if (typeof sl !== 'function') {
+  if (typeof sel !== 'function') {
     fn = function () {
       return textContains(sel).exists();
     }
@@ -4024,8 +4162,8 @@ function runAndMarkByDuring(fn, key, max, addDuring) {
 
     function addInFn(addOne) {
       if (addOne > 0) {
-        if(shouldCheckT && !anotherDay && getStorageKey() !== sKey) {
-          anotherDay =  true;
+        if (shouldCheckT && !anotherDay && getStorageKey() !== sKey) {
+          anotherDay = true;
           storeDuring = 0;
           sKey = getStorageKey();
           willDone = false;
@@ -4045,12 +4183,12 @@ function runAndMarkByDuring(fn, key, max, addDuring) {
       res = fn(addDuring, addInFn);
     }
     if (res === false) {
-      saveUnDoneFn(function() {
+      saveUnDoneFn(function () {
         return runAndMarkByDuring(fn, key, max, addDuring)
       }, key);
       return;
     }
-    if(shouldCheckT && !anotherDay && getStorageKey() !== sKey) {
+    if (shouldCheckT && !anotherDay && getStorageKey() !== sKey) {
       anotherDay = true;
       storeDuring = 0;
       sKey = getStorageKey();
@@ -4064,7 +4202,7 @@ function runAndMarkByDuring(fn, key, max, addDuring) {
       return true;
     } else {
       store.put(duringKey, storeDuring + leftDuring);
-      saveUnDoneFn(function() {
+      saveUnDoneFn(function () {
         return runAndMarkByDuring(fn, key, max, addDuring)
       }, key);
     }
@@ -4073,6 +4211,10 @@ function runAndMarkByDuring(fn, key, max, addDuring) {
     toast(key + '__Done');
     return true;
   }
+}
+
+function setDuring(key, d) {
+  getStorage().put(key + '__During', d);
 }
 
 function runAndMark(fn, key) {
@@ -4102,7 +4244,7 @@ function isDone(key) {
   }
   var s = getStorage();
   var done = !!s.get(key);
-  if(done) {
+  if (done) {
     toast('done__' + key);
   }
   return done;
@@ -4127,7 +4269,7 @@ function getStorageKey(isLastDate) {
 function saveUnDoneFn(fn, key) {
   unDoneFnForSave = unDoneFnForSave || [];
   unDoneFnKeyForSave = unDoneFnKeyForSave || [];
-  if(key && unDoneFnKeyForSave.indexOf(key) > -1) {
+  if (key && unDoneFnKeyForSave.indexOf(key) > -1) {
     return;
   }
   unDoneFnKeyForSave.push(key);

@@ -1,5 +1,5 @@
 <template>
-  <PageLayout>
+  <PageLayout class="container">
     <template #switch-tab-top>
       <div class="tab">
         <span
@@ -14,15 +14,13 @@
         >离岗人员</span>
       </div>
     </template>
-    <template v-slot:hot-block>
-      <div class="tab-container">
+      <div class="tab-content">
         <transition name="component-fade" mode="out-in">
           <keep-alive>
             <component :is="currentComponent"/>
           </keep-alive>
         </transition>
       </div>
-    </template>
   </PageLayout>
 </template>
 <script>
@@ -55,7 +53,15 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '../../assets/less/hro-theme.less';
-
+.container {
+	/deep/ .body-content {
+		min-height: none !important;
+		>div {
+			max-width: none !important;
+			width: 100%;
+		}
+	}
+}
 .tab {
 	width: 100vw;
 	height: 64px;

@@ -1,5 +1,5 @@
 var isDefLaunch = true;
-var isAdmin = false;
+var isAdmin = true;
 
 var videoCheckLs = [];
 var useStorage = true;
@@ -7,7 +7,7 @@ var useStorage = true;
 var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
 var caidanReadingT = isDefLaunch ? 60 : 33;
-var kReadingT = isDefLaunch ? 1000 : 1000;
+var kReadingT = isDefLaunch ? 1300 : 1300;
 var zhongVideoT = isDefLaunch ? 0 : 0;
 var easyVideoT = 5;
 var noVideoFirst = false;
@@ -104,100 +104,89 @@ useStorage = true;
 
 home();
 begin();
+otherRun();
+begin();
+otherRun();
 
-if (isAdmin) {
-  douYin(25);
-} else {
-  kuai7GuaKa();
-}
-
-huohuo(30);
-huohuoOthers();
-
-huohuo(40);
-huohuoHongBao();
-huohuoOthers();
-huohuoChengjiu();
-
-if (!isAdmin) {
-  kuai7LeftGames();
-  kuai7LiuLan(60);
-  kuai7GuaKa();
-  kuai7Chengjiu();
-  kuai7RightGames();
-  kuai7RightGames2();
-}
-
-if (new Date().getDay() === 5) {
-  xiangKanJob(0.8);
-}
-
-if (!isAdmin) {
-  shuaBao();
-}
-
-zhongVideoT = 0;
-zhongJob(0.5);
-zhongQingLongVideo(25);
-if (isDefLaunch) {
-  zhongQingSearch();
-  if (!isAdmin) {
-    zhongQingSearch();
-    kuaiYinLiuLan();
+function otherRun() {
+  if (isAdmin) {
+    douYin(25);
+  } else {
+    kuai7GuaKa();
   }
+
+  huohuo(30);
+  huohuoOthers();
+
+  huohuo(40);
+  huohuoHongBao();
+  huohuoOthers();
+  huohuoChengjiu();
+
+  if (!isAdmin) {
+    kuai7LeftGames();
+    kuai7LiuLan(60);
+    kuai7GuaKa();
+    kuai7Chengjiu();
+    kuai7RightGames();
+    kuai7RightGames2();
+  }
+
+  if (!isAdmin) {
+    shuaBao();
+  }
+
+  zhongVideoT = 0;
+  zhongJob(0.5);
+  zhongQingLongVideo(25);
+  if (isDefLaunch) {
+    zhongQingSearch();
+    if (!isAdmin) {
+      zhongQingSearch();
+      kuaiYinLiuLan();
+    }
+  }
+
+  runUnDoneFn();
+
+  // qulingShengPai();
+
+  quLingSheng(19);
+
+  if (!isAdmin) {
+    shuaBao();
+  }
+
+
+  zhongQingLongVideo();
+
+  zhongJob(45);
+  runUnDoneFn();
+  zhongQingLongVideo(100);
+  kReading();
+  runUnDoneFn();
+
+  if (!isDefLaunch) {
+    zhongQingSearch();
+  }
+
+  runUnDoneFn();
+  quLingSheng();
+  kuai7GuaKa();
+  runUnDoneFn();
 }
 
-runUnDoneFn();
-
-// qulingShengPai();
-
-quLingSheng(19);
-
-if (!isAdmin) {
-  shuaBao();
-}
-
-
-zhongQingLongVideo();
-
-xiangKanVideo();
-
-zhongJob(45);
-runUnDoneFn();
-zhongQingLongVideo(100);
-kReading();
-runUnDoneFn();
-
-if (!isDefLaunch) {
-  zhongQingSearch();
-}
-
-runUnDoneFn();
-runUnDoneFn();
-quLingSheng();
-kuai7GuaKa();
-runUnDoneFn();
 
 home();
 
 console.log(new Date().toString())
+
 function begin() {
   sleep(2000)
 
   if (isDefLaunch) {
-    //  tianTian();
 
-    // quLingSheng();
-    if (isAdmin) {
-      // caidanDown();
-    }
-
-    xiangKanJob(0.6);
-
-    zhongJob(0.48);
-    // tianTian();
-
-    xiangKanJob(0.6);
+    zhongJob(0.5);
 
     if (!isAdmin) {
       quTouTiaoR();
@@ -205,25 +194,14 @@ function begin() {
     }
 
   } else {
-    // tianTian();
+    // runAndMarkByDuring(function (r) {
+    //   lauchDuoFu();
+    //   duofuReading(r);
+    // }, 'duoFuReading', 0.1, 0.1);
 
-    // quLingSheng();
-    runAndMarkByDuring(function (r) {
-      lauchDuoFu();
-      duofuReading(r);
-    }, 'duoFuReading', 0.1, 0.1);
+    zhongJob(0.6);
 
-
-    xiangKanJob(0.6);
-
-    zhongJob(0.5);
-
-    // caidanDown();
-    // tianTian();
-
-    xiangKanJob(0.6);
     zhongQingZhuanPan();
-
   }
 }
 
@@ -1748,6 +1726,7 @@ function shuaBao() {
       hasVideoText: '立即翻倍',
       beforeOneBegin: function (i, passTime) {
         if (i < 7) {
+          click('取消');
           back();
         }
         if (!textContains('首页').exists()) {
@@ -1991,7 +1970,7 @@ function kuai7GuaKa() {
         if (textContains('看视频继续').exists()) {
           break;
         }
-        if(textContains('开始刮卡').exists()) {
+        if (textContains('开始刮卡').exists()) {
           click('开始刮卡');
           sleep(1000)
         }
@@ -2994,7 +2973,7 @@ function zhongJob(last) {
     if (error) {
       return false;
     }
-  }, 'zhongJob', 1.6, last);
+  }, 'zhongJob', 1.8, last);
 
 
   function zhongVideo(t) {

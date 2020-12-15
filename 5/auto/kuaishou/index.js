@@ -1,7 +1,7 @@
 
 sleep(5000);
 start();
-function start() {
+function kuaishouUpDown() {
     if (text('拖动滑块').exists()) {
         function trySwipe(j) {
           j = j || 0;
@@ -35,7 +35,12 @@ function start() {
       }
     sleep(15 * 1000);
     oneUpDown();
-    start();
+    kuaishouUpDown();
+    function oneUpDown(isX) {
+      swipe(900, isX?770: 1600, 900, 60, 500);
+      sleep(500);
+      swipe(900, 200, 900, isX?1180: 1600, 500);
+    }
 }
 
 
@@ -44,8 +49,3 @@ function start() {
 
 
 
-function oneUpDown(isX) {
-    swipe(900, isX?770: 1600, 900, 60, 500);
-    sleep(500);
-    swipe(900, 200, 900, isX?1180: 1600, 500);
-  }

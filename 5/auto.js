@@ -970,13 +970,6 @@ function zhongQingKanKan() {
       }
     }
     if (type) {
-      if (type === a1) {
-        if (textContains('浏览').find().length < 5) {
-          back();
-          sleep(2000);
-          findAd();
-        }
-      }
       toast(type)
       var lg = 7;
       if (type === a4) {
@@ -5664,7 +5657,7 @@ function initZhongQingOther() {
             upDown(2);
             click(500, 800);
             sleep(1000);
-            upDown(2);
+            // upDown(2);
             back();
             sleep(1200);
             if (isEnd()) {
@@ -5691,13 +5684,6 @@ function initZhongQingOther() {
         if (type) {
           if (halfAuto && !shouldRun()) {
             return true;
-          }
-          if (type === a1) {
-            if (textContains('浏览').find().length < 5) {
-              back();
-              sleep(2000);
-              findAd();
-            }
           }
           toast(type)
           var lg = 7;

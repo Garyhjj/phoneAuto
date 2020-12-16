@@ -5786,9 +5786,9 @@ function initZhongQingOther() {
           var i = 8;
           while (i--) {
             myWaitUntil(mainT, 5);
-            var isNear = text('其他人还搜了').exists() && i < 4;
+            var isNear = text('其他人还搜了').exists() && i > 2;
             var t = isNear ? '其他人还搜了' : mainT;
-            isNear && upDown(2);
+            isNear && upDown(3);
             scrollIntoView(t, device.height - 300);
             var a = text(t).findOne(1000);
             if (a) {
@@ -6829,7 +6829,7 @@ function scrollIntoView(tar, s, maxSwipe) {
       } else {
         break;
       }
-      sleep(800);
+      sleep(300);
       c = a();
     }
     return c && c.bounds() && c.bounds().top <= site ? c : null;

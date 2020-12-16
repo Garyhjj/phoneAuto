@@ -42,99 +42,30 @@ useStorage = false;
 
 // checkDouYinInKuaiShou();
 // kuaishouUpDown(1, true);
-// kuaiYinLiuLan();
 // zhongQingZhuanPan();
-// quTouTiaoWaBao();
-// quTouTiaoQiu();
 // kuai7Chengjiu();
-// caidanOthers();
 // zhongQingLongVideo(100);
-// quTouTiaoLaoHuji();
-// sleep(1000 * 10000);
-// kuai7LeftGames();
-// kuai7LiuLan(60);
-// kuai7GuaKa();
-// kuai7Chengjiu();
-// kuai7RightGames();
-// kuai7RightGames2();
-// sleep(1000 * 10000);
 
-// tianTianLeftGame();
-// tianTianGuaFen();
-// tianTianRightGame();
-// tiantianLittle();
-
-// tianTianBaoXiang();
-// tiantianChengJiu();
-// quTouTiaoLaoHuji();
-// storages.remove(this.getStorageKey());
-// sleep(1000 * 10000);
-
-// quTouTiaoGuaFen();
-// quTouTiaoXiaoShuo();
 // getStorage().remove('huohuo');
 // getStorage().remove('huohuo__During');
 // toast(getStorage().get('huohuo__During'))
-// huohuo(60);
-// huohuoHongBao();
-// huohuoOthers();
-// huohuoChengjiu();
 // sleep(1000 * 10000);
 
-// quLingSheng();
-// qulingBaoXiang();
-// resetLaunch();
-// qulingShengPai();
-// resetLaunch();
-// qulingShengChengjiu();
-// resetLaunch();
-// qulingXiaoShuo();
-// sleep(1000 * 10000);
-
-// xiangKanJob();
-// douYin();
-// easyVideo();
-// zhongQingSearch();
 // zhongQingSearch();
 
-// xiangKanVideo();
-// zhongQingVideoKa();
-// noVideoFirst = false;
-// tiantianCanLittle = true;
-// tianTian(1);
 // quTouTiaoR();
-// quLingSheng();
-// caidanDown();
-// quKankan();
-// xiangKanVideo();
-// easyVideo();
-// kReadingT = 19000;
+
 // kReading();
-// zhongVideoT = 0;
-// zhongJob(0.34);
-// douYinBaoXiang();
+
+// zhongJob(0.94);
 // zhongQingLongVideo(0.2);
-// douYinBaoXiang();
 // shuaBao();
-// zhongQingZhuanPan();
-// douYinBaoXiang();
-// zhongQingKanKan();
-// rehuo(30);
-// rehuoHongBao();
-// rehuoOthers();
-// rehuoChengjiu();
-// quZhuan(30);
-// quZhuanHongBao();
-// quZhuanOthers();
-// quZhuanChengjiu();
-// toast(text('电商').exists())
+// zhongQingKanKan();;
 // quTouTiaoWatch()
 // kuaiShouSmallTask();
 // sleep(1000 * 10000);
 // kuaishouUpDown(1, true);
-// kReading();
 // zhongQingSearch()
-// fengKan();
 // huohuoJob.other();
 // quZhuanJob.runAll();
 // rehuoJob.runAll();
@@ -147,6 +78,7 @@ useStorage = false;
 // zhongQingOther.kankan(true)
 // jinRiJob();
 // tianQiJob.runAll();
+// runReHuoLikeOther();
 useStorage = true;
 
 home();
@@ -243,6 +175,17 @@ function begin() {
     }
   } else {
     zhongJob(0.6);
+  }
+}
+
+function runReHuoLikeOther () {
+  var apps = initAllReHuoLike();
+  for(var name in apps) {
+    console.log(i)
+    var app = apps[name];
+    if (app && typeof app.other === 'function') {
+      app.other();
+    }
   }
 }
 
@@ -3817,7 +3760,7 @@ function initKuaiYinJob() {
   }
 
   function goToTask() {
-    myWaitUntil('福利')
+    myWaitUntil('福利');
     click(isDefLaunch ? 700 : 700, 1850);
     sleep(5000);
     closeModal();
@@ -3827,6 +3770,8 @@ function initKuaiYinJob() {
     var res = launch(appName);
     if (res) {
       sleep(8000);
+      click('知道了');
+      sleep(2000);
       back();
     }
   }
@@ -4816,6 +4761,10 @@ function kReading(disableCheck) {
         click('我知道了', 0);
         if (!text('拖动滑块').exists()) {
           back();
+          sleep(2000)
+        }
+        if (!text('分享').exists()) {
+          swipe(1000, 500, 200, 510, 800);
         }
         randomInterest(0.3)
       } else if (i === startE) {
@@ -5715,6 +5664,7 @@ function initZhongQingOther() {
             upDown(2);
             click(500, 800);
             sleep(1000);
+            upDown(2);
             back();
             sleep(1200);
             if (isEnd()) {
@@ -5763,7 +5713,7 @@ function initZhongQingOther() {
           while (i--) {
             upDown(2);
             clickFirst();
-            sleep(600);
+            sleep(1100);
             back();
             sleep(1200);
             if (isEnd()) {
@@ -5835,15 +5785,14 @@ function initZhongQingOther() {
           }
           var i = 8;
           while (i--) {
-            swipe(500, 1700, 500, 600, 600);
             myWaitUntil(mainT, 5);
             var isNear = text('其他人还搜了').exists() && i < 4;
             var t = isNear ? '其他人还搜了' : mainT;
-            isNear && upDown(1);
+            isNear && upDown(2);
             scrollIntoView(t, device.height - 300);
             var a = text(t).findOne(1000);
             if (a) {
-              click(300, a.bounds().centerY() + 160);
+              click(i % 2 === 0? 730 : 300, a.bounds().centerY() + 160);
             } else {
               back();
             }

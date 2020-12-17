@@ -5774,7 +5774,7 @@ function initZhongQingOther() {
             myWaitUntil(mainT, 5);
             var isNear = text('其他人还搜了').exists() && i > 2;
             var t = isNear ? '其他人还搜了' : mainT;
-            isNear && upDown(3);
+            isNear && upDown(2);
             scrollIntoView(t, device.height - 300);
             var a = text(t).findOne(1000);
             if (a) {
@@ -5910,7 +5910,7 @@ function initZhongQingOther() {
       }
 
       function upDown(j) {
-        oneUpDown(3000);
+        oneUpDown(1800);
         if (j > 2) {
           return
         } else {

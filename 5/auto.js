@@ -167,14 +167,14 @@ function begin() {
 
   if (isDefLaunch) {
 
-    zhongJob(0.7);
+    zhongJob(1.0);
     zhongQingOther.zhuanPan();
 
     if (!isAdmin) {
       quTouTiaoR();
     }
   } else {
-    zhongJob(0.6);
+    zhongJob(1.0);
   }
 }
 

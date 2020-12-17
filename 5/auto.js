@@ -155,6 +155,10 @@ function otherRun() {
   }
   zhongJob(1.34);
   runUnDoneFn();
+  runReHuoLikeOther();
+  tianQiJob.runAll();
+  zhongQingOther.kankan();
+  zhongQingOther.kankan();
 }
 
 

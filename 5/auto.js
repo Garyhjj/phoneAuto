@@ -149,10 +149,11 @@ function otherRun() {
   }
   zhongJob(1.34);
   runUnDoneFn();
-  runReHuoLikeOther();
   tianQiJob.runAll();
-  zhongQingOther.kankan();
+  runReHuoLikeOther();
   zhongQingOther.search();
+  zhongQingOther.kankan();
+  runUnDoneFn();
 }
 
 
@@ -370,6 +371,8 @@ function initReHuoLikeJob(p) {
     hongBao = function () {
       goToD();
       begin();
+      sleep(2000);
+      videoAd();
 
       function begin() {
         var tarText = '领红包';
@@ -458,6 +461,8 @@ function initReHuoLikeJob(p) {
         begin(ls.length);
         sleep(2000);
         back();
+        sleep(3000);
+        videoAd();
       }, key + 'chengJiu');
 
       function begin(all) {
@@ -526,7 +531,8 @@ function initReHuoLikeJob(p) {
         return quTouTiaoAdGame({
           enter: function () {
             click(100, 150);
-            sleep(1000);
+            myWaitUntil('还剩下')
+            sleep(2000);
             return true;
           },
           signalText: '还剩下',
@@ -543,6 +549,7 @@ function initReHuoLikeJob(p) {
             return true;
           },
           testTryT: function (n) {
+            sleep(5000);
             return textContains(n + '次机会').exists();
           }
         });
@@ -550,6 +557,7 @@ function initReHuoLikeJob(p) {
       if (a3) {
         markDone(keyP);
       }
+      videoAd();
 
       function goToD() {
         startApp();
@@ -599,6 +607,22 @@ function initReHuoLikeJob(p) {
 
   function hongBaoModalExists() {
     return text('看视频红包').exists();
+  }
+
+  function videoAd() {
+    if (text('看视频').exists()) {
+      click('看视频');
+      sleep(4000);
+      if (!text('看视频').exists()) {
+        quTouTiaoWatch();
+        sleep(2000);
+        closeSuccessModal();
+        sleep(2000);
+      }
+      if (!text('看视频').exists()) {
+        back();
+      }
+    }
   }
 
   function goToTask() {
@@ -2588,6 +2612,7 @@ function checkZhongQingTwo(mark) {
   var afterLaunch = function () {
     if (isNote3) {
       var hasTwo = myWaitUntil('请选择要使用的应用', 10);
+      launch.lastest === '';
       if (hasTwo) {
         click(runFirst ? 300 : 750, 1520);
       }
@@ -2719,15 +2744,18 @@ function zhongJob(last) {
         enterP1: function () {
           var t = '阅读';
           var ls = textContains(t).find();
+          ls.sort(function (a, b) {
+            return a.bounds().top - b.bounds().top;
+          });
           var lg = ls.length;
           var a;
-          for (var index = 1; index < lg; index++) {
+          for (var index = 2; index < lg; index++) {
             var l = ls[index];
             var txt = l.text();
             var bounds = l.bounds();
             var top = bounds.top;
             var left = bounds.left;
-            if (top > 350 && top < 1700 && left > 0 && left < 700 && +txt[0] > 0) {
+            if (top > 600 && top < 1700 && left > 0 && left < 700 && +txt[0] > 0) {
               a = l;
               break;
             };
@@ -2991,7 +3019,7 @@ function initZhongQingOther() {
     function start(i) {
       i = i || 0;
       clickOneByText('抽奖赚');
-      var res = myWaitUntil('剩余次数', 4);
+      var res = myWaitUntil('剩余次数', 6);
       if (!res) {
         click('关闭');
         sleep(4000);
@@ -3015,7 +3043,7 @@ function initZhongQingOther() {
       back();
       myWaitUntil('抽奖赚');
 
-      if (i < 102) {
+      if (i < 106) {
         return start(i + 1);
       }
       return true || text('0').exists();
@@ -3215,14 +3243,14 @@ function initZhongQingOther() {
       }
 
       function tongChengType() {
-        if (textContains('city=fs').exists()) {
+        if (textContains('city=fs').exists() || textStartsWith('京东热卖').exists()) {
           if (halfAuto && !shouldRun()) {
             return true;
           }
           var i = 8;
           while (i--) {
             upDown(2);
-            click(500, 800);
+            click(500, 1300);
             sleep(1500);
             // upDown(2);
             back();
@@ -3539,7 +3567,7 @@ function initZhongQingOther() {
             doneT = doneT + 1;
           }
         } else {
-          if (textContains((max + 1) + '/' + (max + 1)).exists()) {
+          if (textContains(max + '/' + max).exists()) {
             doneT = doneT + 1;
           }
         }
@@ -3555,7 +3583,7 @@ function initZhongQingOther() {
       function zhongqingSearch(times) {
         function aa(i) {
           var max = times || 4;
-          var t = max + 1;
+          var t = max;
           var specialT = textStartsWith('点击今').exists();
           if (specialT) {
             if (text('8').find().length > 1) {
@@ -3581,6 +3609,9 @@ function initZhongQingOther() {
             sleep(1000);
           }
           sleep(3000);
+          if (text('当前奖励已获得').exists()) {
+            return;
+          }
           var upDown = (j) => {
             oneUpDown(4000)
             if (j > 1) {

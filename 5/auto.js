@@ -17,7 +17,7 @@ var unDoneFnKeyForSave = [];
 var unDoneFnForRun = [];
 
 var kankanSleep = 2400;
-
+var runChildFirst = true;
 
 var isNote3 = isDefLaunch && !isAdmin;
 var startDate = (new Date).getDate();
@@ -49,7 +49,7 @@ useStorage = false;
 
 // quTouTiaoR();
 
-kReading();
+// kReading();
 
 // zhongJob(0.94);
 // zhongQingLongVideo(0.2);
@@ -196,7 +196,17 @@ function initAllReHuoLike() {
     enterMain: function () {
       click(640, 1825);
     },
-    upDownRead: true
+    upDownRead: true,
+    afterEnterTask: function () {
+      sleep(4000);
+      var id1 = 'h9';
+      if (id(id1).exists()) {
+        var tar = id(id1).findOne(2000);
+        if (tar) {
+          tar.click();
+        }
+      }
+    }
   });
   var quZhuanJob = initReHuoLikeJob({
     appName: '趣赚清理',
@@ -260,7 +270,8 @@ function initReHuoLikeJob(p) {
     },
     backStopId: false,
     taskEntryName: '任务',
-    upDownRead: false
+    upDownRead: false,
+    afterEnterTask: noneFn
   }
   p = p ? Object.assign(def, p) : def;
 
@@ -273,6 +284,7 @@ function initReHuoLikeJob(p) {
   var backStopId = p.backStopId;
   var taskEntryName = p.taskEntryName;
   var upDownRead = p.upDownRead;
+  var afterEnterTask = p.afterEnterTask;
 
   var main = noneFn;
   var hongBao = noneFn;
@@ -635,6 +647,7 @@ function initReHuoLikeJob(p) {
     } else {
       click(920, 1850);
     }
+    afterEnterTask();
   }
 
   function closeSuccessModal() {
@@ -2607,10 +2620,18 @@ function kReading(disableCheck) {
 
 function checkZhongQingTwo(mark) {
   var runFirst = true;
+  var child = mark + '_two';
   if (isNote3) {
-    if (isDone(mark)) {
-      runFirst = false
-      mark = mark + '_two';
+    if (runChildFirst) {
+      if (!isDone(child)) {
+        runFirst = false
+        mark = child;
+      }
+    } else {
+      if (isDone(mark)) {
+        runFirst = false
+        mark = child;
+      }
     }
   }
   var afterLaunch = function () {

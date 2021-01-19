@@ -7,7 +7,7 @@ var useStorage = true;
 var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
 var caidanReadingT = isDefLaunch ? 60 : 33;
-var kReadingT = isDefLaunch ? 1300 : 1300;
+var kReadingT = isDefLaunch ? 1200 : 1200;
 var zhongVideoT = isDefLaunch ? 0 : 0;
 var easyVideoT = 5;
 var noVideoFirst = false;
@@ -177,9 +177,9 @@ function begin() {
   }
 }
 
-function runReHuoLikeOther () {
+function runReHuoLikeOther() {
   var apps = initAllReHuoLike();
-  for(var name in apps) {
+  for (var name in apps) {
     var app = apps[name];
     if (app && typeof app.other === 'function') {
       app.other();
@@ -188,6 +188,10 @@ function runReHuoLikeOther () {
 }
 
 function initAllReHuoLike() {
+  var clickF = function () {
+    click(500, 350);
+  }
+  var lastIdIdx = 0;
   var tianQiJob = initReHuoLikeJob({
     appName: '趣查天气',
     videoAdText: '看视频再送',
@@ -206,7 +210,36 @@ function initAllReHuoLike() {
           tar.click();
         }
       }
-    }
+    },
+    beforeMainStart: function () {
+      sleep(8000);
+      clickF();
+      sleep(3000);
+      clickF();
+    },
+    mainEveryloop: function (i) {
+      var startId = 'd'
+      if (text('关闭广告').exists()) {
+        click('关闭广告');
+      }
+      if (i % 5 === 0) {
+        var ls = id(startId).find();
+        ls.sort(function (a, b) {
+          return a.bounds().top - b.bounds().top;
+        });
+        try {
+          var idx = lastIdIdx === 0 ? 1 : 0;
+          var tar = ls[idx];
+          if (tar) {
+            tar.click();
+          }
+          lastIdIdx = idx;
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    },
+    mainText: '天气'
   });
   var quZhuanJob = initReHuoLikeJob({
     appName: '趣赚清理',
@@ -229,7 +262,7 @@ function initAllReHuoLike() {
   var huohuoJob = initReHuoLikeJob({
     appName: '火火视频极速版',
     videoAdText: '看视频再送',
-    successCloseId: isNote3? 'ky' : function () {
+    successCloseId: isNote3 ? 'ky' : function () {
       var id3 = 'kj';
       var id4 = 'ki';
       if (id(id3).exists()) {
@@ -252,7 +285,7 @@ function initAllReHuoLike() {
       }
       sleep(1500);
     },
-    hourCoinText: isNote3? 'ac0': 'abc',
+    hourCoinText: isNote3 ? 'ac0' : 'abc',
     backStopId: 'gi'
   });
   return {
@@ -271,7 +304,10 @@ function initReHuoLikeJob(p) {
     backStopId: false,
     taskEntryName: '任务',
     upDownRead: false,
-    afterEnterTask: noneFn
+    afterEnterTask: noneFn,
+    mainEveryloop: noneFn,
+    beforeMainStart: noneFn,
+    mainText: '首页'
   }
   p = p ? Object.assign(def, p) : def;
 
@@ -285,6 +321,9 @@ function initReHuoLikeJob(p) {
   var taskEntryName = p.taskEntryName;
   var upDownRead = p.upDownRead;
   var afterEnterTask = p.afterEnterTask;
+  var mainEveryloop = p.mainEveryloop;
+  var beforeMainStart = p.beforeMainStart;
+  var mainText = p.mainText;
 
   var main = noneFn;
   var hongBao = noneFn;
@@ -299,7 +338,7 @@ function initReHuoLikeJob(p) {
         var i = 8;
         while (i) {
           sleep(800);
-          if (text(!upDownRead? '小视频': '天气').exists()) {
+          if (text(mainText).exists()) {
             break;
           }
           i = i - 1;
@@ -307,28 +346,13 @@ function initReHuoLikeJob(p) {
         enterMain();
         sleep(4000);
         var getOnePassTime = initGetLittleDuringTime();
-        var clickF = function () {
-          click(500, 350);
-        }
-        if (upDownRead) {
-          sleep(8000);
-          clickF();
-          sleep(3000);
-          clickF();
-        }
+        beforeMainStart();
         quTouTiaoVideo({
           readTime: upDownRead ? 0 : (realT || 40),
-          upDownReadTime:upDownRead ? (realT || 40) : 0,
+          upDownReadTime: upDownRead ? (realT || 40) : 0,
           goDown: function () {},
           goUp: function () {},
           beforeOneBegin: function (i, passTime) {
-            if (upDownRead) {
-              if (i % 43 === 0 && i > 0) {
-                enterMain();
-                sleep(8000);
-                clickF();
-              }
-            }
             if (textContains('充电').exists()) {
               click('取消');
             }
@@ -340,7 +364,7 @@ function initReHuoLikeJob(p) {
             } else {
               closeSuccessModal();
             }
-            if (!text(!upDownRead? '首页': '天气').exists()) {
+            if (!text(mainText).exists()) {
               sleep(500);
               back();
             }
@@ -349,11 +373,9 @@ function initReHuoLikeJob(p) {
               sleep(2000);
               back();
             }
-            if (! upDownRead && i % 23 === 0) {
-              enterMain();
-            }
             randomInterest(0.07);
             addInFn(getOnePassTime(passTime, 0.1));
+            mainEveryloop(i)
           },
           hasVideoText: videoAdText,
           oneReadTime: function () {
@@ -377,7 +399,7 @@ function initReHuoLikeJob(p) {
             }
           }
         });
-      }, key + 'main', upDownRead ?20: 60, t || 40);
+      }, key + 'main', upDownRead ? 20 : 60, t || 40);
     }
 
     hongBao = function () {
@@ -718,7 +740,7 @@ function kuaiShouSmallTask() {
           return isEnd
         }
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
   }, 'kuaiShouSmallTask')
@@ -757,8 +779,8 @@ function kuaiShouSmallTask() {
 
   function watch2() {
     var tar = text('看直播').find();
-    if (tar[tar.length-1]) {
-      tar[tar.length-1].click();
+    if (tar[tar.length - 1]) {
+      tar[tar.length - 1].click();
       sleep(40000);
       back();
       sleep(2000);
@@ -2064,7 +2086,8 @@ function initKuaiYinJob() {
       back();
     }
   }
-  function beforeEnd () {
+
+  function beforeEnd() {
     click('首页')
   }
 
@@ -2799,7 +2822,7 @@ function zhongJob(last) {
     if (error) {
       return false;
     }
-  }, mark, 1.9, last);
+  }, mark, 2.0, last);
 
 
   function zhongVideo(t) {
@@ -2897,7 +2920,7 @@ function zhongQingLongVideo(t) {
           addInFn(getOnePassTime(passTime, 0.03));
         },
         beforeOneUpDown: function (i) {
-          if (i< 10 && id('n1').exists()) {
+          if (i < 10 && id('n1').exists()) {
             back();
             sleep(300);
           }
@@ -3283,7 +3306,7 @@ function initZhongQingOther() {
             // upDown(2);
             back();
             sleep(1200);
-            
+
           }
           return true;
         }
@@ -3323,12 +3346,12 @@ function initZhongQingOther() {
               break;
             }
             clickFirst();
-            myWaitUntil(function() {
+            myWaitUntil(function () {
               return !text(ls[i]).exists()
             }, 10);
             back();
             sleep(1200);
-            
+
             if (i === 4) {
               var lg1 = 7;
               while (lg1--) {
@@ -3405,7 +3428,7 @@ function initZhongQingOther() {
             scrollIntoView(t, device.height - 300);
             var a = text(t).findOne(1000);
             if (a) {
-              click(i % 2 === 0? 730 : 300, a.bounds().centerY() + 160);
+              click(i % 2 === 0 ? 730 : 300, a.bounds().centerY() + 160);
             } else {
               back();
             }
@@ -3701,12 +3724,7 @@ function initZhongQingOther() {
         }
       }
       sleep(8000);
-      var done = false;
-      try {
-        done = all();
-      } catch (e) {
-        console.log(e);
-      }
+      var done = all();
       backToMain();
       if (!done) {
         saveUnDoneFn(function () {
@@ -3774,8 +3792,14 @@ function initZhongQingOther() {
   }
 
   return {
-    search: search,
-    kankan: withCatch(kankan),
+    search: withCatch(search, function () {
+      begin();
+      otherRun();
+    }),
+    kankan: withCatch(kankan, function () {
+      begin();
+      otherRun();
+    }),
     zhuanPan: zhuanPan,
     runAll: function () {
       zhuanPan();
@@ -4484,18 +4508,21 @@ function randomInterest(rate) {
   }
 }
 
-function withCatch(fn) {
+function withCatch(fn, onError) {
   return function () {
     var arg = [];
     for (var index = 0; index < arguments.length; index++) {
       var element = arguments[index];
-      arg[index]=element;
+      arg[index] = element;
     }
     try {
-      fn.apply(null,arg);
+      fn.apply(null, arg);
       fn()
-    }catch(err) {
+    } catch (err) {
       console.log(err)
+      if (onError === 'function') {
+        onError();
+      }
     }
   }
 }

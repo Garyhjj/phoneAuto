@@ -190,8 +190,10 @@ function runReHuoLikeOther() {
 function initAllReHuoLike() {
   var clickF = function () {
     click(500, 350);
+    inFirst = true;
   }
-  var lastIdIdx = 0;
+  var pageIdx = 0;
+  var inFirst = true;
   var tianQiJob = initReHuoLikeJob({
     appName: '趣查天气',
     videoAdText: '看视频再送',
@@ -218,26 +220,41 @@ function initAllReHuoLike() {
       clickF();
     },
     mainEveryloop: function (i) {
-      var startId = 'd'
-      if (text('关闭广告').exists()) {
-        click('关闭广告');
+      var startId = 'a2y'
+      if (textContains('看视频再送').exists()) {
+        return;
       }
-      if (i % 5 === 0) {
-        var ls = id(startId).find();
-        ls.sort(function (a, b) {
-          return a.bounds().top - b.bounds().top;
-        });
-        try {
-          var idx = lastIdIdx === 0 ? 1 : 0;
-          var tar = ls[idx];
-          if (tar) {
-            tar.click();
+      if (textEndsWith('关闭广告').exists()) {
+        click('关闭广告');
+      } else {
+        if (i % 5 === 0 && i > 1) {
+          var ad = text('广告').findOne(2000);
+          var noAd;
+          if (ad) {
+            var top = ad.bounds().top;
+            noAd = top < device.height - 100;
+          } else {
+            noAd = true;
           }
-          lastIdIdx = idx;
-        } catch (err) {
-          console.log(err)
+          if (noAd && inFirst) {
+            click(500, 1250);
+          } else {
+            try {
+              if (pageIdx === 0) {
+                nextPage();
+                pageIdx++;
+              } else {
+                nextPage(true);
+                pageIdx--
+              }
+              clickF();
+            } catch (err) {
+              console.log(err)
+            }
+          }
         }
       }
+      
     },
     mainText: '天气'
   });
@@ -3593,7 +3610,7 @@ function initZhongQingOther() {
           isSpecial = true;
           for (var j = 4; j < 13; j++) {
             if (textContains(j + '').exists()) {
-              max = 8 - j - 1;
+              max = j;
               toast(max);
               break;
             }

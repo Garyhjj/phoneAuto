@@ -77,8 +77,8 @@ useStorage = false;
 // runReHuoLikeOther();
 // zhongQingOther.search();
 // zouYiZouLikeTask();
-// zou.task20();
-// sleep(10000 * 10000)
+zou.task20Auto();
+sleep(10000 * 10000)
 useStorage = true;
 
 home();
@@ -201,27 +201,41 @@ function initZouYiZouLikeTask(p) {
     goToMain: function () {
       click(650, device.height - 60);
       myWaitUntil('天天提现')
-    }
+    },
+    task20Title: '天天提现'
   }
   p = p ? Object.assign(def, p) : def;
   var appName = p.appName;
   var adId = p.adId;
   var isInTask20 = p.isInTask20;
   var goToMain = p.goToMain;
+  var task20Title = p.task20Title;
 
   function task20Auto() {
-    startApp();
-    goToMain();
-    task20();
+    runAndMark(function () {
+      startApp();
+      goToMain();
+      var res = task20();
+      return res;
+    }, appName + 'task20Auto');
   }
 
   function task20() {
     var tarText = '去完成';
     var subCloseId = 'close';
     var readType = '还需要阅读';
-    run();
+    var maxLg = text(tarText).find().length;
+    return run();
     // 领取 立即领取
-    function run() {
+    function run(i) {
+      i = i || 0;
+      if (text('知道了').exists()) {
+        click('知道了');
+        return text(tarText).find().length === 0;
+      }
+      if (i > maxLg) {
+        return text(tarText).find().length === 0;
+      }
       closeAd();
       if (text(tarText).exists()) {
         toast('has task');
@@ -267,7 +281,9 @@ function initZouYiZouLikeTask(p) {
           }
         }
         sleep(4000);
-        run();
+        run(i + 1);
+      } else {
+        return text(tarText).find().length === 0;
       }
     }
   }

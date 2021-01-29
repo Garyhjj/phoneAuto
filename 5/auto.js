@@ -1,5 +1,5 @@
-var isDefLaunch = false;
-var isAdmin = false;
+var isDefLaunch = true;
+var isAdmin = true;
 
 var videoCheckLs = [];
 var useStorage = true;
@@ -34,6 +34,9 @@ var huohuoJob = rehuoLike.huohuoJob;
 var quZhuanJob = rehuoLike.quZhuanJob;
 var rehuoJob = rehuoLike.rehuoJob;
 var tianQiJob = rehuoLike.tianQiJob;
+
+var zouLike = initZouYiZouLikeApp();
+var zou = zouLike.zou;
 
 var kuaiYinJob = initKuaiYinJob();
 var zhongQingOther = initZhongQingOther();
@@ -73,6 +76,9 @@ useStorage = false;
 // tianQiJob.runAll();
 // runReHuoLikeOther();
 // zhongQingOther.search();
+// zouYiZouLikeTask();
+// zou.task20();
+// sleep(10000 * 10000)
 useStorage = true;
 
 home();
@@ -177,6 +183,115 @@ function begin() {
   }
 }
 
+function initZouYiZouLikeApp() {
+  var zou = initZouYiZouLikeTask({
+    appName: '快乐走一走'
+  })
+  return {
+    zou: zou
+  }
+}
+
+function initZouYiZouLikeTask(p) {
+  var def = {
+    adId: 'tt_insert_dislike_icon_img',
+    isInTask20: function () {
+      return text('天天提现').exists();
+    },
+    goToMain: function () {
+      click(650, device.height - 60);
+      myWaitUntil('天天提现')
+    }
+  }
+  p = p ? Object.assign(def, p) : def;
+  var appName = p.appName;
+  var adId = p.adId;
+  var isInTask20 = p.isInTask20;
+  var goToMain = p.goToMain;
+
+  function task20Auto() {
+    startApp();
+    goToMain();
+    task20();
+  }
+
+  function task20() {
+    var tarText = '去完成';
+    var subCloseId = 'close';
+    var readType = '还需要阅读';
+    run();
+    // 领取 立即领取
+    function run() {
+      closeAd();
+      if (text(tarText).exists()) {
+        toast('has task');
+        click(tarText, 0);
+        myWaitUntil(function () {
+          return !text(tarText).exists();
+        })
+        sleep(800);
+        if (textContains(readType).exists()) {
+          var y = 33;
+          while (y --) {
+            sleep(2000);
+            if (y > 29) {
+              click(500, 600);
+              sleep(800);
+              back();
+            } 
+            if (!textContains(readType).exists()) {
+              break;
+            }
+          }
+          back();
+          sleep(2000);
+        } else {
+          quTouTiaoWatch();
+          if (!isInTask20()) {
+            videoLeftClose();
+            sleep(1000);
+            videoRightClose();
+          }
+        }
+        var c = id(subCloseId).findOne(1000);
+        if (c) {
+          c.close();
+          sleep(500)
+        }
+        if (myWaitUntil(function () {
+            return text('领 取').exists();
+          })) {
+          clickOneByText('领 取');
+          if (myWaitUntil('立即领取')) {
+            click('立即领取', 0)
+          }
+        }
+        sleep(4000);
+        run();
+      }
+    }
+  }
+
+  function startApp() {
+    var res = launch(appName);
+    sleep(15000);
+    closeAd();
+    return res;
+  }
+
+  function closeAd() {
+    var closeAd = id(adId).findOne(2000);
+    if (closeAd) {
+      closeAd.click();
+      sleep(800);
+    }
+  }
+  return {
+    task20: task20,
+    task20Auto: task20Auto
+  }
+}
+
 function runReHuoLikeOther() {
   var apps = initAllReHuoLike();
   for (var name in apps) {
@@ -254,7 +369,7 @@ function initAllReHuoLike() {
           }
         }
       }
-      
+
     },
     mainText: '天气'
   });

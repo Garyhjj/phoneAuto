@@ -6,10 +6,8 @@ var useStorage = true;
 
 var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
-var caidanReadingT = isDefLaunch ? 60 : 33;
-var kReadingT = isDefLaunch ? 1300 : 1300;
+var kReadingT = isDefLaunch ? 1020 : 1020;
 var zhongVideoT = isDefLaunch ? 0 : 0;
-var easyVideoT = 5;
 var noVideoFirst = false;
 var stopReading = false;
 var unDoneFnForSave = [];
@@ -19,9 +17,11 @@ var unDoneFnForRun = [];
 var kankanSleep = 2400;
 var runChildFirst = true;
 
+var canKanKan = true
+
 var isNote3 = isDefLaunch && !isAdmin;
 var startDate = (new Date).getDate();
-var runDouYinBX = false;
+var runDouYinBX = true;
 var kuaiShouSmallTaskId = 'redFloat';
 
 if (!isAdmin && isDefLaunch) {
@@ -37,11 +37,7 @@ var rehuoJob = rehuoLike.rehuoJob;
 var tianQiJob = rehuoLike.tianQiJob;
 var zhuanJob = rehuoLike.zhuanJob;
 var hongyunJob = rehuoLike.hongyunJob;
-
-var zouLike = initZouYiZouLikeApp();
-var zou = zouLike.zou;
-var meng = zouLike.meng;
-var xinFu = zouLike.xinFu;
+var liulanQi = rehuoLike.liulanQiJob;
 
 var kuaiYinJob = initKuaiYinJob();
 var zhongQingOther = initZhongQingOther();
@@ -49,9 +45,10 @@ var zhongQingOther = initZhongQingOther();
 sleep(5000);
 useStorage = false;
 
+var currentDate = new Date().getDate();
+
 // checkDouYinInKuaiShou();
 // kuaishouUpDown(1, true);
-// kuai7Chengjiu();
 // zhongQingLongVideo(100);
 // sleep(1000 * 10000);
 
@@ -65,6 +62,7 @@ useStorage = false;
 // zhongQingKanKan();;
 // quTouTiaoWatch()
 // kuaiShouSmallTask();
+// zhongQingOther.getMoreReward();
 // sleep(1000 * 10000);
 // kuaishouUpDown(1, true);
 // huohuoJob.other();
@@ -73,6 +71,7 @@ useStorage = false;
 // kuaiYinJob.runAll();
 // kuaiYinJob.baoXiang();
 // huohuoJob.hongBao();
+// device.wakeUp()
 // sleep(1000 * 10000);
 // quZhuanJob.chengJiu();
 // zhongQingOther.zhuanPan();
@@ -81,108 +80,97 @@ useStorage = false;
 // tianQiJob.runAll();
 // runReHuoLikeOther();
 // zhongQingOther.search();
-// zouYiZouLikeTask();
-// zou.task20Auto();
 // meng.task20();
-// xinFu.task20Auto();
-// sleep(10000 * 10000)
 // zhuanJob.runAll();
 // hongyunJob.runAll();
+// liulanQi.runAll();
 useStorage = true;
+// runReHuoLikeCustom();
 
+wakeUpDevice()
 home();
-begin();
-otherRun();
 begin();
 otherRun();
 
 function otherRun() {
   if (isAdmin) {
     douYin(30);
-    douYinBaoXiang();
-    // jinRiJob();
   } else {
-    kuaiYinJob.runAll();
+    kuaiYinJob.main();
   }
-  // fengKan(10);
-  hongyunJob.runAll();
+  runReHuoLikeCustom();
 
-  isNote3 && huohuoJob.runAll();
+  zhongJob(1.0);
 
-  rehuoJob.runAll();
+  kReading();
 
-  quZhuanJob.runAll();
+  zhongJob(1.0);
 
-  zhuanJob.runAll();
+  runReHuoLikeMain();
 
-  tianQiJob.runAll();
+  kReading();
 
-  if (isAdmin || !isDefLaunch) {
-    shuaBao();
-  }
+  runReHuoLikeChengjiu();
+
+  zhongJob(1.0);
+
+  runReHuoLikeOther();
+
+  runReHuoLikeCustom();
 
   zhongVideoT = 0;
-  zhongJob(1.0);
-  douYinBaoXiang();
-  zhongQingLongVideo(0.2);
-  douYinBaoXiang();
-  zhongJob(1.0);
-  runUnDoneFn();
-  douYinBaoXiang();
-  zhongJob(1.0);
-  douYinBaoXiang();
-  if (isAdmin || !isDefLaunch) {
-    shuaBao();
-  }
+  // zhongQingLongVideo(0.2);
   // fengKan(10);
   if (isDefLaunch && !isAdmin) {
     zhongQingOther.search();
   }
 
-  douYinBaoXiang();
+  runReHuoLikeChengjiu();
+
   zhongJob(0.9);
-  douYinBaoXiang();
-  runUnDoneFn();
-  zhongQingLongVideo(0.2);
-  douYinBaoXiang();
+  // zhongQingLongVideo(0.2);
   kReading();
-  douYinBaoXiang();
-  runUnDoneFn();
-  douYinBaoXiang();
-  // fengKan(10);
+  zhongJob(1.0);
   if (isDefLaunch) {
     zhongQingOther.zhuanPan();
   }
 
-  runUnDoneFn();
-  huohuoJob.other();
+  zhongQingOther.getMoreReward();
 
-  rehuoJob.other();
+  runReHuoLikeOther();
 
-  quZhuanJob.other();
+  zhongQingLongVideo(0.2);
+
+  runReHuoLikeCustom();
 
   if (isDefLaunch && !isAdmin) {
     zhongQingOther.search();
   }
   if (!isAdmin) {
-    kuaiYinJob.water();
+    kuaiYinJob.runAll();
   }
-  // if (isDefLaunch) {
-  //   if(isAdmin) {
-  //     // xinFu.task20Auto();
-  //   } else {
-  //     zou.task20Auto();
-  //     meng.task20Auto();
-  //     xinFu.task20Auto();
-  //   }
-  // }
-  zhongJob(1.34);
+  zhongQingOther.getMoreReward();
+  zhongQingLongVideo(0.2);
+
   runUnDoneFn();
-  tianQiJob.runAll();
-  runReHuoLikeOther();
   zhongQingOther.search();
   zhongQingOther.kankan();
+  zhongQingOther.kankan();
   runUnDoneFn();
+  if (new Date().getHours() < 17) {
+    begin();
+    otherRun();
+  } else {
+    while (new Date().getDate() === currentDate) {
+      var waitMinutes = 1
+      sleep(1000 * 60 * waitMinutes)
+    }
+    currentDate = new Date().getDate()
+    wakeUpDevice()
+    home();
+    begin();
+    otherRun();
+  }
 }
 
 
@@ -206,213 +194,40 @@ function begin() {
   }
 }
 
-function initZouYiZouLikeApp() {
-  var zou = initZouYiZouLikeTask({
-    appName: '快乐走一走'
-  })
-  var xinFu = initZouYiZouLikeTask({
-    appName: '幸福农场',
-    task20Title: '刷新任务',
-    goToMain: function () {
-      var e = id('meirifuli').findOne(2000);
-      if (e) {
-        e.click();
-      } else {
-        click(420, device.height - 160);
-      }
-      myWaitUntil('刷新任务')
-    },
-    oneTaskId: 'status_tv',
-    afterOneTask: noneFn,
-    canClick: false,
-    isInTask20: function () {
-      return textContains('刷新任务').exists();
-    },
-    beforeOneTask: function () {
-      sleep(1500);
-      if (text('开心收下').exists()) {
-        click('开心收下')
-        return false;
-      }
+function runReHuoLikeCustom() {
+  var apps = initAllReHuoLike();
+  for (var name in apps) {
+    var app = apps[name];
+    if (app && typeof app.custom === 'function') {
+      app.custom();
     }
-  })
-  var meng = initZouYiZouLikeTask({
-    appName: '梦想小镇新春版',
-    task20Title: '刷新任务',
-    goToMain: function () {
-      var e = id('iv_mrfl').findOne(2000);
-      if (e) {
-        e.click();
-      } else {
-        click(420, device.height - 60);
-      }
-      myWaitUntil('刷新任务')
-    },
-    oneTaskId: 'taskBtnView',
-    afterOneTask: noneFn,
-    isInTask20: function () {
-      return textContains('刷新任务').exists();
-    }
-  })
-  return {
-    zou: zou,
-    xinFu: xinFu,
-    meng: meng
   }
 }
 
-function initZouYiZouLikeTask(p) {
-  var task20Title = '天天提现';
-  var def = {
-    adId: 'tt_insert_dislike_icon_img',
-    isInTask20: function () {
-      return text(task20Title).exists();
-    },
-    goToMain: function () {
-      click(650, device.height - 60);
-      myWaitUntil(task20Title)
-    },
-    task20Title: '天天提现',
-    oneTaskId: '',
-    afterOneTask: function () {
-      if (myWaitUntil(function () {
-          return text('领 取').exists();
-        })) {
-        clickOneByText('领 取');
-        if (myWaitUntil('立即领取')) {
-          click('立即领取', 0)
-        }
-      }
-    },
-    beforeOneTask: noneFn,
-    canClick: true
-  }
-  p = p ? Object.assign(def, p) : def;
-  var appName = p.appName;
-  var adId = p.adId;
-  var isInTask20 = p.isInTask20;
-  var goToMain = p.goToMain;
-  task20Title = p.task20Title;
-  var oneTaskId = p.oneTaskId;
-  var afterOneTask = p.afterOneTask;
-  var beforeOneTask = p.beforeOneTask;
-  var canClick = p.canClick;
-
-  function task20Auto() {
-    runAndMark(function () {
-      startApp();
-      goToMain();
-      var res = task20();
-      return res;
-    }, appName + 'task20Auto');
-  }
-
-  function task20() {
-    var tarText = '去完成';
-    var subCloseId = 'close';
-    var readType = '还需要阅读';
-    var preGetTar = function () {
-      return oneTaskId ? id(oneTaskId) : text(tarText);
+function runReHuoLikeChengjiu() {
+  var apps = initAllReHuoLike();
+  for (var name in apps) {
+    var app = apps[name];
+    if (app && typeof app.hongBao === 'function') {
+      app.hongBao();
     }
-    var isFinsish = function () {
-      return preGetTar().find().length === 0;
+    if (app && typeof app.chengJiu === 'function') {
+      app.chengJiu();
     }
-    var maxLg = preGetTar().find().length;
-    return run();
-    // 领取 立即领取
-    function run(i) {
-      i = i || 0;
-      if (text('知道了').exists()) {
-        click('知道了');
-        return isFinsish();
-      }
-      if (i > maxLg) {
-        return isFinsish();
-      }
-      closeAd();
-      if (i > 0) {
-        sleep(3000)
-      }
-      if (preGetTar().exists()) {
-        toast('has task');
-        if (oneTaskId) {
-          var t = preGetTar().find();
-          if (t[i]) {
-            if (canClick) {
-              t[i].click();
-            } else {
-              var b = t[0].bounds();
-              click(b.centerX(), b.centerY())
-            }
-          } else {
-            return;
-          }
-        } else {
-          click(tarText, 0);
-        }
-        var r = beforeOneTask();
-        if (r === false) {
-          return run(i);
-        }
-        myWaitUntil(function () {
-          return !preGetTar().exists();
-        })
-        sleep(800);
-        if (textContains(readType).exists()) {
-          var y = 35;
-          while (y--) {
-            sleep(2000);
-            click('继续浏览');
-            if (y > 29) {
-              click(500, 600 + (y % 3) * 200);
-              sleep(800);
-              back();
-            }
-            if (!textContains(readType).exists()) {
-              break;
-            }
-          }
-          back();
-          sleep(2000);
-        } else {
-          quTouTiaoWatch();
-          if (!isInTask20()) {
-            videoLeftClose();
-            sleep(1000);
-            videoRightClose();
-          }
-        }
-        var c = id(subCloseId).findOne(1000);
-        if (c) {
-          c.click();
-          sleep(500)
-        }
-        afterOneTask();
-        sleep(4000);
-        return run(i + 1);
+  }
+}
+
+function runReHuoLikeMain() {
+  var apps = initAllReHuoLike();
+  for (var name in apps) {
+    var app = apps[name];
+    if (app && typeof app.main === 'function') {
+      if (isAdmin && name === 'liulanQiJob') {
+        app.main(10);
       } else {
-        return isFinsish();
+        app.main();
       }
     }
-  }
-
-  function startApp() {
-    var res = launch(appName);
-    sleep(15000);
-    closeAd();
-    return res;
-  }
-
-  function closeAd() {
-    var closeAd = id(adId).findOne(2000);
-    if (closeAd) {
-      closeAd.click();
-      sleep(800);
-    }
-  }
-  return {
-    task20: task20,
-    task20Auto: task20Auto
   }
 }
 
@@ -427,10 +242,22 @@ function runReHuoLikeOther() {
 }
 
 function initAllReHuoLike() {
+  var liulanQi = initReHuoLikeJob({
+    appName: '百宝箱浏览器',
+    videoAdText: '看视频再送',
+    hourCoinText: 'aef',
+    successCloseId: 'lw',
+    taskEntryName: '福利',
+    readTime: isAdmin ? 55 : 70,
+    custom: function () {
+      var id1 = 'ab4';
+      idWatch(id1, liulanQi)
+    }
+  });
   var hongyun = initReHuoLikeJob({
     appName: '红云视频极速版',
     videoAdText: '看视频再送',
-    hourCoinText:'ad2',
+    hourCoinText: 'ad2',
     successCloseId: 'll',
     taskEntryName: '福利'
   });
@@ -504,7 +331,35 @@ function initAllReHuoLike() {
       }
 
     },
-    mainText: '天气'
+    mainText: '天气',
+    custom: function () {
+      begin();
+
+      function begin() {
+        var tarText = '领红包';
+        while (text(tarText).exists()) {
+          var a = text(tarText).findOne(1000);
+          if (a) {
+            swipe(500, 500, 500, 600, 500);
+            sleep(100);
+            click(a.bounds().left + 10, a.bounds().top - 30);
+            sleep(3000);
+            if (text('看视频红包').exists()) {
+              click(550, 1230);
+              sleep(5000)
+              quTouTiaoWatch();
+              sleep(3000);
+              tianQiJob.closeSuccessModal();
+              if (text('观看历史').exists()) {
+                back();
+                sleep(1000);
+              }
+            }
+            return begin();
+          }
+        }
+      }
+    }
   });
   var zhuanJob = initReHuoLikeJob({
     appName: '赚赚清理',
@@ -513,6 +368,20 @@ function initAllReHuoLike() {
     hourCoinText: 'ajg',
     enterMain: function () {
       click(410, 1825);
+    },
+    custom: function () {
+      var id1 = 'ag5';
+      idWatch(id1, zhuanJob)
+      var tar = id('uy').findOne(1000);
+      if (tar) {
+        var bs = tar.bounds();
+        click(bs.centerX(), bs.centerY());
+        if (myWaitUntil('看视频最高')) {
+          click('看视频最高');
+          quTouTiaoWatch();
+          zhuanJob.closeSuccessModal();
+        }
+      }
     }
   });
   var quZhuanJob = initReHuoLikeJob({
@@ -523,7 +392,41 @@ function initAllReHuoLike() {
     enterMain: function () {
       click(640, 1825);
     },
-    backStopId: 'gt'
+    backStopId: 'gt',
+    custom: function () {
+      var id1 = 'abb';
+      if (isNote3) {
+        var ls = [
+          [130, 280],
+          [130, 570],
+          [950, 320]
+        ];
+        var lg = ls.length;
+        while (lg--) {
+          var tar = ls[lg];
+          if (tar) {
+            click(tar[0], tar[1]);
+            if (myWaitUntil('看视频最高')) {
+              click('看视频最高');
+              quTouTiaoWatch();
+              quZhuanJob.closeSuccessModal();
+            }
+          }
+        }
+      } else {
+        idWatch(id1, quZhuanJob)
+      }
+      var tar = id('t1').findOne(1000);
+      if (tar) {
+        var bs = tar.bounds();
+        click(bs.centerX(), bs.centerY());
+        if (myWaitUntil('看视频最高')) {
+          click('看视频最高');
+          quTouTiaoWatch();
+          quZhuanJob.closeSuccessModal();
+        }
+      }
+    }
   });
 
   var rehuoJob = initReHuoLikeJob({
@@ -531,13 +434,13 @@ function initAllReHuoLike() {
     videoAdText: '翻倍',
     successCloseId: 'lx',
     hourCoinText: isDefLaunch && !isAdmin ? 'adx' : 'acn',
-    readTime: 18
+    readTime: 20
   });
 
   var huohuoJob = initReHuoLikeJob({
     appName: '火火视频极速版',
     videoAdText: '看视频再送',
-    readTime: 18,
+    readTime: 30,
     successCloseId: isNote3 ? 'ky' : function () {
       var id3 = 'kj';
       var id4 = 'ki';
@@ -562,15 +465,44 @@ function initAllReHuoLike() {
       sleep(1500);
     },
     hourCoinText: isNote3 ? 'ac0' : 'abc',
-    backStopId: 'gi'
+    backStopId: 'gi',
+    custom: function () {
+      huohuoJob.goToTask();
+      myWaitUntil('立即提现');
+      click('立即提现');
+      if (myWaitUntil('我的钱包')) {
+        myWaitUntil('立即提现');
+        click('立即提现');
+      }
+    }
   });
+
+  function idWatch(myId, instance) {
+    var id1 = myId;
+    var ls = id(id1).find();
+    var lg = ls.length;
+    toast('idWatch' + lg);
+    while (lg--) {
+      var tar = ls[lg];
+      if (tar) {
+        var bs = tar.bounds();
+        click(bs.centerX(), bs.centerY());
+        if (myWaitUntil('看视频最高')) {
+          click('看视频最高');
+          quTouTiaoWatch();
+          instance.closeSuccessModal();
+        }
+      }
+    }
+  }
   return {
     huohuoJob: huohuoJob,
     quZhuanJob: quZhuanJob,
     rehuoJob: rehuoJob,
     tianQiJob: tianQiJob,
     zhuanJob: zhuanJob,
-    hongyunJob: hongyun
+    hongyunJob: hongyun,
+    liulanQiJob: liulanQi
   }
 }
 
@@ -586,7 +518,8 @@ function initReHuoLikeJob(p) {
     mainEveryloop: noneFn,
     beforeMainStart: noneFn,
     mainText: '首页',
-    readTime: 60
+    readTime: 60,
+    custom: undefined
   }
   p = p ? Object.assign(def, p) : def;
 
@@ -604,15 +537,17 @@ function initReHuoLikeJob(p) {
   var beforeMainStart = p.beforeMainStart;
   var mainText = p.mainText;
   var readTime = p.readTime;
+  var myCustom = p.custom;
 
   var main = noneFn;
   var hongBao = noneFn;
   var chengJiu = noneFn;
   var other = noneFn;
+  var custom = noneFn;
 
   if (appName && videoAdText && hourCoinText && successCloseId) {
     main = function (t) {
-      runAndMarkByDuring(function (realT, addInFn) {
+      return runAndMarkByDuring(function (realT, addInFn) {
         toast(realT)
         startApp();
         var i = 8;
@@ -682,7 +617,7 @@ function initReHuoLikeJob(p) {
             }
           }
         });
-      }, key + 'main', readTime || 60, t || 40);
+      }, key + 'main', readTime || 60, t || readTime);
     }
 
     hongBao = function () {
@@ -775,11 +710,12 @@ function initReHuoLikeJob(p) {
         goToD();
         var ls = text(tarText).find();
         toast(ls.length)
-        begin(ls.length);
+        var res = begin(ls.length);
         sleep(2000);
         back();
         sleep(3000);
         videoAd();
+        return res
       }, key + 'chengJiu');
 
       function begin(all) {
@@ -898,6 +834,17 @@ function initReHuoLikeJob(p) {
         sleep(8000);
       }
     }
+
+    custom = function () {
+      if (myCustom) {
+        runAndMark(function () {
+          startApp();
+          sleep(2000);
+          var res = myCustom();
+          return res
+        }, key + 'custom');
+      }
+    }
   }
 
   function closeBackStopModal() {
@@ -989,7 +936,10 @@ function initReHuoLikeJob(p) {
     hongBao: hongBao,
     chengJiu: chengJiu,
     other: other,
-    runAll: runAll
+    runAll: runAll,
+    custom: custom,
+    closeSuccessModal: closeSuccessModal,
+    goToTask: goToTask
   }
 }
 
@@ -1003,6 +953,7 @@ function kuaiShouSmallTask() {
         var res = myWaitUntil('日常任务');
         if (res) {
           // swipe(500,1900,500,200,600);
+          click('签到');
           sleep(1200)
           var tar1 = '福利';
           var end2 = '已完成';
@@ -1031,6 +982,10 @@ function kuaiShouSmallTask() {
   function watch1() {
     click('福利');
     sleep(3000);
+    if (text('快手小店').exists()) {
+      back();
+      return
+    }
     if (text('刷新').exists()) {
       back();
       return
@@ -1075,7 +1030,7 @@ function kuaiShouSmallTask() {
           click('退出');
           sleep(1000);
           break;
-        }else {
+        } else {
           back();
           sleep(2000);
         }
@@ -2164,18 +2119,23 @@ function shuaBao() {
           sleep(2500);
           var slide = id('seekView').findOne(2000);
           if (slide) {
-            swipe(330, 1180, 900, 1181, 400)
+            var bs = slide.bounds();
+            // swipe(330, bs.centerY(), 900, bs.centerY(), 400)
+            swipe(bs.left + 30, bs.centerY(), 900, bs.centerY(), 400)
             sleep(1800);
           }
           back()
           sleep(3000);
         }
         if (i % 23 === 0) {
-          click (130, 1050);
+          click(130, 1050);
           sleep(2500);
           var slide = id('seekView').findOne(2000);
           if (slide) {
-            swipe(330, 1180, 900, 1181, 400)
+            var bs = slide.bounds();
+            console.log(bs.left)
+            console.log(bs.top)
+            swipe(bs.left + 30, bs.centerY(), 900, bs.centerY(), 400)
             sleep(1800);
           }
           back()
@@ -2210,13 +2170,13 @@ function shuaBao() {
       var a = id('tv_gold_num').findOne(2000);
       if (a) {
         var t = a.text();
-        if (!(+t > 6600)) {
+        if (!(+t > 8900)) {
           getStorage().remove('shuaBao__During');
           return false;
         }
       }
     }
-  }, 'shuaBao', 55, 60);
+  }, 'shuaBao', 60, 60);
 }
 
 function initKuaiYinJob() {
@@ -2260,6 +2220,8 @@ function initKuaiYinJob() {
               if (myWaitUntil(addText)) {
                 sleep(1000);
                 click(addText);
+                sleep(3000);
+                swipe(500, 200, 500, 1330, 500)
                 quTouTiaoWatch();
                 if (myWaitUntil(closeText)) {
                   sleep(1000);
@@ -2453,6 +2415,7 @@ function douYinBaoXiang() {
   if (enter) {
     enter.click();
     myWaitUntil('去提现');
+    click('立即签到')
     sleep(1600);
     click(400, 90);
     sleep(1200);
@@ -2795,9 +2758,10 @@ function kReading(disableCheck) {
   var getOnePassTime = initGetLittleDuringTime();
   var durationId = 'player_duration';
   var seekbarId = 'player_seekbar';
+  var startTime = Date.now();
 
   function getDuration() {
-    function getInScreen (ls) {
+    function getInScreen(ls) {
       return ls.filter(function (t) {
         var bs = t.bounds();
         return bs.top > 0 && bs.top < device.height
@@ -2822,7 +2786,7 @@ function kReading(disableCheck) {
           click(bs.left + 50, bs.centerY());
         }
         click(500, 900);
-        return d - 12;
+        return Math.min(d - 12, 160);
       }
     }
     back();
@@ -2831,6 +2795,10 @@ function kReading(disableCheck) {
   }
   runAndMarkByDuring(function (realT, addInFn) {
     function start(i) {
+      var endTime = startTime + realT * sleepTime * 1000
+      if (Date.now() > endTime) {
+        return
+      }
       addInFn(getOnePassTime(i, 6));
       if (text('拖动滑块').exists()) {
         function trySwipe(j) {
@@ -2944,7 +2912,7 @@ function kReading(disableCheck) {
         normal()
         return start(i + 1);
       }
-      var dua = getDuration ()
+      var dua = getDuration()
       if (dua > 0) {
         sleep(dua * 1000);
       }
@@ -2960,6 +2928,11 @@ function kReading(disableCheck) {
     launch('快手极速版');
     sleep(15000);
     try {
+      kuaiShouSmallTask.a = kuaiShouSmallTask.a || 1;
+      if (kuaiShouSmallTask.a > 1) {
+        kuaiShouSmallTask();
+      }
+      kuaiShouSmallTask.a = kuaiShouSmallTask.a + 1;
       var res = start(0);
       kuaiShouSmallTask();
       return res;
@@ -3106,10 +3079,17 @@ function zhongJob(last) {
   var mark = data.mark;
   var afterLaunch = data.afterLaunch;
   var runFirst = data.runFirst;
+  var tryOne = true;
   runAndMarkByDuring(function (realLast, addInFn) {
     var res = launch('中青看点', isNote3, runFirst ? 0 : 1);
     afterLaunch();
-    sleep(res ? 20000 : 12000);
+    sleep(20000);
+    back();
+    sleep(4000);
+    back();
+    sleep(4000);
+    back();
+    sleep(4000);
     back();
     sleep(4000);
     back();
@@ -3135,6 +3115,10 @@ function zhongJob(last) {
           }
         },
         beforeOneUpDown: function (i) {
+          if (tryOne) {
+            get20Coin();
+            tryOne = false;
+          }
           if (i < 4) {
             click('查看全文，奖励更多');
           }
@@ -3175,6 +3159,28 @@ function zhongJob(last) {
           }
         }
       });
+      runAndMark(function () {
+        return get20Coin();
+      }, 'zhong_get20Coin');
+      runAndMark(function () {
+        var reward = id('gx').findOne(1000);
+        if (!reward) {
+          reward = id('hj').findOne(1000);
+        }
+        if (reward) {
+          reward.click();
+          if (myWaitUntil('阅读5分钟')) {
+            var max = 3;
+            while (max-- && text('点击领取').exists()) {
+              click('点击领取', 0);
+              myWaitUntil('忽略');
+              click('忽略');
+              sleep(1000)
+              back();
+            }
+          }
+        }
+      }, 'zhong_reward')
     } catch (err) {
       console.log(err);
       error = err;
@@ -3184,6 +3190,42 @@ function zhongJob(last) {
     }
   }, mark, 2.0, last);
 
+  function get20Coin() {
+    if (isNote3) {
+      var i = 5;
+      while (i--) {
+        click(400, 430);
+        sleep(2500);
+        if (!text('热文').exists()) {
+          break;
+        }
+      }
+      var i = 1
+      while (!textContains('阅读惊喜').exists()) {
+        oneDown()
+        sleep(100)
+        i++;
+        if (i > 20) {
+          break;
+        }
+      }
+      if (!textContains('阅读惊喜').exists()) {
+        return
+      }
+      var max = 23;
+      while (max--) {
+        click('阅读惊喜', 0)
+        if (!myWaitUntil('继续阅读')) {
+          break;
+        }
+        back();
+        sleep(300);
+      }
+      back();
+      return true
+    }
+
+  }
 
   function zhongVideo(t) {
     //  home();
@@ -3386,7 +3428,7 @@ function zhongQingLongVideo(t) {
     //     lastI = i;
     //   }
     // }
-  }, mark, 0.4, t);
+  }, mark, 0.2, t);
 
   function toVideo() {
     click(400, 1815);
@@ -3406,6 +3448,32 @@ function initZhongQingOther() {
   var search = noneFn;
   var kankan = noneFn;
   var zhuanPan = noneFn;
+  var getMoreReward = noneFn;
+
+  getMoreReward = function () {
+    if (!isNote3) {
+      return
+    }
+    var myK = keyP + 'getMoreReward';
+    var reakKey = beforeGoToMain(myK);
+    runAndMark(function () {
+      if (reakKey) {
+        var r = myWaitUntil('抽奖赚');
+        if (!r) {
+          return;
+        }
+        scrollIntoView('立即领取', device.height - 400);
+        click('立即领取', 0);
+        if (myWaitUntil('试玩3个')) {
+          var max = 4;
+          while (max-- && text('待领取').exists()) {
+            click('待领取', 1)
+          }
+        }
+        click(920, 600);
+      }
+    }, reakKey);
+  }
 
   zhuanPan = function () {
     var myK = keyP + 'ZhuanPan';
@@ -3414,12 +3482,28 @@ function initZhongQingOther() {
       if (reakKey) {
         var r = myWaitUntil('抽奖赚');
         if (!r) {
+          click(500, 720);
           return;
         }
         sleep(5000);
         var res = start(0);
+        var ls = [200, 430, 670, 890];
+        var yH = 1800;
+        ls.forEach(x => {
+          click(x, yH);
+          quTouTiaoWatch();
+          sleep(1000);
+          click(920, 540);
+        })
         sleep(5000);
         backToMain();
+        if (text('签到领红包').exists()) {
+          click('签到领红包')
+        } else {
+          clickIdCenter('a71')
+        }
+        click(500, 720);
+        sleep(500);
         return res;
       }
     }, reakKey);
@@ -3457,6 +3541,9 @@ function initZhongQingOther() {
     if (halfAuto) {
       startTask();
     } else {
+      if (!canKanKan) {
+        return
+      }
       var myK = keyP + 'Kankan';
       var reakKey = beforeGoToMain(myK);
       if (reakKey) {
@@ -4081,6 +4168,7 @@ function initZhongQingOther() {
       sleep(8000);
       var done = all();
       backToMain();
+      click(500, 720);
       if (!done) {
         saveUnDoneFn(function () {
           search();
@@ -4144,7 +4232,7 @@ function initZhongQingOther() {
   }
 
   function startApp(isFirst) {
-    return launch(appName, isNote3, isFirst? 0: 1);
+    return launch(appName, isNote3, isFirst ? 0 : 1);
   }
 
   return {
@@ -4157,6 +4245,7 @@ function initZhongQingOther() {
       otherRun();
     }),
     zhuanPan: zhuanPan,
+    getMoreReward: getMoreReward,
     runAll: function () {
       zhuanPan();
       search();
@@ -4281,18 +4370,40 @@ function launch(name, useClickOpen, idx) {
     return false;
   }
   var lastest = launch.lastest;
-  if (lastest === '火火视频极速版' || lastest === '趣赚清理' | lastest === '趣查天气') {
-    home();
-  } else if (lastest) {
-    back();
-    sleep(100);
-    back();
-    sleep(100);
-    back();
-    sleep(100);
-    back();
+  if (lastest) {
+    if (!isDefLaunch) {
+      launch2('一键优化')
+    } else {
+      home();
+      sleep(1200);
+      home();
+      sleep(1200);
+      if (isAdmin) {
+        click(150, 750);
+      } else {
+        var tar = textEndsWith('%').findOne(1500);
+        if (tar) {
+          toast('清理');
+          var bounds = tar.bounds();
+          var y = !isDefLaunch ? bounds.top + 100 : bounds.top - 100
+          click(bounds.left + 60, y);
+        }
+      }
+    }
   }
-  sleep(isDefLaunch && isAdmin && lastest ? 20000 : 8000);
+  // if (lastest === '火火视频极速版' || lastest === '趣赚清理' | lastest === '趣查天气') {
+  //   home();
+  // } else if (lastest) {
+  //   back();
+  //   sleep(100);
+  //   back();
+  //   sleep(100);
+  //   back();
+  //   sleep(100);
+  //   back();
+  // }
+  // sleep(isDefLaunch && isAdmin && lastest ? 20000 : 8000);
+  sleep(5000);
   if (!isDefLaunch || useClickOpen) {
     launch2(name, idx);
 
@@ -4399,17 +4510,17 @@ function launch2(name, idx) {
   home();
   sleep(2000);
   var ls = text(name).find();
-  var idx = ls.length > idx ? idx: 0 
+  var idx = ls.length > idx ? idx : 0
   var tar = ls[idx];
   while (!tar || tar.bounds().left < 8 || tar.bounds().left > 900) {
     swipe(950, 600, 50, 600, 400);
     sleep(2500);
     ls = text(name).find();
-    idx = ls.length > idx ? idx: 0
+    idx = ls.length > idx ? idx : 0
     tar = ls[idx];
   }
   var bounds = tar.bounds();
-  var y = !isDefLaunch ? bounds.top + 100: bounds.top - 100
+  var y = !isDefLaunch ? bounds.top + 100 : bounds.top - 100
   click(bounds.left + 60, y);
 }
 
@@ -4706,11 +4817,14 @@ function runAndMarkByDuring(fn, key, max, addDuring) {
   var store = getStorage();
   var storeDuring = +store.get(duringKey) || 0;
   var unFinishDuring = max - storeDuring;
-  var realDuring = Math.min(addDuring, unFinishDuring, 0);
+  var realDuring = Math.min(addDuring, unFinishDuring);
   var leftDuring = realDuring;
   var sKey = getStorageKey();
   var anotherDay = false;
   var shouldCheckT = new Date().getHours() > 21;
+  if (isDone(key)) {
+    return false
+  }
   if (!isDone(key) || realDuring > 0) {
     var willDone = realDuring >= unFinishDuring;
     toast('willDone__' + willDone)
@@ -4832,6 +4946,9 @@ function saveUnDoneFn(fn, key) {
 }
 
 function runUnDoneFn() {
+  if (unDoneFnForSave.length === 0) {
+    return false
+  }
   unDoneFnForRun.length = 0;
   for (var i = 0; i < unDoneFnForSave.length; i++) {
     var a = unDoneFnForRun[i];
@@ -4844,6 +4961,7 @@ function runUnDoneFn() {
       fn();
     }
   }
+  return true
 }
 
 
@@ -4893,4 +5011,18 @@ function withCatch(fn, onError) {
       }
     }
   }
+}
+
+function wakeUpDevice() {
+  if (!isScreenOn()) {
+    device.wakeUp();
+    console.log('wakeup')
+    sleep(800);
+    swipe(500, 1500, 500, 900, 202);
+    sleep(2000)
+  }
+}
+
+function isScreenOn() {
+  return device.isScreenOn();
 }

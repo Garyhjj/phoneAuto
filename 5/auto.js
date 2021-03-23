@@ -6,7 +6,7 @@ var useStorage = true;
 
 var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
 var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
-var kReadingT = isDefLaunch ? 1020 : 1020;
+var kReadingT = isDefLaunch ? 1120 : 1120;
 var zhongVideoT = isDefLaunch ? 0 : 0;
 var noVideoFirst = false;
 var stopReading = false;
@@ -42,6 +42,10 @@ var liulanQi = rehuoLike.liulanQiJob;
 var kuaiYinJob = initKuaiYinJob();
 var zhongQingOther = initZhongQingOther();
 
+var adList = initWatchAdList();
+var xiaoxiaoLe = adList.xiaoxiaoLe;
+var leDou = adList.leDou;
+
 sleep(5000);
 useStorage = false;
 
@@ -72,7 +76,8 @@ var currentDate = new Date().getDate();
 // kuaiYinJob.baoXiang();
 // huohuoJob.hongBao();
 // device.wakeUp()
-// sleep(1000 * 10000);
+leDou()
+sleep(1000 * 10000);
 // quZhuanJob.chengJiu();
 // zhongQingOther.zhuanPan();
 // zhongQingOther.kankan(true)
@@ -157,7 +162,9 @@ function otherRun() {
   zhongQingOther.kankan();
   zhongQingOther.kankan();
   runUnDoneFn();
-  if (new Date().getHours() < 17) {
+  liulanQi.main();
+  runReHuoLikeCustom();
+  if (new Date().getHours() < 18) {
     begin();
     otherRun();
   } else {
@@ -191,6 +198,82 @@ function begin() {
     }
   } else {
     zhongJob(1.0);
+  }
+}
+
+function initWatchAdList() {
+  var xiaoxiaoLe = function (max) {
+    watchAdList({
+      startAd: function () {
+        click(880, 1010);
+        return true;
+      },
+      afterAd: function () {
+        sleep(800)
+        click(500, 1580);
+        sleep(800)
+      },
+      max: max || 20,
+      key: 'xiaoxiaoLe'
+    })
+  }
+  var leDou = function (max) {
+    launch('疯狂乐斗');
+    sleep(10000);
+    myWaitUntil('再通一关');
+    if (clickIdCenter('no')) {
+      myWaitUntil('领券中心');
+      watchAdList({
+        startAd: function () {
+          if (text('明日再来').exists()) {
+            return false
+          }
+          click('领取', 1);
+          return true;
+        },
+        afterAd: function () {
+          sleep(800)
+          // click(500, 1580);
+          sleep(800)
+        },
+        max: max || 30,
+        key: 'leDou'
+      })
+    }
+  }
+  return {
+    xiaoxiaoLe: xiaoxiaoLe,
+    leDou: leDou
+  }
+}
+
+function watchAdList (p) {
+  var p = p || {};
+  var waitTime = p.waitTime || 5;
+  var startAd = p.startAd || noneFn;
+  var afterAd = p.afterAd || noneFn;
+  var max = p.max || 20;
+  var key = p.key;
+  var i = 0;
+  if (key) {
+    runAndMarkByDuring(function(realT, addInFn) {
+      while(realT--) {
+        if (startAd(i++)) {
+          quTouTiaoWatch();
+          afterAd();
+          addInFn(1)
+          sleep(waitTime * 1000)
+        }
+      }
+    }, key + '_adList', max, max);
+  } else {
+    while(max--) {
+      if (startAd(i++)) {
+        quTouTiaoWatch();
+        afterAd();
+        sleep(waitTime * 1000)
+      }
+    }
   }
 }
 

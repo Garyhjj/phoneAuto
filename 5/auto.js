@@ -17,6 +17,8 @@ var unDoneFnForRun = [];
 var kankanSleep = 2400;
 var runChildFirst = true;
 
+var watchAdMaxWaitTime = 32;
+
 var canKanKan = true
 
 var isNote3 = isDefLaunch && !isAdmin;
@@ -76,7 +78,8 @@ var currentDate = new Date().getDate();
 // kuaiYinJob.baoXiang();
 // huohuoJob.hongBao();
 // device.wakeUp()
-// leDou()
+// xiaoxiaoLe(8)
+leDou()
 // sleep(1000 * 10000);
 // quZhuanJob.chengJiu();
 // zhongQingOther.zhuanPan();
@@ -163,6 +166,7 @@ function otherRun() {
   zhongQingOther.kankan();
   runUnDoneFn();
   liulanQi.main();
+  leDou();
   runReHuoLikeCustom();
   if (new Date().getHours() < 18) {
     begin();
@@ -205,12 +209,14 @@ function initWatchAdList() {
   var xiaoxiaoLe = function (max) {
     watchAdList({
       startAd: function () {
-        click(880, 1010);
+        click(880, 884);
+        // click(880, 1010);
         return true;
       },
       afterAd: function () {
         sleep(800)
-        click(500, 1580);
+        // click(500, 1580);
+        click(500, 1280);
         sleep(800)
       },
       max: max || 20,
@@ -232,8 +238,8 @@ function initWatchAdList() {
           return true;
         },
         afterAd: function () {
-          sleep(800)
-          // click(500, 1580);
+          myWaitUntil('我知道了');
+          click('我知道了');
           sleep(800)
         },
         max: max || 30,
@@ -255,6 +261,14 @@ function watchAdList (p) {
   var max = p.max || 20;
   var key = p.key;
   var i = 0;
+  var oldClose = videoLeftClose;
+  var oldWait = watchAdMaxWaitTime;
+  watchAdMaxWaitTime = 19;
+  videoLeftClose = function () {
+    back();
+    sleep(500);
+    click(80, 60);
+  }
   if (key) {
     runAndMarkByDuring(function(realT, addInFn) {
       while(realT--) {
@@ -275,6 +289,8 @@ function watchAdList (p) {
       }
     }
   }
+  videoLeftClose = oldClose;
+  watchAdMaxWaitTime = oldWait
 }
 
 function runReHuoLikeCustom() {
@@ -4790,8 +4806,8 @@ function quTouTiaoWatch(textE) {
       isOutBreak = true;
       break;
     }
-    if (tryT > 32) {
-      back();
+    if (tryT > watchAdMaxWaitTime) {
+      videoLeftClose();
       sleep(5000);
       if (text('继续观看').exists()) {
         if (goOnClickTime > 3) {
@@ -4802,13 +4818,13 @@ function quTouTiaoWatch(textE) {
         click('继续观看');
         tryT = 10;
       } else {
-        click(985, 112);
+        videoRightClose();
         break;
       }
     }
     tryT = tryT + 1;
   }
-  if (tryT <= 32 && !isOutBreak) {
+  if (tryT <= watchAdMaxWaitTime && !isOutBreak) {
     sleep(2000);
     if (textContains('是否允许').exists()) {
       back();

@@ -76,8 +76,8 @@ var currentDate = new Date().getDate();
 // kuaiYinJob.baoXiang();
 // huohuoJob.hongBao();
 // device.wakeUp()
-leDou()
-sleep(1000 * 10000);
+// leDou()
+// sleep(1000 * 10000);
 // quZhuanJob.chengJiu();
 // zhongQingOther.zhuanPan();
 // zhongQingOther.kankan(true)

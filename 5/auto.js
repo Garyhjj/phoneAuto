@@ -1,5 +1,5 @@
-var isDefLaunch = true;
-var isAdmin = true;
+var isDefLaunch = false;
+var isAdmin = false;
 
 var videoCheckLs = [];
 var useStorage = true;
@@ -79,7 +79,7 @@ var currentDate = new Date().getDate();
 // huohuoJob.hongBao();
 // device.wakeUp()
 // xiaoxiaoLe(8)
-leDou()
+// leDou()
 // sleep(1000 * 10000);
 // quZhuanJob.chengJiu();
 // zhongQingOther.zhuanPan();
@@ -225,7 +225,10 @@ function initWatchAdList() {
   }
   var leDou = function (max) {
     launch('疯狂乐斗');
-    sleep(10000);
+    sleep(15000);
+    if (textContains('离线收益').exists()) {
+      click(530, 1620);
+    }
     myWaitUntil('再通一关');
     if (clickIdCenter('no')) {
       myWaitUntil('领券中心');
@@ -263,7 +266,7 @@ function watchAdList (p) {
   var i = 0;
   var oldClose = videoLeftClose;
   var oldWait = watchAdMaxWaitTime;
-  watchAdMaxWaitTime = 19;
+  watchAdMaxWaitTime = 28;
   videoLeftClose = function () {
     back();
     sleep(500);

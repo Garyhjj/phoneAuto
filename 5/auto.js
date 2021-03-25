@@ -1165,7 +1165,7 @@ function kuaiShouSmallTask() {
   }, 'kuaiShouSmallTask')
 
   function watch1() {
-    click('福利');
+    click('福利', 1);
     sleep(3000);
     if (text('快手小店').exists()) {
       back();

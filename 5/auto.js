@@ -1,5 +1,6 @@
-var isDefLaunch = false;
-var isAdmin = false;
+var isDefLaunch = true;
+var isAdmin = true;
+var is10X = false;
 
 var videoCheckLs = [];
 var useStorage = true;
@@ -209,14 +210,14 @@ function initWatchAdList() {
   var xiaoxiaoLe = function (max) {
     watchAdList({
       startAd: function () {
-        click(880, 884);
+        click(880, is10X? 1010: 884);
         // click(880, 1010);
         return true;
       },
       afterAd: function () {
         sleep(800)
         // click(500, 1580);
-        click(500, 1280);
+        click(500, is10X? 1580: 1280);
         sleep(800)
       },
       max: max || 20,
@@ -225,9 +226,11 @@ function initWatchAdList() {
   }
   var leDou = function (max) {
     launch('疯狂乐斗');
-    sleep(15000);
-    if (textContains('离线收益').exists()) {
-      click(530, 1620);
+    sleep(8000);
+    var i = 4
+    while(i--) {
+      closeModal();
+      sleep(2000)
     }
     myWaitUntil('再通一关');
     if (clickIdCenter('no')) {
@@ -237,17 +240,38 @@ function initWatchAdList() {
           if (text('明日再来').exists()) {
             return false
           }
-          click('领取', 1);
+          var hasOther = textContains('安装并打开').exists();
+          click('领取', hasOther? 2: 1);
           return true;
         },
         afterAd: function () {
-          myWaitUntil('我知道了');
-          click('我知道了');
-          sleep(800)
+          if (myWaitUntil('我知道了')) {
+            click('我知道了');
+            sleep(800)
+          } else {
+            videoLeftClose();
+            sleep(300)
+            videoRightClose();
+            myWaitUntil('我知道了')
+            click('我知道了');
+            sleep(800)
+          }
         },
         max: max || 30,
         key: 'leDou'
       })
+    }
+    function closeModal () {
+      if (textContains('离线收益').exists()) {
+        if (!clickIdCenter('su')) {
+          click(530, 1620);
+        }
+      }
+      if (text('第二天').exists()) {
+        clickIdCenter('gq');
+      }
+      sleep(500)
+      clickIdCenter('su')
     }
   }
   return {
@@ -1121,7 +1145,7 @@ function kuaiShouSmallTask() {
     var tar = text('看直播').find();
     if (tar[tar.length - 1]) {
       tar[tar.length - 1].click();
-      sleep(40000);
+      sleep(100 * 1000);
       back();
       sleep(2000);
       var tr = 3;

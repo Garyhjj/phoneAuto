@@ -1,6 +1,6 @@
 var isDefLaunch = true;
 var isAdmin = true;
-var is10X = true;
+var is10X = false;
 
 var videoCheckLs = [];
 var useStorage = true;
@@ -79,9 +79,9 @@ var currentDate = new Date().getDate();
 // kuaiYinJob.baoXiang();
 // huohuoJob.hongBao();
 // device.wakeUp()
-// xiaoxiaoLe(8)
-leDou()
-sleep(1000 * 10000);
+// xiaoxiaoLe(20)
+// leDou()
+// sleep(1000 * 10000);
 // quZhuanJob.chengJiu();
 // zhongQingOther.zhuanPan();
 // zhongQingOther.kankan(true)
@@ -225,14 +225,14 @@ function initWatchAdList() {
     })
   }
   var leDou = function (max) {
-    // launch('疯狂乐斗');
-    // sleep(8000);
-    // var i = 4
-    // while (i--) {
-    //   closeModal();
-    //   sleep(2000)
-    // }
-    // myWaitUntil('再通一关');
+    launch('疯狂乐斗');
+    sleep(8000);
+    var i = 4
+    while (i--) {
+      closeModal();
+      sleep(2000)
+    }
+    myWaitUntil('再通一关');
     if (clickIdCenter('no')) {
       myWaitUntil('领券中心');
       watchAdList({
@@ -256,10 +256,18 @@ function initWatchAdList() {
             click('我知道了');
             sleep(800)
           } else {
+            if (id('uj').exists()) {
+              back();
+              sleep(300)
+            }
             if (!text('领券中心').exists()) {
               videoLeftClose();
               sleep(300)
               videoRightClose();
+            }
+            if (id('uj').exists()) {
+              back();
+              sleep(300)
             }
             myWaitUntil('我知道了')
             click('我知道了');
@@ -5213,8 +5221,10 @@ function isScreenOn() {
 
 function clickVideoCloseIcon () {
   if (id('tt_video_ad_close').exists()) {
-    sleep(2000);
-    videoRightClose();
+    sleep(800);
+    if (!clickIdCenter('tt_video_ad_close')) {
+      videoRightClose();
+    }
     return true;
   };
   if (id('tt_video_ad_close_layout').exists()) {

@@ -1,6 +1,6 @@
 var isDefLaunch = true;
 var isAdmin = true;
-var is10X = false;
+var is10X = true;
 
 var videoCheckLs = [];
 var useStorage = true;
@@ -80,8 +80,8 @@ var currentDate = new Date().getDate();
 // huohuoJob.hongBao();
 // device.wakeUp()
 // xiaoxiaoLe(8)
-// leDou()
-// sleep(1000 * 10000);
+leDou()
+sleep(1000 * 10000);
 // quZhuanJob.chengJiu();
 // zhongQingOther.zhuanPan();
 // zhongQingOther.kankan(true)
@@ -210,14 +210,14 @@ function initWatchAdList() {
   var xiaoxiaoLe = function (max) {
     watchAdList({
       startAd: function () {
-        click(880, is10X? 1010: 884);
+        click(880, is10X ? 1010 : 884);
         // click(880, 1010);
         return true;
       },
       afterAd: function () {
         sleep(800)
         // click(500, 1580);
-        click(500, is10X? 1580: 1280);
+        click(500, is10X ? 1580 : 1280);
         sleep(800)
       },
       max: max || 20,
@@ -225,14 +225,14 @@ function initWatchAdList() {
     })
   }
   var leDou = function (max) {
-    launch('疯狂乐斗');
-    sleep(8000);
-    var i = 4
-    while(i--) {
-      closeModal();
-      sleep(2000)
-    }
-    myWaitUntil('再通一关');
+    // launch('疯狂乐斗');
+    // sleep(8000);
+    // var i = 4
+    // while (i--) {
+    //   closeModal();
+    //   sleep(2000)
+    // }
+    // myWaitUntil('再通一关');
     if (clickIdCenter('no')) {
       myWaitUntil('领券中心');
       watchAdList({
@@ -241,7 +241,14 @@ function initWatchAdList() {
             return false
           }
           var hasOther = textContains('安装并打开').exists();
-          click('领取', hasOther? 2: 1);
+          click('领取', hasOther ? 2 : 1);
+          sleep(2000);
+          if (text('领券中心').exists()) {
+            sleep(4000);
+            clickIdCenter('a_c');
+            sleep(500)
+            click('领取', hasOther ? 2 : 1);
+          }
           return true;
         },
         afterAd: function () {
@@ -249,9 +256,11 @@ function initWatchAdList() {
             click('我知道了');
             sleep(800)
           } else {
-            videoLeftClose();
-            sleep(300)
-            videoRightClose();
+            if (!text('领券中心').exists()) {
+              videoLeftClose();
+              sleep(300)
+              videoRightClose();
+            }
             myWaitUntil('我知道了')
             click('我知道了');
             sleep(800)
@@ -261,7 +270,8 @@ function initWatchAdList() {
         key: 'leDou'
       })
     }
-    function closeModal () {
+
+    function closeModal() {
       if (textContains('离线收益').exists()) {
         if (!clickIdCenter('su')) {
           click(530, 1620);
@@ -280,13 +290,14 @@ function initWatchAdList() {
   }
 }
 
-function watchAdList (p) {
+function watchAdList(p) {
   var p = p || {};
   var waitTime = p.waitTime || 5;
   var startAd = p.startAd || noneFn;
   var afterAd = p.afterAd || noneFn;
   var max = p.max || 20;
   var key = p.key;
+  var leftClose = p.leftClose;
   var i = 0;
   var oldClose = videoLeftClose;
   var oldWait = watchAdMaxWaitTime;
@@ -294,11 +305,50 @@ function watchAdList (p) {
   videoLeftClose = function () {
     back();
     sleep(500);
-    click(80, 60);
+    if (is10X) {
+      click(70, 120);
+    } else {
+      click(80, 60);
+    }
   }
+  var localListener = function () {
+    var checkLeftTimeList = [9, 10 , 11, 12];
+    var checkLeftTime = 0
+    var checkedTime = 0;
+    return function (time) {
+      if (checkedTime) {
+        if (time > checkedTime + checkLeftTime + 3) {
+          var res = clickVideoCloseIcon();
+          if (res) {
+            return true;
+          }
+          back();
+          sleep(1500);
+          if (is10X) {
+            click(70, 120);
+          } else {
+            click(80, 60);
+          }
+          return true;
+        }
+      } else {
+        var lg = checkLeftTimeList.length;
+        while(lg --) {
+          var tar = checkLeftTimeList[lg];
+          if (text(checkLeftTime + '').exists()) {
+            toast('ad left' + tar + ' sec')
+            checkLeftTime = tar;
+            checkedTime = time;
+          }
+        }
+      }
+    }
+  }()
+  addVideoCheckListener(localListener);
+
   if (key) {
-    runAndMarkByDuring(function(realT, addInFn) {
-      while(realT--) {
+    runAndMarkByDuring(function (realT, addInFn) {
+      while (realT--) {
         if (startAd(i++)) {
           quTouTiaoWatch();
           afterAd();
@@ -308,7 +358,7 @@ function watchAdList (p) {
       }
     }, key + '_adList', max, max);
   } else {
-    while(max--) {
+    while (max--) {
       if (startAd(i++)) {
         quTouTiaoWatch();
         afterAd();
@@ -318,6 +368,7 @@ function watchAdList (p) {
   }
   videoLeftClose = oldClose;
   watchAdMaxWaitTime = oldWait
+  removeVideoCheckListener(localListener);
 }
 
 function runReHuoLikeCustom() {
@@ -1772,11 +1823,12 @@ function initVideoCheckListener() {
             }
           }
         }
-        if (id('tt_video_ad_close').exists()) {
-          sleep(2000);
-          videoRightClose();
-          return true;
-        };
+        if (time > 32) {
+          if (textContains('跳过').exists()) {
+            click('跳过');
+          }
+        }
+        return clickVideoCloseIcon()
       }
 
       function getSignal() {
@@ -4869,6 +4921,12 @@ function addVideoCheckListener(fn) {
   }
 }
 
+function removeVideoCheckListener(fn) {
+  videoCheckLs = videoCheckLs.filter(function (c) {
+    return c !==fn
+  })
+}
+
 function runVideoCheck(time) {
   var isEnd = false;
   var lg = videoCheckLs.length;
@@ -4887,7 +4945,7 @@ function videoLeftClose() {
 }
 
 function videoRightClose() {
-  click(985, 112);
+  click(985, is10X ? 160 : 112);
 }
 
 function clickOneByText(t) {
@@ -5151,4 +5209,19 @@ function wakeUpDevice() {
 
 function isScreenOn() {
   return device.isScreenOn();
+}
+
+function clickVideoCloseIcon () {
+  if (id('tt_video_ad_close').exists()) {
+    sleep(2000);
+    videoRightClose();
+    return true;
+  };
+  if (id('tt_video_ad_close_layout').exists()) {
+    sleep(800);
+    if (!clickIdCenter('tt_video_ad_close_layout')) {
+      videoRightClose();
+    }
+    return true;
+  };
 }

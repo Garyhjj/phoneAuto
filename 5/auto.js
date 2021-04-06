@@ -1,3 +1,13 @@
+var PHONE_TYPES = {
+  mi5: 'mi5',
+  note3: 'note3',
+  hong10X: 'hong10X',
+  hong9A: 'hong9A',
+  huaWei3: 'huaWei3'
+}
+
+var currentPhoneType = PHONE_TYPES.mi5;
+
 var isDefLaunch = true;
 var isAdmin = true;
 var is10X = false;
@@ -5,8 +15,8 @@ var is10X = false;
 var videoCheckLs = [];
 var useStorage = true;
 
-var quTouTiaoId1 = isDefLaunch ? 'avi' : 'aw_';
-var quTouTiaoId2 = isDefLaunch ? 'uu' : 'v4'; // 'a68' : 'a5x';
+var quTouTiaoId1 = 'awx';
+var quTouTiaoId2 = 'v7'; // 'a68' : 'a5x';
 var kReadingT = isDefLaunch ? 1120 : 1120;
 var zhongVideoT = isDefLaunch ? 0 : 0;
 var noVideoFirst = false;
@@ -22,17 +32,47 @@ var watchAdMaxWaitTime = 32;
 
 var canKanKan = true
 
-var isNote3 = isDefLaunch && !isAdmin;
+var isNote3 = false;
 var startDate = (new Date).getDate();
 var runDouYinBX = true;
 var kuaiShouSmallTaskId = 'redFloat';
 
 var doubleZhongQing = true;
 
-if (!isAdmin && isDefLaunch) {
-  quTouTiaoId1 = 'awx';
-  quTouTiaoId2 = 'v7';
+switch (currentPhoneType) {
+  case PHONE_TYPES.mi5:
+    isDefLaunch = true;
+    isAdmin = true;
+    is10X = false;
+    doubleZhongQing = true;
+    break;
+  case PHONE_TYPES.note3:
+    isDefLaunch = true;
+    isAdmin = false;
+    is10X = false;
+    doubleZhongQing = true;
+    isNote3 = true;
+    break;
+  case PHONE_TYPES.huaWei3:
+    isDefLaunch = false;
+    isAdmin = false;
+    is10X = false;
+    doubleZhongQing = false;
+    break;
+  case PHONE_TYPES.hong10X:
+    isDefLaunch = true;
+    isAdmin = false;
+    is10X = true;
+    doubleZhongQing = false;
+    break;
+  case PHONE_TYPES.hong9A:
+    isDefLaunch = true;
+    isAdmin = false;
+    is10X = false;
+    doubleZhongQing = false;
+    break;
 }
+
 removeUselessStorage();
 initVideoCheckListener();
 var rehuoLike = initAllReHuoLike();
@@ -332,7 +372,7 @@ function watchAdList(p) {
     }
   }
   var localListener = function () {
-    var checkLeftTimeList = [9, 10 , 11, 12];
+    var checkLeftTimeList = [9, 10, 11, 12];
     var checkLeftTime = 0
     var checkedTime = 0;
     return function (time) {
@@ -353,7 +393,7 @@ function watchAdList(p) {
         }
       } else {
         var lg = checkLeftTimeList.length;
-        while(lg --) {
+        while (lg--) {
           var tar = checkLeftTimeList[lg];
           if (text(checkLeftTime + '').exists()) {
             toast('ad left' + tar + ' sec')
@@ -836,7 +876,7 @@ function initReHuoLikeJob(p) {
             }
             var coinText = '金蛋大奖';
             if (textContains(coinText).exists()) {
-              coinTextExistsTime ++;
+              coinTextExistsTime++;
               if (coinTextExistsTime > 1) {
                 var tar = textContains(coinText).findOne(1000);
                 click(tar.bounds().left + 15, tar.bounds().top - 15);
@@ -1166,10 +1206,10 @@ function initReHuoLikeJob(p) {
       id1();
       return;
     }
-    
+
     if (myWaitUntil(function () {
-      return id(id1).exists()
-    }), 4) {
+        return id(id1).exists()
+      }), 4) {
       var tar = id(id1).findOne(2000);
       if (tar) {
         tar.click();
@@ -1242,7 +1282,7 @@ function kuaiShouSmallTask() {
 
   function watch1() {
     var ls = textContains('福利').find()
-    click('福利', 1 );
+    click('福利', 1);
     sleep(3000);
     if (text('快手小店').exists()) {
       back();
@@ -3071,6 +3111,7 @@ function kReading(disableCheck) {
   }
   runAndMarkByDuring(function (realT, addInFn) {
     var mayEndCheckTime = 0;
+
     function start(i) {
       var endTime = startTime + realT * sleepTime * 1000
       if (Date.now() > endTime) {
@@ -3804,7 +3845,7 @@ function initZhongQingOther() {
     function start(i) {
       i = i || 0;
       clickOneByText('抽奖赚');
-      sleep(isAdmin? 6500 : 2500);
+      sleep(isAdmin ? 6500 : 2500);
       click(530, 1000);
       sleep(800);
       if (i % 17 === 0 && i > 0) {
@@ -4800,7 +4841,7 @@ function launch2(name, idx) {
   sleep(2000);
   home();
   sleep(2000);
-  
+
   var ls = text(name).find();
   var realIdx = ls.length > idx ? idx : 0
   var tar = ls[realIdx];
@@ -5061,7 +5102,7 @@ function addVideoCheckListener(fn) {
 
 function removeVideoCheckListener(fn) {
   videoCheckLs = videoCheckLs.filter(function (c) {
-    return c !==fn
+    return c !== fn
   })
 }
 
@@ -5356,7 +5397,7 @@ function isScreenOn() {
   return device.isScreenOn();
 }
 
-function clickVideoCloseIcon () {
+function clickVideoCloseIcon() {
   if (id('tt_video_ad_close').exists()) {
     sleep(800);
     if (!clickIdCenter('tt_video_ad_close')) {

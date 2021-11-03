@@ -14,7 +14,7 @@ var is10X = false;
 
 var videoCheckLs = [];
 var useStorage = true;
-var kuaiFuliIdx = 1;
+var kuaiFuliIdx = currentPhoneType === PHONE_TYPES.mi5 ? 0 : 1;
 var kuaiVideoIdx = 1;
 var douYinTaskEntryId = 'c1z';
 var leDouTaskId = 'mv';
@@ -31,7 +31,7 @@ var zhongQingMainSite = [700, 1815];
 
 var quTouTiaoId1 = 'awx';
 var quTouTiaoId2 = 'v7'; // 'a68' : 'a5x';
-var kReadingT = isDefLaunch ? 500 : 500;
+var kReadingT = isDefLaunch ? 50 : 50;
 var zhongVideoT = isDefLaunch ? 0 : 0;
 var noVideoFirst = false;
 var stopReading = false;
@@ -63,6 +63,7 @@ var zhongKuaiContentBottom = 2210;
 var zhongKuaiVideoY = [600, 1400, 2000];
 var zhongKuaiTaskSite = [130, 400, 680, 940];
 var zhongKuaiXY;
+var zhongKanEndTextBottom = 1900;
 
 switch (currentPhoneType) {
   case PHONE_TYPES.mi5:
@@ -104,7 +105,7 @@ switch (currentPhoneType) {
     zhongKuaiVideoY = [600, 1400];
     zhongKuaiTaskSite = [130, 400, 680, 940];
     zhongKuaiXY = [530, 1180];
-    kReadingT = 450;
+    kReadingT = 45;
     refreshWait = 3500;
     break;
   case PHONE_TYPES.huaWei3:
@@ -124,9 +125,10 @@ switch (currentPhoneType) {
     zhongKuaiContentBottom = 2210;
     zhongKuaiVideoY = [600, 1400, 2000];
     refreshWait = 2000;
+    zhongKanEndTextBottom = 2335
     break;
   case PHONE_TYPES.hong9A:
-    isDefLaunch = true;
+    isDefLaunch = false;
     isAdmin = false;
     is10X = false;
     doubleZhongQing = false;
@@ -142,8 +144,9 @@ switch (currentPhoneType) {
     zhongKuaiContentBottom = 1500;
     zhongKuaiVideoY = [400, 910, 1350];
     zhongKuaiTaskSite = [90, 270, 450, 630];
-    zhongKuaiXY = [110, 540];
+    zhongKuaiXY = [270, 540];
     refreshWait = 2000;
+    zhongKanEndTextBottom = 1590
     break;
 }
 
@@ -193,9 +196,8 @@ var currentDate = new Date().getDate();
 // zhongJob(0.94);
 // zhongQingLongVideo(0.4);
 // shuaBao();
-// zhongQingKanKan();;
 // quTouTiaoWatch()
- kuaiShouSmallTask();
+kuaiShouSmallTask();
 // zhongQingOther.getMoreReward();
 // yiKanDianReading();
 // sleep(1000 * 10000);
@@ -235,17 +237,22 @@ var currentDate = new Date().getDate();
 useStorage = true;
 // runReHuoLikeCustom();
 
-wakeUpDevice()
-home();
-begin();
-otherRun();
-// hong9ARun();
+if (currentPhoneType === PHONE_TYPES.hong9A) {
+  hong9ARun();
+} else {
+  wakeUpDevice()
+  home();
+  begin();
+  otherRun();
+}
 
 function hong9ARun() {
-  // zhongQingLongVideo(0.4);
+  zhongQingLongVideo(0.4);
   zhongJob(1.3);
   zhongKuaiJob();
   zhongKuaiVideoJob();
+  zhongJob(1.3);
+  zhongQingOther.kankan()
 }
 
 function otherRun() {
@@ -1520,7 +1527,7 @@ function kuaiShouSmallTask() {
   function watch2() {
     var tar = text('看直播').find();
     if (tar[tar.length - 1]) {
-      click('看直播', kuaiVideoIdx);
+      click('领福利', kuaiVideoIdx);
       // tar[tar.length - 1].click();
       sleep(100 * 1000);
       back();
@@ -1605,409 +1612,6 @@ function kuaishouUpDown(i, untilNextDay, afterCheck) {
     swipe(900, isX ? 770 : 1600, 900, 60, 500);
     sleep(500);
     swipe(900, 200, 900, isX ? 1180 : 1600, 500);
-  }
-}
-
-function zhongQingKanKan() {
-  begin();
-
-  function findAd() {
-    var ad = '广告';
-    var ad2 = '热点新闻';
-    var ad3 = '热闻看看';
-    var ad31 = '热点资讯';
-    var ad4 = '今日热搜';
-    var ad41 = '今日热点';
-    var ad5 = '猎文小说';
-    var ad6WithEnd = 'ErkJggg==';
-    var ad7 = '?';
-    var ad8 = 'iframe';
-    var type = '';
-    myWaitUntil(function () {
-      if (text(ad).exists()) {
-        type = ad;
-        return true
-      } else if (textEndsWith(ad6WithEnd).exists()) {
-        type = ad6WithEnd;
-        return true;
-      } else if (text(ad2).exists() || text(ad3).exists() || text(ad31).exists()) {
-        type = ad2;
-        return true
-      } else if (text(ad4).exists() || text(ad41).exists()) {
-        type = ad4;
-        return true
-      } else if (text(ad5).exists()) {
-        type = ad5;
-        return true
-      } else if (idEndsWith(ad8).exists()) {
-        type = ad8;
-        return true
-      }
-      return false;
-    }, 10);
-    toast(type);
-    if (type === ad) {
-      toast('has ad');
-      if (text(ad7).findOne(2000)) {
-        myWaitUntil(function () {
-          return id('pop_close').exists()
-        }, 6)
-        click(500, 1020);
-        checkSpecialType();
-        return true;
-      } else {
-        var ls = text(ad).find().concat(textEndsWith(ad6WithEnd).find());
-        ls.sort(function (a, b) {
-          return a.bounds().top - b.bounds().top;
-        });
-        scrollIntoView(function () {
-          return ls[0];
-        }, 1600);
-        ls = text(ad).find();
-        ls.sort(function (a, b) {
-          return a.bounds().top - b.bounds().top;
-        });
-        var a = ls[0];
-        if (a) {
-          var top = a.bounds().top;
-          click(500, top + 80);
-          checkSpecialType();
-        }
-        return true;
-      }
-    } else if (type === ad2) {
-      toast(ad2);
-      clickFirst();
-      checkSpecialType();
-      return true;
-    } else if (type === ad4) {
-      var tar = text(ad4).findOne(2000);
-      if (tar) {
-        click(500, tar.bounds().top + 160);
-        checkSpecialType();
-      }
-      return true;
-    } else if (type === ad5) {
-      sleep(4000);
-      var tar = myWaitUntil('ggg==');
-      toast(tar);
-      if (tar) {
-        click(500, 1000);
-        checkSpecialType();
-      }
-      return true;
-    } else if (type === ad6WithEnd) {
-      toast('has ad end');
-      var ls = textEndsWith(ad6WithEnd).find();
-      ls.sort(function (a, b) {
-        return a.bounds().top - b.bounds().top;
-      });
-      scrollIntoView(function () {
-        return ls[0];
-      }, 1600);
-      ls = textEndsWith(ad6WithEnd).find();
-      ls.sort(function (a, b) {
-        return a.bounds().top - b.bounds().top;
-      });
-      var a = ls[0];
-      if (a) {
-        var top = a.bounds().top;
-        click(500, top - 80);
-        checkSpecialType();
-      }
-      return true;
-    } else if (type === ad7) {
-      toast('modal')
-      myWaitUntil(function () {
-        return id('pop_close').exists()
-      }, 6)
-      click(500, 1020);
-      checkSpecialType();
-      return true;
-    } else if (type === ad8) {
-      toast('iframe')
-      var a = idEndsWith(ad8).findOne(1000);
-      if (a) {
-        click(500, a.bounds().top + 80);
-        checkSpecialType();
-        return true;
-      }
-    }
-  }
-
-  function checkSpecialType() {
-    sleep(5000);
-    if (isEnd()) {
-      return true;
-    }
-    return myWaitUntil(function () {
-      if (addListType()) {
-        return true;
-      } else if (souGouType()) {
-        return true;
-      } else if (baiDuType()) {
-        return true;
-      } else if (otherSouType()) {
-        return true;
-      } else if (tongChengType()) {
-        return true;
-      }
-    })
-
-  }
-
-  function tongChengType() {
-    if (textContains('city=fs').exists()) {
-      var i = 8;
-      while (i--) {
-        upDown(2);
-        click(500, 800);
-        sleep(600);
-        back();
-        sleep(1200);
-        if (isEnd()) {
-          break;
-        }
-      }
-      return true;
-    }
-  }
-
-  function addListType() {
-    var a1 = '商家列表';
-    var a2 = '聚合商家推荐';
-    var a3 = '为您推荐';
-    var a4 = '柠檬爱美'
-    var a5 = '聚合商家推荐';
-    var ls = [a1, a2, a3, a4, a5];
-    var type = '';
-    for (var i = 0; i < ls.length; i++) {
-      if (text(ls[i]).exists()) {
-        type = ls[i];
-      }
-    }
-    if (type) {
-      toast(type)
-      var lg = 7;
-      if (type === a4) {
-        lg = 1;
-      }
-      while (lg--) {
-        if (textContains('已看' + lg + '篇').exists()) {
-          break;
-        }
-      }
-      var i = 8;
-      while (i--) {
-        upDown(2);
-        clickFirst();
-        sleep(600);
-        back();
-        sleep(1200);
-        if (isEnd()) {
-          break;
-        }
-        if (i === 4) {
-          var lg1 = 7;
-          while (lg1--) {
-            if (textContains('已看' + lg1 + '篇').exists()) {
-              break;
-            }
-          }
-          if (lg1 === lg) {
-            break;
-          }
-        }
-      }
-      return true;
-    }
-  }
-
-  function souGouType() {
-    if (text('搜索').exists() && text('相关搜索').exists()) {
-      var a = text('搜索').findOne(1000);
-      if (a) {
-        var i = 8;
-        while (i--) {
-          sleep(1200);
-          upDown(2);
-          click(a.bounds().centerX(), a.bounds().centerY());
-          if (isEnd()) {
-            break;
-          }
-        }
-      }
-      return true;
-    }
-  }
-
-  function baiDuType() {
-    if (text('百度一下').exists()) {
-      var a = text('百度一下').findOne(1000);
-      if (a) {
-        var i = 8;
-        while (i--) {
-          sleep(1200);
-          upDown(2);
-          click(a.bounds().centerX(), a.bounds().centerY());
-          if (isEnd()) {
-            break;
-          }
-        }
-      }
-      return true;
-    }
-  }
-
-  function otherSouType() {
-    var t = '相关搜索';
-    if (text(t).exists()) {
-      var i = 8;
-      while (i--) {
-        myWaitUntil(t, 5);
-        scrollIntoView(t);
-        var a = text(t).findOne(1000);
-        if (a) {
-          click(300, a.bounds().centerY() + 160);
-        } else {
-          back();
-        }
-        if (isEnd()) {
-          break;
-        }
-      }
-      return true;
-    }
-  }
-
-  function isEnd() {
-    return textContains('青豆奖励').exists() || textContains('今日任务已完成').exists();
-  }
-
-  function clickFirst() {
-    click(500, 500);
-  }
-  // begin();
-  function begin(l, f) {
-    function aa1(i, btn) {
-      if (i > 9) {
-        return
-      }
-      if (i > 3) {
-        if (!textContains('加油').exists()) {
-          return;
-        }
-      }
-      if (text('美图').exists()) {
-        return
-      }
-      btn.click();
-      var waitTime = 0;
-      while (!textContains('青豆').exists()) {
-        sleep(2000)
-        waitTime = waitTime + 1;
-        if (waitTime > 12) {
-          break;
-        }
-      }
-      sleep(6000);
-      const changeSite = (y) => {
-        if (y > 0) {
-          swipe(350, 870, 350, 270, 700);
-          sleep(800);
-          return changeSite(y - 1)
-        }
-      }
-      var hasAd = findAd();
-      if (!hasAd) {
-        changeSite(i);
-        click(300, 570);
-        var a = checkSpecialType();
-        if (!a) {
-          sleep(3000);
-          upDown(2);
-        } else if (!isEnd()) {
-          back();
-          sleep(3000);
-          click(300, 550);
-          checkSpecialType();
-        }
-      }
-      var done;
-      if (isEnd()) {
-        done = true;
-      }
-      leave();
-      if (done) {
-        return true;
-      }
-      return aa1(i + 1, btn)
-    }
-    var readingTime = 0;
-
-    function beginReading(target) {
-      if (!target) {
-        return;
-      }
-      aa1(0, target);
-      sleep(2000);
-      readingTime = readingTime + 1;
-      if (readingTime > 48) {
-        return;
-      }
-      return beginReading()
-    }
-    var ls = text('去完成').find()
-    var lg1 = ls.length;
-    while (lg1--) {
-      var tar = text('去完成').findOne(800);
-      if (!tar) {
-        break;
-      }
-      var bounds = tar.bounds();
-      // click(bounds.centerX(), bounds.centerY());
-      beginReading({
-        click: function () {
-          click(bounds.centerX(), bounds.centerY() - 30);
-        }
-      });
-    }
-    var ls1 = text('进行中').find();
-    var lg2 = ls1.length;
-    while (lg2--) {
-      var tar = text('进行中').find()[0];
-      if (!tar) {
-        break;
-      }
-      var bounds = tar.bounds();
-      beginReading({
-        click: function () {
-          click(bounds.centerX(), bounds.centerY() - 30);
-        }
-      });
-    }
-  }
-
-  function leave() {
-    back();
-    sleep(2000);
-    click(230, 100);
-    sleep(2000);
-  }
-
-  function upDown(j) {
-    oneUpDown(3000);
-    if (j > 2) {
-      return
-    } else {
-      return upDown(j + 1)
-    }
-  }
-
-  function oneUpDown(sl) {
-    swipe(350, 770, 350, 270, 800);
-    sleep(sl || 1000);
-    swipe(350, 270, 350, 770, 800);
   }
 }
 
@@ -3804,7 +3408,7 @@ function zhongKuaiJob(last) {
     if (error) {
       return false;
     }
-  }, 'zhongKuaiJob', 0.8, last || 0.8);
+  }, 'zhongKuaiJob', 1.1, last || 1.1);
 
 }
 
@@ -3907,7 +3511,7 @@ function zhongJob(last) {
     sleep(6000);
     back();
     sleep(6000);
-    click(80, 1815);
+    click(80, zhongContentBottom + 30);
     sleep(1000);
     nextPage(true);
     nextPage(true);
@@ -4063,7 +3667,7 @@ function zhongJob(last) {
     if (error) {
       return false;
     }
-  }, mark, (week === 1 || week === 5 ) ? 3.0 : 2.1, last || 1.1);
+  }, mark, (week === 1 || week === 5) ? 3.0 : 2.1, last || 1.1);
 
   function get20Coin() {
     if (isNote3) {
@@ -4206,7 +3810,7 @@ function zhongQingLongVideo(t) {
       commonReading({
         readTime: realT,
         oneReadTime: 32,
-        oneWipeTime: 15,
+        oneWipeTime: 5,
         oneUpDown: function () {
           sleep(2300);
         },
@@ -4317,7 +3921,7 @@ function zhongQingLongVideo(t) {
     //     lastI = i;
     //   }
     // }
-  }, mark, (week === 1 || week === 5 ) ? 1.2 : 0.6, t);
+  }, mark, (week === 1 || week === 5) ? 1.2 : 0.6, t);
 
   function toVideo() {
     var s = zhongVideoSite;
@@ -4570,6 +4174,12 @@ function initZhongQingOther() {
 
   kankan = function (halfAuto) {
     var title;
+    var maxT = 0;
+    var foundSpecial = false;
+    var lastClickFn = null;
+    var hasAdModal = false;
+    var endCache = false;
+    var finishedLg = 0;
     if (halfAuto) {
       startTask();
     } else {
@@ -4633,11 +4243,41 @@ function initZhongQingOther() {
         clickCenter(className("android.view.View").boundsInside(809, 300, 920, 1200).findOne(100));
       }
 
+      function clickAdModal() {
+        var ad = className("android.view.View").boundsInside(809, 300, 920, 1200).findOne(100);
+        if (ad) {
+          var bs = ad.bounds();
+          click(500, bs.top + 100);
+          return true;
+        }
+      }
+
       function closeBigAdModal() {
         clickCenter(className("android.view.View").boundsInside(940, 505, 1020, 1080).findOne(100));
       }
 
-      function findAd() {
+      function getTitle() {
+        var t = className("TextView").boundsInside(0, 0, device.width, currentPhoneType === PHONE_TYPES.hong9A ? 122 : 180).findOne(500);
+        var text = t && t.text() || '';
+        sleep(1000);
+        return text;
+      }
+
+      function waitTitleChange() {
+        var text = "";
+        var r = myWaitUntil(function () {
+          text = getTitle();
+          return text && text !== title;
+        })
+        return r ? text : "";
+      }
+
+      function findAd(i) {
+        if (i === 0) {
+          foundSpecial = false;
+          lastClickFn = null;
+          hasAdModal = false;
+        }
         var ad = '广告';
         var ad2 = '热点新闻';
         var ad3 = '热闻看看';
@@ -4650,12 +4290,227 @@ function initZhongQingOther() {
         var ad8 = 'iframe';
         var ad9 = '新闻天天看';
         var type = '';
-        var w = className("TextView").boundsInside(0, 0, device.width, 180).findOne(500);
-        title = w && w.text();
+
+        title = getTitle();;
         type = title;
+        toast(title);
         if (!title) {
-          return;
+          return 1;
         }
+        var list = [{
+            match: function (n) {
+              return n === '标点资讯';
+            },
+            wait: function () {
+              return myWaitUntil(function () {
+                return text('广告').find().length > 2
+              }, 8)
+            },
+            main: function () {
+              click(500, 680);
+              checkSpecialType();
+              return true;
+            }
+          },
+          {
+            match: function (n) {
+              return n === '私人厨房' || isClickSecondSimpleType();
+            },
+            wait: function () {
+              sleep(2000);
+              return true
+            },
+            main: function () {
+              i === 0 && upDown(2);
+              click(500, 680);
+              checkSpecialType();
+              return true;
+            }
+          },
+          {
+            match: function (n) {
+              return titleIncludes('为你推送') || titleIncludes('新闻天天看');
+            },
+            wait: function () {
+              sleep(2000);
+              return true
+            },
+            main: function () {
+              i === 0 && upDown(2);
+              if (clickAdModal()) {
+                checkSpecialType();
+              } else {
+                watchList(300, i);
+              };
+              return true;
+            }
+          },
+          {
+            match: function (n) {
+              return isClickFirstSimpleType();
+            },
+            wait: function () {
+              sleep(2000);
+              return true
+            },
+            main: function () {
+              if (foundSpecial && lastClickFn) {
+                lastClickFn();
+              } else {
+                var y = Math.min(295 * i + 400, device.height - 130);
+                click(500, y);
+                lastClickFn = function () {
+                  click(500, y);
+                }
+              }
+              foundSpecial = checkSpecialType();
+              return true;
+            }
+          }
+        ]
+
+        const target = list.find(l => l.match(title));
+        if (target) {
+          target.wait();
+          if (i === 0 || foundSpecial) {
+            if (!target.skipAd && clickAdModal()) {
+              hasAdModal = true;
+              foundSpecial = checkSpecialType();
+            }
+          } else if (hasAdModal) {
+            closeAdModal();
+          }
+          return target.main();
+        }
+        sleep(3000);
+        if (isClickFirstSimpleType()) {
+          if (foundSpecial && lastClickFn) {
+            lastClickFn();
+          } else {
+            var y = Math.min(295 * i + 500, device.height - 130);
+            click(500, y);
+            lastClickFn = function () {
+              click(500, y);
+            }
+          }
+          foundSpecial = checkSpecialType();
+          return true;
+        }
+        if (isClickFirstTypeWithAd()) {
+          closeAdModal();
+          if (foundSpecial && lastClickFn) {
+            lastClickFn();
+          } else {
+            var y = Math.min(295 * i + 500, device.height - 130);
+            click(500, y);
+            lastClickFn = function () {
+              click(500, y);
+            }
+          }
+          foundSpecial = checkSpecialType();
+          return true;
+        }
+        if (isClickSecondSimpleType()) {
+          closeAdModal();
+          if (foundSpecial && lastClickFn) {
+            lastClickFn();
+          } else {
+            var y;
+            if (currentPhoneType === PHONE_TYPES.hong9A) {
+              y = Math.min(190 * i + 460, device.height - 40);
+            } else {
+              y = Math.min(295 * i + 680, device.height - 130);
+            }
+            click(500, y);
+            lastClickFn = function () {
+              click(500, y);
+            }
+          }
+          foundSpecial = checkSpecialType();
+          return true;
+        }
+        if (titleIncludes('新闻天天看')) {
+          upDown(2);
+          closeAdModal();
+          click(500, 295 * i + 300);
+          if (waitTitleChange()) {
+            upDown(2);
+            var max = 2;
+            if (text('下一页').exists() && max--) {
+              click('下一页');
+              sleep(1500);
+              upDown(2);
+            }
+          }
+          return true;
+        }
+        if (title === '天天看点' || title.indexOf('爱豆免费小说') > -1) {
+          closeAdModal();
+          click(500, 1300);
+          checkSpecialType();
+          return true;
+        }
+        if (titleIncludes('热词') || titleIncludes('实时') || titleIncludes('热榜')) {
+          var m = 3;
+          while (m--) {
+            sleep(800);
+            if (setText(0, '天气' + ~~(Math.random() * 10))) {
+              break;
+            }
+          }
+          click('搜索', 0)
+          checkSpecialType();
+          return true;
+        }
+
+        i === 0 && upDown(2);
+        if (clickAdModal()) {
+          var res = checkSpecialType();
+          if (!res) {
+            return 1;
+          }
+        } else {
+          if (foundSpecial && lastClickFn) {
+            lastClickFn();
+          } else {
+            var y = Math.min(295 * i + 500, device.height - 130);
+            click(500, y);
+            lastClickFn = function () {
+              click(500, y);
+            }
+          }
+          foundSpecial = checkSpecialType();
+        }
+        return true;
+
+        function watchList(from, times) {
+          from = from || 300;
+          times = times || 0;
+          click(500, Math.min(295 * times + 300, device.height - 130));
+          sleep(2000);
+          upDown(2);
+        }
+
+        function invalidType() {
+          return ['今日资讯', '最新资讯'].indexOf(title) > -1;
+        }
+
+        function isClickFirstSimpleType() {
+          return ['热点新闻', '每日资讯', '快影资讯', '花生有料', '私人厨房'].indexOf(title) > -1 || titleIncludes('wap');
+        }
+
+        function isClickFirstTypeWithAd() {
+          return ['八卦资讯'].indexOf(title) > -1;
+        }
+
+        function isClickSecondSimpleType() {
+          return ['标点资讯', '一点生活趣事'].indexOf(title) > -1;
+        }
+
+        function titleIncludes(val) {
+          return title.indexOf(val) > -1
+        }
+
         myWaitUntil(function () {
           if (text(ad).exists()) {
             type = ad;
@@ -4809,30 +4664,75 @@ function initZhongQingOther() {
       }
 
       function checkSpecialType() {
-        sleep(5000);
-        if (isEnd()) {
-          return true;
+        var title1
+        if (!halfAuto) {
+          title1 = waitTitleChange();
+          sleep(1300);
+          if (!title1) {
+            return;
+          }
+        } else {
+          if (isEnd()) {
+            return true;
+          }
+          title1 = getTitle();
         }
-        var w = className("TextView").boundsInside(0, 0, device.width, 180).findOne(500);
-        var title1 = w && w.text();
-        if (title1 === title) {
+
+        if (otherSouType(title1)) {
           return true;
-        }
-        if (baiDuType()) {
+        } else if (baiDuType(title1)) {
           return true;
         } else if (souGouType(title1)) {
           return true;
-        } else if (otherSouType(title1)) {
-          return true;
-        } else if (addListType(title1)) {
-          return true;
-        } else if (tongChengType(title1)) {
-          return true;
+        } else if (halfAuto) {
+          if (baiDuType(title1)) {
+            return true;
+          } else if (jingDongType(title1)) {
+            return true;
+          } else if (addListType(title1)) {
+            return true;
+          }
         }
-        upDown(2);
+        // if (baiDuType(title1)) {
+        //   return true;
+        // } else if (souGouType(title1)) {
+        //   return true;
+        // } else if (otherSouType(title1)) {
+        //   return true;
+        // } else if (addListType(title1)) {
+        //   return true;
+        // } else if (tongChengType(title1)) {
+        //   return true;
+        // }
+        if (!halfAuto) {
+          upDown(2);
+        }
       }
 
-      function tongChengType() {
+      function jingDongType(title) {
+        if (title.indexOf('京东热卖') > -1) {
+          if (halfAuto && !shouldRun()) {
+            return true;
+          }
+          var mm = 8;
+          var i = 8;
+          while (i--) {
+            upDown(2);
+            if (mm - i >= maxT && isEnd()) {
+              break;
+            }
+            click(500, 1300);
+            sleep(1500);
+            // upDown(2);
+            back();
+            sleep(1200);
+
+          }
+          return true;
+        }
+      }
+
+      function tongChengType(title) {
         if (textContains('city=fs').exists() || textStartsWith('京东热卖').exists()) {
           if (halfAuto && !shouldRun()) {
             return true;
@@ -4865,57 +4765,39 @@ function initZhongQingOther() {
           if (halfAuto && !shouldRun()) {
             return true;
           }
-          toast(type)
           var lg = 7;
           if (type === a4) {
             lg = 1;
           }
-          while (lg--) {
-            if (textContains('已看' + lg + '篇').exists()) {
-              break;
-            }
-          }
+          var mm = 8;
           var i = 8;
           while (i--) {
             upDown(2);
-            if (isEnd()) {
+            if (mm - i >= maxT && isEnd()) {
               break;
             }
             clickFirst();
-            myWaitUntil(function () {
-              return !text(ls[i]).exists()
-            }, 10);
+            sleep(2000);
             back();
             sleep(1200);
-
-            if (i === 4) {
-              var lg1 = 7;
-              while (lg1--) {
-                if (textContains('已看' + lg1 + '篇').exists()) {
-                  break;
-                }
-              }
-              if (lg1 === lg) {
-                break;
-              }
-            }
           }
           return true;
         }
       }
 
-      function souGouType() {
-        if (text('搜索').exists() && text('相关搜索').exists()) {
+      function souGouType(title) {
+        var a = text('搜索').findOne(1000);
+        if (a) {
           if (halfAuto && !shouldRun()) {
             return true;
           }
-          var a = text('搜索').findOne(1000);
           if (a) {
+            var mm = 8;
             var i = 8;
             while (i--) {
               sleep(1200);
               upDown(2);
-              if (isEnd()) {
+              if (mm - i >= maxT && isEnd()) {
                 break;
               }
               click(a.bounds().centerX(), a.bounds().centerY());
@@ -4932,11 +4814,12 @@ function initZhongQingOther() {
           }
           var a = text('百度一下').findOne(1000);
           if (a) {
+            var mm = 8;
             var i = 8;
             while (i--) {
               sleep(1200);
               upDown(2);
-              if (isEnd()) {
+              if (mm - i >= maxT && isEnd()) {
                 break;
               }
               click(a.bounds().centerX(), a.bounds().centerY());
@@ -4946,29 +4829,42 @@ function initZhongQingOther() {
         }
       }
 
-      function otherSouType() {
+      function otherSouType(title) {
         var mainT = '相关搜索';
-        if (text(mainT).exists()) {
+        if (title.indexOf("网页搜索") > -1) {
           if (halfAuto && !shouldRun()) {
             return true;
           }
-          var i = 8;
+          var mm = 6;
+          var i = 6;
           while (i--) {
-            myWaitUntil(mainT, 5);
-            var isNear = text('其他人还搜了').exists() && i > 1;
-            var t = isNear ? '其他人还搜了' : mainT;
-            isNear && upDown(2);
-            if (i < 3 && isEnd()) {
-              return true;
-            }
-            scrollIntoView(t, device.height - 300);
-            var a = text(t).findOne(1000);
-            if (a) {
-              click(i % 2 === 0 ? 730 : 300, a.bounds().centerY() + 160);
+            sleep(2000);
+            upDown(2);
+            swipe(350, 270, 350, 1000, 500);
+            sleep(500);
+            var hotKeys = ['天气', '温度', 'c++', '王者', '抖音', '开发教程', '水果'];
+            if (setText(0, hotKeys[~~(Math.random() * hotKeys.length)] + i)) {
+              if (currentPhoneType === PHONE_TYPES.hong9A) {
+                click(630, 230);
+              } else {
+                click(950, 300);
+              }
             } else {
-              back();
+              return true;
+              myWaitUntil(mainT, 5);
+              // var isNear = text('其他人还搜了').exists() && i > 1;
+              // var t = isNear ? '其他人还搜了' : mainT;
+              var t = mainT;
+              scrollIntoView(t, device.height - 300);
+              var a = text(t).findOne(1000);
+              if (a) {
+                click(i % 2 === 0 ? 730 : 300, a.bounds().centerY() + 160);
+              } else {
+                back();
+              }
             }
-            if (isEnd()) {
+
+            if (mm - i >= (maxT || 2) && isEnd()) {
               break;
             }
           }
@@ -4977,7 +4873,16 @@ function initZhongQingOther() {
       }
 
       function isEnd() {
-        return textContains('青豆奖励').exists() || textContains('今日任务已完成').exists();
+        if (!halfAuto) {
+          return false;
+        }
+        if (endCache && !halfAuto) {
+          return true;
+        }
+        var t = className("TextView").boundsInside(0, zhongKanEndTextBottom - 75, device.width, zhongKanEndTextBottom).findOne(500);
+        var text = t && t.text() || '';
+        sleep(1000);
+        return endCache = (text.indexOf('青豆奖励') > -1 || text.indexOf('任务已完成') > -1);
       }
 
       function clickFirst() {
@@ -4986,27 +4891,17 @@ function initZhongQingOther() {
       // begin();
       function begin(l, f) {
         function aa1(i, btn) {
-          if (i > 9) {
-            return
-          }
-          if (i > 3) {
-            if (!textContains('加油').exists()) {
-              return;
-            }
-          }
-          if (text('美图').exists()) {
-            return
-          }
           btn.click();
-          var waitTime = 0;
-          while (!textContains('青豆').exists()) {
-            sleep(2000)
-            waitTime = waitTime + 1;
-            if (waitTime > 12) {
-              break;
-            }
+          var bottomText = '';
+          if (i > (maxT || 5)) {
+            return
           }
-          sleep(6000);
+          sleep(2000);
+          if (maxT === 0) {
+            sleep(5000);
+            maxT = 5
+          }
+          sleep(200);
           const changeSite = (y) => {
             if (y > 0) {
               swipe(350, 870, 350, 270, 700);
@@ -5017,30 +4912,36 @@ function initZhongQingOther() {
           if (text('页面已拦截').exists()) {
             return;
           }
-          var hasAd = findAd();
-          clickIdCenter(kankanCloseID1);
-          if (!hasAd) {
-            changeSite(i);
-            click(300, 570);
-            var a = checkSpecialType();
-            if (!a) {
-              sleep(3000);
-              upDown(2);
-            } else if (!isEnd()) {
-              back();
-              sleep(3000);
-              click(300, 550);
-              checkSpecialType();
-            }
-          }
-          var done;
-          if (isEnd()) {
-            done = true;
-          }
-          leave();
-          if (done) {
+          var hasAd = findAd(i);
+          if (hasAd === 1) {
+            leave();
             return;
           }
+          // if (!hasAd) {
+          //   changeSite(i);
+          //   click(300, 570);
+          //   var a = checkSpecialType();
+          //   if (!a) {
+          //     sleep(3000);
+          //     upDown(2);
+          //   } else if (!isEnd()) {
+          //     back();
+          //     sleep(3000);
+          //     click(300, 550);
+          //     checkSpecialType();
+          //   }
+          // }
+          // var done;
+          // if (isEnd()) {
+          //   done = true;
+          // }
+          leave();
+          if (text('已完成').find().length !== finishedLg) {
+            return;
+          }
+          // if (done) {
+          //   return;
+          // }
           return aa1(i + 1, btn)
         }
         var readingTime = 0;
@@ -5049,6 +4950,8 @@ function initZhongQingOther() {
           if (!target) {
             return;
           }
+          endCache = false;
+          finishedLg = text('已完成').find().length;
           aa1(0, target);
           sleep(2000);
           readingTime = readingTime + 1;
@@ -5064,8 +4967,11 @@ function initZhongQingOther() {
           if (!tar) {
             break;
           }
-          scrollIntoView(tar)
+          scrollIntoView(function () {
+            return tar = text('去完成').find()[0];
+          }, device.height - 50)
           var bounds = tar.bounds();
+          maxT = 0;
           beginReading({
             click: function () {
               click(bounds.centerX(), bounds.centerY() - 30);
@@ -5074,16 +4980,19 @@ function initZhongQingOther() {
         }
         var ls1 = text('进行中').find();
         var lg2 = ls1.length;
+        var mL = lg2;
         while (lg2--) {
-          var tar = text('进行中').find()[0];
-          if (!tar) {
+          ls1 = text('进行中').find();
+          var idx = mL - lg2 - 1;
+          console.log(mL - lg2 - 1, mL)
+          mL = ls1.length;
+          if (!idx < 0) {
             break;
           }
-          scrollIntoView(tar)
-          var bounds = tar.bounds();
+          maxT = 0;
           beginReading({
             click: function () {
-              click(bounds.centerX(), bounds.centerY() - 30);
+              click('进行中', idx);;
             }
           });
         }
@@ -5120,27 +5029,21 @@ function initZhongQingOther() {
       var ls = text('去搜索').find();
       allT = ls.length;
       var lgAll = allT;
+      var isSpecial = false;
       while (lgAll--) {
         ls = text('去搜索').find();
-        ls[lgAll].click();
+        clickCenter(ls[lgAll]);
         sleep(5000);
         var max = 4;
-        var isSpecial = false;
-        if (textStartsWith('点击今').exists()) {
+        isSpecial = false;
+        if (textStartsWith('总计可获得').exists()) {
           isSpecial = true;
-          for (var j = 4; j < 13; j++) {
-            if (textContains(j + '').exists()) {
-              max = j;
-              toast(max);
-              break;
-            }
-          }
+          var a = textStartsWith('总计可获得').findOne(1000);
+          max = (+parseFloat(a.text().replace('总计可获得', ''))) / 40;
         } else {
-          for (var j = 1; j < 16; j++) {
-            if (textContains(j + '次搜索').exists()) {
-              max = j;
-              break;
-            }
+          var a = textStartsWith('已奖励').findOne(1000);
+          if (a) {
+            max = +a.text()[a.text().length - 1]
           }
         }
         if (max === 8 && !isDefLaunch) {
@@ -5153,7 +5056,7 @@ function initZhongQingOther() {
         zhongqingSearch(max);
         sleep(3000);
         if (isSpecial) {
-          if (text('8').find().length > 1) {
+          if (text(max).find().length > 1) {
             doneT = doneT + 1;
           }
         } else {
@@ -5168,16 +5071,12 @@ function initZhongQingOther() {
       }
       toast('doneT' + doneT)
       toast('allT' + allT)
-      return doneT > 0 && (doneT - allT > 0);
+      return doneT > 2;
 
       function zhongqingSearch(times) {
         function aa(i) {
           var max = times || 4;
           var t = max;
-          var specialT = textStartsWith('点击今').exists();
-          if (specialT) {
-            t = t + 4;
-          }
           if (i > max || textContains(t + '/' + t).exists()) {
             return
           }
@@ -5186,15 +5085,16 @@ function initZhongQingOther() {
           if (tar) {
             tar.click();
           } else {
-            if (specialT) {
+            if (isSpecial) {
               click(230, 1220);
             } else {
               click('换一批');
               return aa(i + 1)
             }
           }
-          if (specialT) {
+          if (isSpecial) {
             sleep(1500);
+            back();
             return aa(i + 1);
           }
           if (!textContains('搜索').exists() && !textContains('百度一下').exists()) {
@@ -5213,21 +5113,19 @@ function initZhongQingOther() {
             }
           }
           if (!textContains('页面失联了').exists()) {
-            upDown(specialT ? 3 : 4);
+            upDown(4);
             sleep(2000);
             swipe(500, 300, 500, 1000, 500);
             sleep(3000);
-            if (!specialT) {
-              if (click('百度一下', 0)) {
+            if (click('百度一下', 0)) {
 
-              } else {
-                sleep(1000);
-                click(850, 320);
-                click(600, 600);
-              }
-              sleep(2000);
-              upDown(1);
+            } else {
+              sleep(1000);
+              click(850, 320);
+              click(600, 600);
             }
+            sleep(2000);
+            upDown(1);
           }
           back()
           sleep(2000);
@@ -5264,16 +5162,19 @@ function initZhongQingOther() {
       var done = all();
       backToMain();
       click(500, 720);
-      if (!done) {
-        saveUnDoneFn(function () {
-          search();
-          if (!isAdmin && isDefLaunch) {
-            search();
-          }
-        }, reakKey);
-      } else {
+      if (done) {
         markDone(reakKey);
       }
+      // if (!done) {
+      //   saveUnDoneFn(function () {
+      //     search();
+      //     if (!isAdmin && isDefLaunch) {
+      //       search();
+      //     }
+      //   }, reakKey);
+      // } else {
+      //   markDone(reakKey);
+      // }
     }
   };
 
@@ -5346,6 +5247,8 @@ function initZhongQingOther() {
       otherRun();
     }),
     kankan: withCatch(kankan, function () {
+      console.log('kankan after error');
+      checkZhongQingTwo.history[mark] = !checkZhongQingTwo.history[mark];
       begin();
       otherRun();
     }),
@@ -5679,7 +5582,7 @@ function launch2(name, idx) {
     max--
   }
   var bounds = tar.bounds();
-  var y = !isDefLaunch ? bounds.top + 100 : bounds.top - 100
+  var y = bounds.top - 100
   click(bounds.left + 60, y);
 }
 

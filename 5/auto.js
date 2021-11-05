@@ -4180,7 +4180,6 @@ function initZhongQingOther() {
     var realKey = beforeGoToMain(myK);
 
     var store = getKanKanStorage();
-
     if (realKey) {
       if (goToSubTask()) {
         sleep(10000);
@@ -4201,6 +4200,7 @@ function initZhongQingOther() {
       runStoreType('otherSouType', getTaskNameByType('已完成'));
       var unFinishNames = getTaskNameByType('去完成');
       beginReading(unFinishNames);
+      runStoreType('otherSouType', getTaskNameByType('已完成'));
     }
 
     function beginReading(names) {
@@ -4218,7 +4218,7 @@ function initZhongQingOther() {
           click(500, Math.min(500 + 300 * tryT, y));
           sleep(5000);
           var a = getTitle();
-          specialType = matchSpecialType(a);
+          var specialType = matchSpecialType(a);
           if (specialType) {
             putStoreType(specialType, {
               name: name,
@@ -4245,7 +4245,7 @@ function initZhongQingOther() {
           click(l.name);
           sleep(5000);
           click(500, l.y);
-          runSpecialType(specialType);
+          runSpecialType(type);
           leave();
         }
       })
@@ -4273,6 +4273,10 @@ function initZhongQingOther() {
 
     function putStoreType(type, data) {
       var list = getStoreType(type);
+      console.log(222);
+      console.log(list);
+      console.log(list.find);
+      console.log(333)
       var target = list.find(function (l) {
         return l.name === data.name;
       });
@@ -4337,7 +4341,7 @@ function initZhongQingOther() {
           while (i--) {
             sleep(1200);
             upDown();
-            click(a.bounds().centerX(), a.bounds().centerY());
+            click(setting.searchBtn[0], setting.searchBtn[1]);
           }
           return true;
         }
@@ -4362,7 +4366,7 @@ function initZhongQingOther() {
     function leave() {
       back();
       sleep(2000);
-      click(230, 100);
+      click(currentPhoneType === PHONE_TYPES.hong9A ? 160 : 230, 100);
       sleep(2000);
     }
   }

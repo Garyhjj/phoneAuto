@@ -6,7 +6,7 @@ var PHONE_TYPES = {
   huaWei3: 'huaWei3'
 }
 
-var currentPhoneType = PHONE_TYPES.hong10X;
+var currentPhoneType = PHONE_TYPES.note3;
 
 var isDefLaunch = true;
 var isAdmin = true;
@@ -187,8 +187,7 @@ var currentDate = new Date().getDate();
 // zhongQingLongVideo(100);
 // leDou(29, true);
 // zhongQingOther.kankan();
-  // zhongQingOther.kankan2();
-
+// zhongQingOther.kankan2();
 // sleep(1000 * 10000);
 
 // quTouTiaoR();
@@ -254,7 +253,10 @@ function hong9ARun() {
   zhongKuaiJob();
   zhongKuaiVideoJob();
   zhongJob(1.3);
+  zhongQingOther.kankan();
+  zhongQingOther.search();
   zhongQingOther.kankan()
+  runUnDoneFn();
 }
 
 function otherRun() {
@@ -328,6 +330,9 @@ function otherRun() {
   zhongQingOther.kankan();
   runUnDoneFn();
   // leDou();
+  zhongQingOther.kankan();
+  runUnDoneFn();
+  zhongQingOther.kankan();
   zhongQingOther.kankan();
   // runReHuoLikeChengjiu();
   // fenHongTask();
@@ -1467,8 +1472,8 @@ function kuaiShouSmallTask() {
           sleep(1200)
           var tar1 = '福利';
           var end2 = '已完成';
-          var n = 12;
-          while (!text(end2).exists() && n-- && textContains('看直播').exists()) {
+          var n = 22;
+          while (!text(end2).exists() && n-- && textContains('领福利').exists()) {
             watch2()
             sleep(2000);
           }
@@ -1527,11 +1532,11 @@ function kuaiShouSmallTask() {
   }
 
   function watch2() {
-    var tar = text('看直播').find();
-    if (tar[tar.length - 1]) {
+    var tar = text('领福利').find();
+    if (true) {
       click('领福利', kuaiVideoIdx);
       // tar[tar.length - 1].click();
-      sleep(100 * 1000);
+      sleep(70 * 1000);
       back();
       sleep(2000);
       var tr = 3;
@@ -3348,9 +3353,9 @@ function zhongKuaiJob(last) {
         mark: '阅读',
         fallBack: function (i) {
           if (i === 0) {
-            click(400, 430);
+            click(400, 530);
           } else {
-            click(500, 650);
+            click(500, 750);
           }
         },
         top: zhongKuaiContentTop,
@@ -3363,9 +3368,7 @@ function zhongKuaiJob(last) {
         refresh: function () {
           readTool.reset();
           click(120, zhongKuaiContentBottom + 20);
-          sleep(2000);
-          clickCenter(text('+').findOne(200));
-          sleep(300);
+          sleep(3000);
         },
         nextPage: function (isRight) {
           if (isRight && currentPageIndex < pageLg - 1) {
@@ -4108,12 +4111,10 @@ function initZhongQingOther() {
           click(500, 720);
         }
         sleep(5000);
-        if (isAdmin) {
-          clickOneByText('抽奖赚');
-          sleep(isAdmin ? 6500 : 2500);
-          back();
-          sleep(5000);
-        }
+        clickOneByText('抽奖赚');
+        sleep(isAdmin ? 6500 : 2500);
+        back();
+        sleep(5000);
         var res = start(0);
         // clickOneByText('抽奖赚');
         // sleep(8000);
@@ -4145,29 +4146,38 @@ function initZhongQingOther() {
       sleep(isAdmin ? 6500 : 2500);
       while (i < 103) {
         click(530, 1000);
-        var textType = ''
+        sleep(100a)
+        back();
+        sleep(2000);
         myWaitUntil(function () {
-          if (text('继续抽奖').exists()) {
-            textType = '继续抽奖'
-            return true;
-          }
-          if (text('关闭').exists()) {
-            textType = '关闭'
-            return true;
-          }
-          return false;
+          return clickOneByText('抽奖赚');
         })
-        if (textType) {
-          clickCenter(text(textType).findOne(1000));
-          sleep(1000)
-        } else {
-          if (i < 3) {
-            if (text('今日次数已用完').exists()) {
-              back();
-              break;
-            }
-          }
-        }
+        clickOneByText('抽奖赚')
+        clickOneByText('抽奖赚')
+        sleep(isAdmin ? 6500 : 2500);
+        // var textType = ''
+        // myWaitUntil(function () {
+        //   if (text('继续抽奖').exists()) {
+        //     textType = '继续抽奖'
+        //     return true;
+        //   }
+        //   if (text('关闭').exists()) {
+        //     textType = '关闭'
+        //     return true;
+        //   }
+        //   return false;
+        // })
+        // if (textType) {
+        //   clickCenter(text(textType).findOne(1000));
+        //   sleep(1000)
+        // } else {
+        //   if (i < 3) {
+        //     if (text('今日次数已用完').exists()) {
+        //       back();
+        //       break;
+        //     }
+        //   }
+        // }
         i++;
       }
       back();
@@ -4180,6 +4190,9 @@ function initZhongQingOther() {
     var realKey = beforeGoToMain(myK);
 
     var store = getKanKanStorage();
+
+    var latestName = '';
+
     if (realKey) {
       if (goToSubTask()) {
         sleep(10000);
@@ -4198,25 +4211,38 @@ function initZhongQingOther() {
 
     function startTask() {
       runStoreType('otherSouType', getTaskNameByType('已完成'));
-      var unFinishNames = getTaskNameByType('去完成');
+      var unFinishNames = getTaskNameByType('去完成').reverse();
       beginReading(unFinishNames);
       runStoreType('otherSouType', getTaskNameByType('已完成'));
+      beginReading(getTaskNameByType('进行中'));
     }
 
     function beginReading(names) {
       var lg = names.length;
+      var excludes = getStoreType('excludes');
       while (lg--) {
-        var name = names[0];
+        var name = names[lg];
+        if (excludes.indexOf(name) > -1) {
+          continue;
+        }
         if (!text(name).exists()) {
+          if (excludes.indexOf(latestName) < 0) {
+            excludes.push(latestName);
+            store.put('excludes', JSON.stringify(excludes));
+          }
           break;
         }
         var tryT = 4;
         while (tryT--) {
           click(name);
-          sleep(5000);
+          sleep(9000);
           var y = Math.min(500 + 300 * tryT, device.height - 120);
           click(500, Math.min(500 + 300 * tryT, y));
-          sleep(5000);
+          if (tryT < 3) {
+            sleep(100);
+            click(500, 1100);
+          }
+          sleep(8000);
           var a = getTitle();
           var specialType = matchSpecialType(a);
           if (specialType) {
@@ -4231,9 +4257,9 @@ function initZhongQingOther() {
             upDown();
             leave();
           }
+          latestName = name;
+          sleep(4000);
         }
-        sleep(2000);
-        click(name);
       }
     }
 
@@ -4241,12 +4267,13 @@ function initZhongQingOther() {
       var list = getStoreType(type);
       console.log('runType__' + type + '_' + list.length);
       list.forEach(function (l) {
-        if ((excludes || []).indexOf(l.name) < 0) {
+        if ((excludes || []).indexOf(l.name) < 0 && text(l.name).exists()) {
           click(l.name);
-          sleep(5000);
+          sleep(8000);
           click(500, l.y);
           runSpecialType(type);
           leave();
+          sleep(5000)
         }
       })
     }
@@ -4273,10 +4300,6 @@ function initZhongQingOther() {
 
     function putStoreType(type, data) {
       var list = getStoreType(type);
-      console.log(222);
-      console.log(list);
-      console.log(list.find);
-      console.log(333)
       var target = list.find(function (l) {
         return l.name === data.name;
       });
@@ -4292,6 +4315,8 @@ function initZhongQingOther() {
     function matchSpecialType(title) {
       if (title.indexOf("网页搜索") > -1) {
         return 'otherSouType';
+      } else if ((title.indexOf('京东热卖') > -1)) {
+        return 'jingDongType';
       } else if (text('搜索').exists()) {
         var a = text('搜索').findOne(1000);
         store.put('souGouType', JSON.stringify({
@@ -4342,6 +4367,17 @@ function initZhongQingOther() {
             sleep(1200);
             upDown();
             click(setting.searchBtn[0], setting.searchBtn[1]);
+          }
+          return true;
+        },
+        jingDongType: function () {
+          var i = 6;
+          while (i--) {
+            upDown();
+            click(500, 1300);
+            sleep(1500);
+            back();
+            sleep(1200);
           }
           return true;
         }

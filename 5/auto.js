@@ -6,7 +6,7 @@ var PHONE_TYPES = {
   huaWei3: 'huaWei3'
 }
 
-var currentPhoneType = PHONE_TYPES.note3;
+var currentPhoneType = PHONE_TYPES.hong9A;
 
 var isDefLaunch = true;
 var isAdmin = true;
@@ -14,8 +14,8 @@ var is10X = false;
 
 var videoCheckLs = [];
 var useStorage = true;
-var kuaiFuliIdx = currentPhoneType === PHONE_TYPES.mi5 ? 0 : 1;
-var kuaiVideoIdx = 1;
+var kuaiFuliIdx = currentPhoneType === PHONE_TYPES.mi5 ? 0 : 0;
+var kuaiVideoIdx = 0;
 var douYinTaskEntryId = 'c1z';
 var leDouTaskId = 'mv';
 var leDouCloseId = 'gc';
@@ -188,6 +188,7 @@ var currentDate = new Date().getDate();
 // leDou(29, true);
 // zhongQingOther.kankan();
 // zhongQingOther.kankan2();
+// zhongKuaiKanKan();
 // sleep(1000 * 10000);
 
 // quTouTiaoR();
@@ -255,13 +256,14 @@ function hong9ARun() {
   zhongJob(1.3);
   zhongQingOther.kankan();
   zhongQingOther.search();
-  zhongQingOther.kankan()
+  zhongQingOther.kankan();
+  zhongKuaiKanKan();
   runUnDoneFn();
 }
 
 function otherRun() {
   if (isAdmin) {
-    douYin(10);
+    // douYin(10);
   } else {
     kuaiYinJob.main();
   }
@@ -275,7 +277,7 @@ function otherRun() {
   zhongJob(1.1);
   douYinBaoXiang();
 
-  runReHuoLikeMain();
+  // runReHuoLikeMain();
 
   douYinBaoXiang();
 
@@ -288,7 +290,7 @@ function otherRun() {
   douYinBaoXiang();
 
   zhongVideoT = 0;
-  zhongQingLongVideo(0.4);
+  zhongQingLongVideo();
   // fengKan(10);
   if (isDefLaunch && !isAdmin) {
     zhongQingOther.search();
@@ -299,7 +301,7 @@ function otherRun() {
 
   zhongJob(1.1);
   douYinBaoXiang();
-  zhongQingLongVideo(0.4);
+  zhongQingLongVideo();
   zhongKuaiVideoJob();
   kReading();
   douYinBaoXiang();
@@ -311,7 +313,7 @@ function otherRun() {
 
   zhongQingOther.getMoreReward();
 
-  zhongQingLongVideo(0.4);
+  zhongQingLongVideo();
 
   if (isDefLaunch && !isAdmin) {
     zhongQingOther.search();
@@ -336,7 +338,7 @@ function otherRun() {
   zhongQingOther.kankan();
   // runReHuoLikeChengjiu();
   // fenHongTask();
-  if (new Date().getHours() < 15) {
+  if (new Date().getHours() < 20) {
     begin();
     otherRun();
   } else {
@@ -1462,6 +1464,7 @@ function kuaiShouSmallTask() {
   runAndMark(function () {
     var entryId = kuaiShouSmallTaskId;
     var entry = id(entryId).findOne(1200);
+    var isNew = PHONE_TYPES.mi5 !== currentPhoneType;
     try {
       if (PHONE_TYPES.hong9A === currentPhoneType || PHONE_TYPES.note3 === currentPhoneType ? 1 : entry) {
         entry && click(entry.bounds().centerX(), entry.bounds().centerY());
@@ -1472,7 +1475,7 @@ function kuaiShouSmallTask() {
           sleep(1200)
           var tar1 = '福利';
           var end2 = '已完成';
-          var n = 22;
+          var n = 12;
           while (!text(end2).exists() && n-- && textContains('领福利').exists()) {
             watch2()
             sleep(2000);
@@ -1483,7 +1486,7 @@ function kuaiShouSmallTask() {
             sleep(2000);
           }
           sleep(6000);
-          var isEnd = !textStartsWith(tar1).exists() && text(end2).exists();
+          var isEnd = text(end2).exists();
           back();
           sleep(3000);
           return isEnd
@@ -1536,9 +1539,17 @@ function kuaiShouSmallTask() {
     if (true) {
       click('领福利', kuaiVideoIdx);
       // tar[tar.length - 1].click();
+      if (isNew) {
+        sleep(6000);
+        click(300,800);
+      }
       sleep(70 * 1000);
       back();
       sleep(2000);
+      if (isNew) {
+        back();
+      sleep(2000);
+      }
       var tr = 3;
       while (tr--) {
         if (text('日常任务').exists()) {
@@ -1546,10 +1557,18 @@ function kuaiShouSmallTask() {
         } else if (textContains('退出').exists()) {
           click('退出');
           sleep(1000);
+          if (isNew) {
+            back();
+          sleep(2000);
+          }
           break;
         } else {
           back();
           sleep(2000);
+          if (isNew) {
+            back();
+          sleep(2000);
+          }
         }
       }
     }
@@ -2377,6 +2396,7 @@ function initKuaiYinJob() {
     goToTask();
     start();
     beforeEnd();
+    markDone(key);
 
     function start(i) {
       i = i || 0;
@@ -2437,6 +2457,7 @@ function initKuaiYinJob() {
       }
     }
     beforeEnd();
+    markDone(key);
   }
 
   baoXiang = function () {
@@ -2448,6 +2469,7 @@ function initKuaiYinJob() {
     goToTask();
     start();
     beforeEnd();
+    markDone(key);
 
     function start() {
       var tarId = 'tvTreasureBox';
@@ -3269,74 +3291,268 @@ function checkZhongQingTwo(mark) {
   }
 }
 
-function jinRiJob(last) {
-  var mark = 'jinRiJob';
-  runAndMarkByDuring(function (realLast, addInFn) {
-    var res = launch('今日头条极速版');
-    sleep(res ? 20000 : 12000);
-    back();
-    sleep(3000);
-    back();
-    sleep(3000);
-    click(80, 1815);
-    sleep(1000);
-    nextPage(true);
-    nextPage(true);
-    nextPage(true);
-    var error;
-    var getOnePassTime = initGetLittleDuringTime();
-    try {
-      commonReading({
-        readTime: realLast,
-        oneReadTime: 38,
-        oneWipeTime: 10,
-        beforeLeavePage: function (i, passTime) {
-          addInFn(getOnePassTime(passTime, 0.03));
-        },
-        beforeOneUpDown: function (i) {},
-        enterP: function () {
-          var i = 5;
+function zhongKuaiKanKan() {
+  var start = function () {
+    var realKey = 'zhongKuaiKanKan';
+    launchKuaiZhongQing(2);
+    var store = storages.create("zhongKuaiKanKan");
+
+    var latestName = '';
+
+    if (realKey) {
+      if (goToSubTask()) {
+        sleep(10000);
+        startTask();
+        if (text('看看赚').exists() && text('已完成').find().length > 18 && (text('进行中').find().length + text('去完成').find().length) < 8) {
+          markDone(realKey);
+        } else {
+          saveUnDoneFn(function () {
+            zhongKuaiKanKan();
+          }, realKey)
+        }
+      }
+    }
+
+    function goToSubTask() {
+      var enterT = '看看赚';
+      if (myWaitUntil(enterT)) {
+        sleep(200);
+        clickOneByText(enterT);
+        if (myWaitUntil('每天一次任务', 30)) {
+          sleep(200);
+          return true;
+        }
+      }
+    }
+    
+
+
+    function startTask() {
+      var unFinishNames = getTaskNameByType('去完成').reverse();
+      beginReading(unFinishNames);
+      // runStoreType('otherSouType', getTaskNameByType('已完成'));
+      beginReading(getTaskNameByType('进行中'), 2);
+    }
+
+    function beginReading(names, max) {
+      var lg = names.length;
+      while (lg--) {
+        var name = names[lg];
+        if (!text(name).exists()) {
+          break;
+        }
+        if (getTaskNameByType('已完成').indexOf(name) > -1) {
+          continue;
+        }
+        var iMax = max ? 2 : 4;
+        var tryT = iMax;
+        while (tryT--) {
+          click(name);
+          sleep(9000);
+          var y = Math.min(currentPhoneType === PHONE_TYPES.hong9A ? 500 : 610 + (currentPhoneType === PHONE_TYPES.hong9A ? 200 : 300) * tryT, device.height - 120);
+          click(500, y);
+          if (tryT < 3) {
+            sleep(100);
+            click(500, 1100);
+          }
+          sleep(8000);
+          var a = getTitle();
+          var specialType = matchSpecialType(a);
+          if (specialType) {
+            putStoreType(specialType, {
+              name: name,
+              y: y
+            });
+            runSpecialType(specialType, max ? tryT + 1 : (6 - (iMax - tryT - 1)));
+            leave();
+            break;
+          } else {
+            upDown();
+            leave();
+          }
+          latestName = name;
+          sleep(4000);
+        }
+      }
+    }
+
+    function runStoreType(type, excludes) {
+      var list = getStoreType(type);
+      console.log('runType__' + type + '_' + list.length);
+      list.forEach(function (l) {
+        if (!l.fail && (excludes || []).indexOf(l.name) < 0 && text(l.name).exists()) {
+          click(l.name);
+          sleep(8000);
+          click(500, l.y);
+          var res = runSpecialType(type);
+          if (!res) {
+            l.fail = l.fail || 0;
+            l.fail++;
+            putStoreType(type, l);
+          }
+          leave();
+          sleep(5000)
+        }
+      })
+      store.put(type, JSON.stringify(list.filter(l => !l.fail))); //清空异常
+    }
+
+    function getTaskNameByType(type) {
+      var names = [];
+      text(type).find().forEach(function (d) {
+        if (d.parent() && d.parent().child(0)) {
+          names.push(d.parent().child(0).text())
+        }
+      });
+      return names;
+    }
+
+    function getStoreType(type, defaultValue) {
+      var list = store.get(type);
+      if (list) {
+        list = JSON.parse(list) || (defaultValue || []);
+      } else {
+        list = defaultValue || [];
+      }
+      return list;
+    }
+
+    function putStoreType(type, data) {
+      var list = getStoreType(type);
+      var target = list.find(function (l) {
+        return l.name === data.name;
+      });
+      if (target) {
+        for (var key in data) {
+          target[key] = data[key];
+        }
+      } else {
+        console.log('save_' + type + '_' + data.name)
+        list.push(data);
+      }
+      store.put(type, JSON.stringify(list));
+    }
+
+    function matchSpecialType(title) {
+      var a1 = '商家列表';
+      var a2 = '聚合商家推荐';
+      var a3 = '为您推荐';
+      var a4 = '柠檬爱美'
+      var a5 = '聚合商家推荐';
+      var ls = [a1, a2, a3, a4, a5];
+      if (title.indexOf("网页搜索") > -1) {
+        return 'otherSouType';
+      } else if (title.indexOf('京东热卖') > -1 || title.indexOf('一分钟') > -1) {
+        return 'jingDongType';
+      } else if (title.indexOf('一点生活趣事') > -1) {
+        return 'interestType'
+      } else if (ls.indexOf(title) > -1) {
+        return 'addListType';
+      }
+    }
+
+    function getTitle() {
+      var t = className("android.view.View").boundsInside(0, 0, 423, currentPhoneType === PHONE_TYPES.hong9A ? 122 : 180).findOne(500);
+      var text = t && t.text() || '';
+      sleep(1000);
+      return text;
+    }
+
+    function runSpecialType(type, times) {
+      var handlers = {
+        otherSouType: function (max) {
+          var i = max || 6;
+          var isValid = true;
           while (i--) {
-            click(400, 430);
-            sleep(2500);
-            if (!text('发布').exists()) {
+            sleep(2000);
+            upDown(2);
+            swipe(350, 270, 350, 1000, 500);
+            sleep(500);
+            var hotKeys = ['天气', '温度', 'c++', '王者', '抖音', '开发教程', '水果'];
+            if (setText(0, hotKeys[~~(Math.random() * hotKeys.length)] + i)) {
+              if (currentPhoneType === PHONE_TYPES.hong9A) {
+                click(630, 230);
+              } else {
+                click(950, 300);
+              }
+            } else {
+              if (i === (max ? max - 1 : 5)) {
+                isValid = false;
+              }
               break;
             }
           }
-          click('以后再说');
+          return isValid;
         },
-        enterP1: function () {
-          var ls = id('ky').find();
-          ls.sort(function (a, b) {
-            return a.bounds().top - b.bounds().top;
-          });
-          var lg = ls.length;
-          var a;
-          while (lg--) {
-            var l = ls[lg];
-            var bounds = l.bounds();
-            var top = bounds.top;
-            var left = bounds.left;
-            if (top > 350 && top < 1700 && left > 0 && left < 700) {
-              a = l;
-              break;
-            };
+        souGouType: function (max) {
+          var i = max || 6;
+          var setting = getStoreType('souGouType', {});
+          if (!setting) {
+            return;
           }
-          if (a) {
-            click(a.bounds().left + 10, a.bounds().top - 30);
-          } else {
-            click(500, 580);
+          while (i--) {
+            sleep(1200);
+            upDown();
+            click(setting.searchBtn[0], setting.searchBtn[1]);
           }
+          return true;
+        },
+        jingDongType: function (max) {
+          var i = max || 6;
+          while (i--) {
+            upDown();
+            click(500, 1300);
+            sleep(1500);
+            back();
+            sleep(1200);
+          }
+          return true;
+        },
+        addListType: function (max) {
+          var i = max || 6;
+          while (i--) {
+            upDown();
+            click(500, 500);
+            sleep(2500);
+            back();
+            sleep(1200);
+          }
+          return true;
+        },
+        interestType: function (max) {
+          var i = max || 6;
+          click(500, currentPhoneType === PHONE_TYPES.hong9A ? 460 : 650);
+          sleep(6000);
+          handlers.otherSouType(i);
         }
-      });
-    } catch (err) {
-      console.log(err);
-      error = err;
+      }
+      if (handlers[type]) {
+        return handlers[type](times);
+      }
     }
-    if (error) {
-      return false;
+
+    function upDown() {
+      oneUpDown(kankanSleep);
+      oneUpDown(kankanSleep);
+      oneUpDown(kankanSleep);
     }
-  }, mark, 1.5, last);
+
+    function oneUpDown(sl) {
+      swipe(350, 1000, 350, 270, 800);
+      sleep(sl || 1000);
+      swipe(350, 270, 350, 1000, 800);
+      sleep(1000)
+    }
+
+    function leave() {
+      back();
+      sleep(2000);
+      click(currentPhoneType === PHONE_TYPES.hong9A ? 110 : 230, 100);
+      sleep(2000);
+    }
+  }
+
+  start();
 }
 
 
@@ -3398,6 +3614,9 @@ function zhongKuaiJob(last) {
           }
         },
         shouldNext: function (i) {
+          if (i > 0) {
+            readTool.updateList();
+          }
           var max = readTool.getListLength() || 2;
           if (i < max) {
             readTool.enterNext();
@@ -3477,6 +3696,13 @@ function zhongKuaiVideoJob(last) {
 
 }
 
+function zhongLeftTopBack() {
+  if (currentPhoneType === PHONE_TYPES.hong9A) {
+    click(44, 82);
+  } else {
+    click(90, 110);
+  }
+}
 
 function launchKuaiZhongQing(type) {
   if (!zhongKuaiXY) {
@@ -3805,6 +4031,7 @@ function zhongQingLongVideo(t) {
     myWaitUntil('次播放');
     sleep(5000);
     var getOnePassTime = initGetLittleDuringTime();
+    var validTabNames = ["推荐","搞笑","广场舞"];
     try {
       var tool = initMarkReading({
         mark: '次播放',
@@ -3820,6 +4047,10 @@ function zhongQingLongVideo(t) {
           sleep(2300);
         },
         nextPage: function (isRight) {
+          // var tab = validTabNames.pop();
+          // click(tab,0);
+          // validTabNames = [tab].concat(validTabNames);
+          // sleep(5000);
           nextPage(isRight);
           sleep(1000);
           if (text('没有请求到数据').exists()) {
@@ -3926,7 +4157,7 @@ function zhongQingLongVideo(t) {
     //     lastI = i;
     //   }
     // }
-  }, mark, (week === 1 || week === 5) ? 1.2 : 0.6, t);
+  }, mark, (week === 1 || week === 5) ? 0.5 : 0.5, t);
 
   function toVideo() {
     var s = zhongVideoSite;
@@ -4146,7 +4377,7 @@ function initZhongQingOther() {
       sleep(isAdmin ? 6500 : 2500);
       while (i < 103) {
         click(530, 1000);
-        sleep(100a)
+        sleep(100);
         back();
         sleep(2000);
         myWaitUntil(function () {
@@ -4185,23 +4416,37 @@ function initZhongQingOther() {
     }
   }
 
+  var runFirstTimes = 0;
+
   kankan2 = function () {
     var myK = keyP + 'Kankan';
+    checkZhongQingTwo.history = checkZhongQingTwo.history || {};
+    if (checkZhongQingTwo.history[myK]) {
+      runFirstTimes = runFirstTimes + 1;
+    }
     var realKey = beforeGoToMain(myK);
 
     var store = getKanKanStorage();
 
-    var latestName = '';
+    if (!checkZhongQingTwo.history[myK] && runFirstTimes < 2) {
+      checkZhongQingTwo.history[myK] = true;
+    } else {
+      runFirstTimes = 0;
+    }
 
+    var latestName = '';
+    if (isDone(realKey)) {
+      return;
+    }
     if (realKey) {
       if (goToSubTask()) {
         sleep(10000);
         startTask();
-        if (text('看看赚').exists() && !text('去完成').findOne(800) && text('进行中').find().length < 4) {
+        if (text('看看赚').exists() && text('已完成').find().length > 30 && (text('进行中').find().length + text('去完成').find().length) < 8) {
           markDone(realKey);
         } else {
           saveUnDoneFn(function () {
-            kankan();
+            kankan2();
           }, realKey)
         }
         backToMain();
@@ -4210,34 +4455,41 @@ function initZhongQingOther() {
 
 
     function startTask() {
-      runStoreType('otherSouType', getTaskNameByType('已完成'));
       var unFinishNames = getTaskNameByType('去完成').reverse();
+      console.log('one start');
       beginReading(unFinishNames);
-      runStoreType('otherSouType', getTaskNameByType('已完成'));
-      beginReading(getTaskNameByType('进行中'));
+      console.log('one end');
+      beginReading(getTaskNameByType('进行中'), 2);
     }
 
-    function beginReading(names) {
+    function beginReading(names, max) {
       var lg = names.length;
-      var excludes = getStoreType('excludes');
       while (lg--) {
         var name = names[lg];
-        if (excludes.indexOf(name) > -1) {
-          continue;
-        }
         if (!text(name).exists()) {
-          if (excludes.indexOf(latestName) < 0) {
-            excludes.push(latestName);
-            store.put('excludes', JSON.stringify(excludes));
-          }
           break;
         }
-        var tryT = 4;
+        if (getTaskNameByType('已完成').indexOf(name) > -1) {
+          continue;
+        }
+        var iMax = max ? 2 : 4;
+        var tryT = iMax;
+        var bottomText;
+        var left;
         while (tryT--) {
           click(name);
           sleep(9000);
-          var y = Math.min(500 + 300 * tryT, device.height - 120);
-          click(500, Math.min(500 + 300 * tryT, y));
+          if (!bottomText) {
+            bottomText = getBottomText();
+            if (isTextShowEnd(bottomText)) {
+              leave();
+              break;
+            }
+            left = getLeftCount(bottomText);
+          }
+          
+          var y = Math.min(currentPhoneType === PHONE_TYPES.hong9A ? 500 : 610 + (currentPhoneType === PHONE_TYPES.hong9A ? 200 : 300) * tryT, device.height - 120);
+          click(500, y);
           if (tryT < 3) {
             sleep(100);
             click(500, 1100);
@@ -4250,7 +4502,7 @@ function initZhongQingOther() {
               name: name,
               y: y
             });
-            runSpecialType(specialType);
+            runSpecialType(specialType, left ? (left - (iMax - tryT - 2)) : (max ? tryT + 1 : (6 - (iMax - tryT - 2))));
             leave();
             break;
           } else {
@@ -4263,19 +4515,49 @@ function initZhongQingOther() {
       }
     }
 
+    function getBottomText() {
+      var t = className("TextView").boundsInside(0, zhongKanEndTextBottom - 75, device.width, zhongKanEndTextBottom).findOne(500);
+      var text = t && t.text() || '';
+      sleep(1000);
+      return text;
+    }
+
+    function isTextShowEnd(text) {
+      return text.indexOf('青豆奖励') > -1 || text.indexOf('任务已完成') > -1 ||  text.indexOf('已看6篇') > -1;
+    }
+
+    function getLeftCount(text) {
+      if (!text) {
+        return 6;
+      }
+      var max = +text[1];
+      var done = +text[13];
+      var left = max - done;
+      return left > 0 ? left : 6;
+    }
+
     function runStoreType(type, excludes) {
       var list = getStoreType(type);
       console.log('runType__' + type + '_' + list.length);
       list.forEach(function (l) {
-        if ((excludes || []).indexOf(l.name) < 0 && text(l.name).exists()) {
+        if (!l.fail && (excludes || []).indexOf(l.name) < 0 && text(l.name).exists()) {
           click(l.name);
           sleep(8000);
           click(500, l.y);
-          runSpecialType(type);
+          var day = new Date().getDate();
+          var res = runSpecialType(type, l.day === day ? 2 : undefined);
+          l.day = day;
+          if (!res) {
+            l.fail = l.fail || 0;
+            l.fail++;
+            putStoreType(type, l);
+          }
           leave();
           sleep(5000)
         }
       })
+      store.put(type, JSON.stringify(list.filter(l => !l.fail || l.fail < 2))); //清空异常
+      sleep(1000);
     }
 
     function getTaskNameByType(type) {
@@ -4304,7 +4586,9 @@ function initZhongQingOther() {
         return l.name === data.name;
       });
       if (target) {
-        target.y = data.y;
+        for (var key in data) {
+          target[key] = data[key];
+        }
       } else {
         console.log('save_' + type + '_' + data.name)
         list.push(data);
@@ -4313,16 +4597,24 @@ function initZhongQingOther() {
     }
 
     function matchSpecialType(title) {
+      var a1 = '商家列表';
+      var a2 = '聚合商家推荐';
+      var a3 = '为您推荐';
+      var a4 = '柠檬爱美'
+      var a5 = '聚合商家推荐';
+      var ls = [a1, a2, a3, a4, a5];
       if (title.indexOf("网页搜索") > -1) {
         return 'otherSouType';
-      } else if ((title.indexOf('京东热卖') > -1)) {
+      } else if (title.indexOf('京东热卖') > -1 || title.indexOf('一分钟') > -1) {
         return 'jingDongType';
-      } else if (text('搜索').exists()) {
-        var a = text('搜索').findOne(1000);
-        store.put('souGouType', JSON.stringify({
-          searchBtn: [a.bounds().centerX(), a.bounds().centerY()]
-        }))
-        return 'souGouType';
+      } else if (title.indexOf('京东超市') > -1) {
+        return 'jingDongChaoShiType';
+      } else if (title.indexOf('一点生活趣事') > -1) {
+        return 'interestType'
+      } else if (ls.indexOf(title) > -1) {
+        return 'addListType';
+      } else if (title.indexOf('点击红包') > -1) {
+        return 'hongBaoType';
       }
     }
 
@@ -4351,14 +4643,16 @@ function initZhongQingOther() {
                 click(950, 300);
               }
             } else {
-              isValid = false;
+              if (i === (max ? max - 1 : 5)) {
+                isValid = false;
+              }
               break;
             }
           }
           return isValid;
         },
-        souGouType: function () {
-          var i = 6;
+        souGouType: function (max) {
+          var i = max || 6;
           var setting = getStoreType('souGouType', {});
           if (!setting) {
             return;
@@ -4370,17 +4664,58 @@ function initZhongQingOther() {
           }
           return true;
         },
-        jingDongType: function () {
-          var i = 6;
+        jingDongType: function (max) {
+          var i = max || 6;
           while (i--) {
             upDown();
             click(500, 1300);
             sleep(1500);
-            back();
+            // back();
+            zhongLeftTopBack();
             sleep(1200);
           }
           return true;
-        }
+        },
+        jingDongChaoShiType: function (max) {
+          var i = max || 6;
+          while (i--) {
+            click(~~Math.random() * (device.width - 150) + 110, ~~Math.random() * (zhongContentBottom - 300) + 500);
+            sleep(1500);
+            upDown();
+            // back();
+            zhongLeftTopBack();
+            sleep(2200);
+          }
+          return true;
+        },
+        addListType: function (max) {
+          var i = max || 6;
+          while (i--) {
+            upDown();
+            click(500, 500);
+            sleep(2500);
+            // back();
+            zhongLeftTopBack();
+            sleep(1200);
+          }
+          return true;
+        },
+        interestType: function (max) {
+          var i = max || 6;
+          click(500, currentPhoneType === PHONE_TYPES.hong9A ? 460 : 650);
+          sleep(6000);
+          handlers.otherSouType(i);
+        },
+        hongBaoType: function (max) {
+          var i = max || 6;
+          click(500, currentPhoneType === PHONE_TYPES.hong9A ? 600 : 870);
+          sleep(1000);
+          click(500, currentPhoneType === PHONE_TYPES.hong9A ? 600 : 870);
+          sleep(5000);
+          click(500, 500);
+          click(350, 550);
+          handlers.otherSouType(i);
+        },
       }
       if (handlers[type]) {
         return handlers[type](times);
@@ -5476,19 +5811,16 @@ function initZhongQingOther() {
     }),
     kankan0: withCatch(kankan, function () {
       console.log('kankan after error');
-      checkZhongQingTwo.history[mark] = !checkZhongQingTwo.history[mark];
       begin();
       otherRun();
     }),
     kankan: withCatch(kankan2, function () {
       console.log('kankan after error');
-      checkZhongQingTwo.history[mark] = !checkZhongQingTwo.history[mark];
       begin();
       otherRun();
     }),
     kankan2: withCatch(kankan2, function () {
       console.log('kankan after error');
-      checkZhongQingTwo.history[mark] = !checkZhongQingTwo.history[mark];
       begin();
       otherRun();
     }),
@@ -6541,11 +6873,17 @@ function initMarkReading(p) {
     return (currentList || []).length;
   }
 
+  function updateList() {
+    currentList = getList() || [];
+  }
+
   return {
     enterNext: enterNext,
     refresh: refresh,
     clickIntoPage: clickIntoPage,
     getListLength: getListLength,
-    reset: reset
+    reset: reset,
+    getList: getList,
+    updateList: updateList
   }
 }
